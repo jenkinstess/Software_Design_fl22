@@ -7,8 +7,15 @@ export default (req, res) => {
     if (req.method === 'POST') {
       //login
      
+        // const token = jwt.sign(
+        //     {userId: user.userId, email: user.email},
+        //     jwtSecret,
+        //     {
+        //     expiresIn: 3000, //50 minutes
+        //     },
+        // );
         const token = jwt.sign(
-            {userId: user.userId, email: user.email},
+            {userId: "tess", email: "tessjenkins19@gmail.com"},
             jwtSecret,
             {
             expiresIn: 3000, //50 minutes
