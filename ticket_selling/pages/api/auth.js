@@ -15,7 +15,7 @@ export default (req, res) => {
         //     },
         // );
         const token = jwt.sign(
-            {userId: "tess", email: "tessjenkins19@gmail.com"},
+            {userId: "user.userId", email: "user.email"},
             jwtSecret,
             {
             expiresIn: 3000, //50 minutes
