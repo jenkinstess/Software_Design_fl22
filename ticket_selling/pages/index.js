@@ -3,6 +3,11 @@ import fetch from 'isomorphic-unfetch';
 import useSWR from 'swr';
 import Link from 'next/link';
 import cookie from 'js-cookie';
+const db = require('/config/database');
+//test db
+db.authenticate()
+    .then(() => console.log('Database connected...'))
+    .catch(err => console.log("Error: " + err))
 
 function Home() {
   const {data, revalidate} = useSWR('/api/me', async function(args) {
