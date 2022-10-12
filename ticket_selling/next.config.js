@@ -7,6 +7,8 @@ const nextConfig = {
 
 module.exports = nextConfig
 
+//ina can you see this
+
 // module.exports = (phase, { defaultConfig }) => {
 //   return {
 //     ...defaultConfig,
