@@ -1,14 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true
-  
+  swcMinify: true,
 }
 
-module.exports = nextConfig
-
-//ina can you see this
-
+// module.exports = nextConfig
+module.exports = {
+    webpack: (config) => {
+      config.resolve.fallback = { fs: false, path: false, stream: false, constants: false };
+      return config;
+  
+    }
+}
 // module.exports = (phase, { defaultConfig }) => {
 //   return {
 //     ...defaultConfig,
