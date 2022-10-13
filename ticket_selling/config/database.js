@@ -4,6 +4,7 @@ module.exports = new Sequelize('ticketsitedb', 'ticketgroup', 'partytixstinks',{
     dialect: 'mysql',
     dialectModule:'mysql2',
     operatorsAliases: false,
+    target: 'serverless',
 
     pool: {
         max: 5,
