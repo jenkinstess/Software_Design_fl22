@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 module.exports = new Sequelize('ticketsitedb', 'ticketgroup', 'partytixstinks',{
     host: 'ticket-site-db.cvddhqhvjcur.us-east-1.rds.amazonaws.com', 
     dialect: 'mysql',
+    dialectModule:'mysql2',
     operatorsAliases: false,
 
     pool: {
