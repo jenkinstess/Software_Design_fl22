@@ -3,7 +3,7 @@ import fetch from 'isomorphic-unfetch';
 import useSWR from 'swr';
 import Link from 'next/link';
 import cookie from 'js-cookie';
-// import Navbar from '../components/navbar'
+import Navbar from '../components/navbar'
 const db = require('/config/database');
 //test db
 // db.authenticate()
@@ -54,36 +54,4 @@ const db = require('/config/database');
   );
  }
  
- function Navbar(){
-   this.state = {
-        loginoutcome: true
-    };
-    
-       
-    return (
-        <div className = "Navbar">
-                
-            <Link href = "/">
-                <a>Home</a>
-            </Link>   
-            {/* {console.log(localStorage.getItem("loginoutcome") === "true")} */}
-            {/* {localStorage.getItem("loginoutcome") === "true" ? ( */}
-                
-            {localStorage.getItem("loginoutcome") === "true" ? (
-                <>
-                <Link href = "/profile"><a>Profile</a></Link> 
-                <Link href = "/buy"><a>Buy</a></Link> 
-                <Link href = "/sell"><a>Sell</a></Link> 
-                </>
-            ):(
-        
-                <>
-                <Link href = "/login"><a>Login</a></Link>
-                <Link href = "/signup"><a>Sign Up</a></Link>  
-                </>
-            )}
-        </div>
-    )
- }
-
 export default Home;
