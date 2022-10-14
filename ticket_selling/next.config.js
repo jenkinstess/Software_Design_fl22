@@ -13,10 +13,6 @@ module.exports = {
   
     },
     
-    env: {
-      loggedIn: false,
-    },
-    
 }, nextConfig
 // module.exports = (phase, { defaultConfig }) => {
 //   return {

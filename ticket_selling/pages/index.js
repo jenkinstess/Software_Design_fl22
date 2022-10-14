@@ -16,13 +16,11 @@ const db = require('/config/database');
     return res.json();
   });
   if (!data) return <h1>Loading...</h1>;
- 
+  let loggedIn = false;
   if (data.email) {
-    process.env.loggedIn = true;
+    loggedIn = true;
+    // process.env.loggedIn = true;
     // localStorage.setItem("loginoutcome", true);
-  }
-  else{
-    process.env.loggedIn = false;
   }
   return (
     <div>
