@@ -1,36 +1,26 @@
-import React, {Component} from 'react'
-import Link from 'next/link';
-import { useEffect } from 'react';
-// import styles from "../styles/Navbar.css";
-
-export default function Navbar(){ 
-    // this.state = {
-    //     loginoutcome: true
-    // };
-    
-       
+import React from 'react'
+// import styles from '../styles/Navbar.css'
+import Link from 'next/link'
+ 
+const Navbar = () => {
     return (
-        <div className = "Navbar">
+        <nav className = "Navbar">
+            <Link href='/'><a><li>Home</li></a></Link>
+                {process.env.loggedIn === "true" ? (
+                    <>
+                    <Link href='/profile'><a><li>Profile</li></a></Link>
+                    <Link href='/'><a><li>Sign Out</li></a></Link>
+                    </>
+                ) : (
+                    <>
+                    <Link href='/'><a><li>Home</li></a></Link>
+                    <Link href='/login'><a><li>Log In</li></a></Link>
+                    <Link href='/signup'><a><li>Sign Up</li></a></Link>
+                    </>
+                )}
+        </nav>
                 
-            <Link href = "/">
-                <a>Home</a>
-            </Link>   
-            {/* {console.log(localStorage.getItem("loginoutcome") === "true")} */}
-            {/* {localStorage.getItem("loginoutcome") === "true" ? ( */}
-                
-            {/* {localStorage.getItem("loginoutcome") === "true" ? ( */}
-                <>
-                <Link href = "../pages/profile">Profile</Link> 
-                {/* <Link href = "/buy"><a>Buy</a></Link> 
-                <Link href = "/sell"><a>Sell</a></Link>  */}
-                </>
-            {/* ):( */}
-        
-                <>
-                <Link href = "../pages/login">Login</Link>
-                <Link href = "../pages/signup">Sign Up</Link>  
-                </>
-            {/* )} */}
-        </div>
     )
 }
+ 
+export default Navbar

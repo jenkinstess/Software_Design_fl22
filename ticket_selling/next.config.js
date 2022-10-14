@@ -11,7 +11,12 @@ module.exports = {
       config.resolve.fallback = { fs: false, path: false, stream: false, constants: false };
       return config;
   
-    }
+    },
+    
+    env: {
+      loggedIn: false,
+    },
+    
 }, nextConfig
 // module.exports = (phase, { defaultConfig }) => {
 //   return {

@@ -1,12 +1,14 @@
+import Navbar from '../components/Navbar'
+import '../styles/globals.css'
 import '../styles/Navbar.css'
-import Navbar from '../components/navbar'
-
-// import App from 'next/app';
-
-// export default App;
-
+ 
 function MyApp({ Component, pageProps }) {
-  return <Navbar {...pageProps} />
+  return (
+    <>
+      <Navbar />
+      <Component {...pageProps} />
+    </>
+  )
 }
-
+ 
 export default MyApp

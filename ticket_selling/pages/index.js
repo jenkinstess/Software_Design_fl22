@@ -16,13 +16,13 @@ const db = require('/config/database');
     return res.json();
   });
   if (!data) return <h1>Loading...</h1>;
-  let loggedIn = false;
+ 
   if (data.email) {
-    loggedIn = true;
-    localStorage.setItem("loginoutcome", true);
+    process.env.loggedIn = true;
+    // localStorage.setItem("loginoutcome", true);
   }
   else{
-    localStorage.setItem("loginoutcome", false);
+    process.env.loggedIn = false;
   }
   return (
     <div>
@@ -43,13 +43,13 @@ const db = require('/config/database');
           </button>
         </>
       )}
-      {!loggedIn && (
+      {/* {!loggedIn && (
         <>
           <Link href="/login">Login</Link>
           <p>or</p>
           <Link href="/signup">Sign Up</Link>
         </>
-      )}
+      )} */}
     </div>
   );
  }
