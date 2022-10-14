@@ -1,12 +1,12 @@
-import '../styles/login_page.css';
-import App from 'next/app';
+import '../styles/Navbar.css'
+import Navbar from '../components/navbar'
 
-export default App;
+// import App from 'next/app';
 
-// import '../styles/globals.css'
+// export default App;
 
-// function MyApp({ Component, pageProps }) {
-//   return <Component {...pageProps} />
-// }
+function MyApp({ Component, pageProps }) {
+  return <Component {...pageProps} />
+}
 
-// export default MyApp
+export default MyApp
