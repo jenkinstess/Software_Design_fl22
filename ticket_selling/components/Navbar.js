@@ -20,15 +20,15 @@ export default function Navbar(){
                 
             {/* {localStorage.getItem("loginoutcome") === "true" ? ( */}
                 <>
-                <Link href = "/profile">Profile</Link> 
+                <Link href = "../pages/profile">Profile</Link> 
                 {/* <Link href = "/buy"><a>Buy</a></Link> 
                 <Link href = "/sell"><a>Sell</a></Link>  */}
                 </>
             {/* ):( */}
         
                 <>
-                <Link href = "/login">Login</Link>
-                <Link href = "/signup">Sign Up</Link>  
+                <Link href = "../pages/login">Login</Link>
+                <Link href = "../pages/signup">Sign Up</Link>  
                 </>
             {/* )} */}
         </div>
