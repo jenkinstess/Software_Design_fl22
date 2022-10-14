@@ -9,7 +9,7 @@ const db = require('/config/database');
 //     .then(() => console.log('Database connected...'))
 //     .catch(err => console.log("Error: " + err))
 
-// function Home() {
+ function Home() {
 //   const {data, revalidate} = useSWR('/api/me', async function(args) {
 //     const res = await fetch(args);
 //     return res.json();
@@ -47,6 +47,6 @@ const db = require('/config/database');
 //       )}
 //     </div>
 //   );
-// }
+ }
 
 export default Home;
