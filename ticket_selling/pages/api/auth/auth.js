@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const jwtSecret = 'SUPERSECRETE20220';
 
+
+
 export default (req, res) => {
     if (req.method === 'POST') {
       //login

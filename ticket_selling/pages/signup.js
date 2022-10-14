@@ -89,8 +89,8 @@ const Signup = () => {
 
         <br />
   
-        <label for="password">
-          password
+        <label htmlFor="password">
+          Password
           <input
             value={password}
             onChange={(e) => setPassword(e.target.value)}

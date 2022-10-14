@@ -12,7 +12,7 @@ module.exports = {
       return config;
   
     }
-}
+}, nextConfig
 // module.exports = (phase, { defaultConfig }) => {
 //   return {
 //     ...defaultConfig,
