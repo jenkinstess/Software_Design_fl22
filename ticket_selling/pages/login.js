@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import Router from 'next/router';
 import cookie from 'js-cookie';
+import Navbar from '../components/navbar';
 
 const Login = () => {
   const [loginError, setLoginError] = useState('');

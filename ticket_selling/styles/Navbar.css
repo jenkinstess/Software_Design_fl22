@@ -6,7 +6,7 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    color: white;
+    /* color: white; */
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -26,6 +26,6 @@
     background-color: rgb(165, 165, 165);
 }
 
-a:visited{
+/* a:visited{
     color:white;
-  }
+  } */

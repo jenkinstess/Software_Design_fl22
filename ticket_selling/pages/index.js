@@ -3,6 +3,7 @@ import fetch from 'isomorphic-unfetch';
 import useSWR from 'swr';
 import Link from 'next/link';
 import cookie from 'js-cookie';
+import Navbar from '../components/navbar'
 const db = require('/config/database');
 //test db
 // db.authenticate()
@@ -18,6 +19,10 @@ const db = require('/config/database');
   let loggedIn = false;
   if (data.email) {
     loggedIn = true;
+    localStorage.setItem("loginoutcome", true);
+  }
+  else{
+    localStorage.setItem("loginoutcome", false);
   }
   return (
     <div>
