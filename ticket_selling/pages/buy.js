@@ -1,10 +1,5 @@
 import Head from 'next/head';
 import fetch from 'isomorphic-unfetch';
-import useSWR from 'swr';
-import Link from 'next/link';
-import cookie from 'js-cookie';
-import Navbar from '../components/navbar'
-import Router from 'next/router';
 import EventList from '../components/EventList';
 
 // import UserContext from '../components/UserContext';
