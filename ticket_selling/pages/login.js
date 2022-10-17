@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Router from 'next/router';
 import cookie from 'js-cookie';
 import Navbar from '../components/navbar';
+import UserContext from '../components/UserContext';
 
 const Login = () => {
   const [loginError, setLoginError] = useState('');

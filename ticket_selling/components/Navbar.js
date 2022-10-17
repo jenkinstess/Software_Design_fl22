@@ -7,17 +7,18 @@ const Navbar = () => {
     return (
         <nav className = "Navbar">
             <Link href='/'><a><li>Home</li></a></Link>
-                {/* {loggedIn2 === "true" ? (
+            {/* {localStorage.getItem("loggedIn") === "true" ? (
                     <>
                     <Link href='/profile'><a><li>Profile</li></a></Link>
                     <Link href='/'><a><li>Sign Out</li></a></Link>
                     </>
-                ) : ( */}
+            ):( */}
 
                     <>
                     <Link href='/login'><a><li>Log In</li></a></Link>
                     <Link href='/signup'><a><li>Sign Up</li></a></Link>
                     </>
+            {/* )} */}
         </nav>
                 
     )

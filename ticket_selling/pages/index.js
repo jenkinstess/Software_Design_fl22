@@ -4,13 +4,16 @@ import useSWR from 'swr';
 import Link from 'next/link';
 import cookie from 'js-cookie';
 import Navbar from '../components/navbar'
+import Router from 'next/router';
+
+// import UserContext from '../components/UserContext';
 const db = require('/config/database');
 //test db
 // db.authenticate()
 //     .then(() => console.log('Database connected...'))
 //     .catch(err => console.log("Error: " + err))
 
- function Home() {
+function Home() {
   const {data, revalidate} = useSWR('/api/me', async function(args) {
     const res = await fetch(args);
     return res.json();
@@ -19,9 +22,10 @@ const db = require('/config/database');
   let loggedIn = false;
   if (data.email) {
     loggedIn = true;
-    // process.env.loggedIn = true;
-    // localStorage.setItem("loginoutcome", true);
+    // localStorage.setItem('email', data.email);
+    // localStorage.setItem('loggedIn', loggedIn);
   }
+  
   return (
     <div>
       <Head>
@@ -39,17 +43,15 @@ const db = require('/config/database');
             }}>
             Logout
           </button>
+          <br></br>
+          <button onClick={() => Router.push('/sell')}>
+            Sell Tickets!
+          </button>
         </>
       )}
-      {/* {!loggedIn && (
-        <>
-          <Link href="/login">Login</Link>
-          <p>or</p>
-          <Link href="/signup">Sign Up</Link>
-        </>
-      )} */}
     </div>
   );
+  
  }
  
 export default Home;
