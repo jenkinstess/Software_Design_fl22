@@ -53,6 +53,31 @@ users.sync().then(
   () => console.log("initial sync complete")
 );
 
+function findUser(email){
+  const found = users.findAll({
+        where:{
+          email: email
+        }
+      });
+  return found;
+}
+
+function createUser(email, password) {
+  console.log("test before create hash");
+  bcrypt.hash(password, round, function(err, hash) {
+    console.log("test within create hash");
+    console.log(hash)
+    // Stores the hash in the password db
+    const newUser = users.create({
+      userid: v4(),
+      email: email,
+      password: hash
+    });
+    return newUser;
+  })
+  console.log("test after create hash");
+}
+
 // function findUser(email, callback) {
 //   console.log("test beginning of find");
 //   const found = users.findAll({
@@ -68,26 +93,25 @@ users.sync().then(
 // }
 
 // function createUser(email, password, callback) {
-  function createUser(email, password) {
-  console.log("test before create hash");
-  bcrypt.hash(password, round, function(err, hash) {
-    console.log("test within create hash");
-    console.log(hash)
-    // Stores the hash in the password db
-    const newUser = users.create({
-      userid: v4(),
-      email: email,
-      password: hash,
-      // function(err, userCreated) {
-      //   assert.strictEqual(err, null);
-      //   callback(userCreated);
-      // }
-    });
-  })
-  console.log("test after create hash");
+//   function createUser(email, password) {
+//   console.log("test before create hash");
+//   bcrypt.hash(password, round, function(err, hash) {
+//     console.log("test within create hash");
+//     console.log(hash)
+//     // Stores the hash in the password db
+//     const newUser = users.create({
+//       userid: v4(),
+//       email: email,
+//       password: hash,
+//       // function(err, userCreated) {
+//       //   assert.strictEqual(err, null);
+//       //   callback(userCreated);
+//       // }
+//     });
+//   })
+//   console.log("test after create hash");
 
-}
-
+// }
 export default (req, res) => {
     if (req.method === 'POST') {
       // signup!!
@@ -111,29 +135,44 @@ export default (req, res) => {
         console.log("data grabbed");
         console.log(password);
 
-        const found = users.findAll({
-          where:{
-            email: email
-          }
-        }).then(function(found){
-          return found;
-        });
-
-        console.log("found filled");
-        console.log(found);
-        
-        if(found == []){
-          console.log("found nothing");
-          createUser(email, password);
-          res.status(200).json({token});
+        try{
+          findUser(email);
+        }catch(e){
+          console.log(e);
+          res.status(403).json({error: true, message: 'email exists'});
           return;
         }
-        else{
-            // user already exists
-            console.log("found user");
-            res.status(403).json({error: true, message: 'email exists'});
-            return;
+
+        try{
+          createUser(email, password);
         }
+        catch(err){
+          console.log(err);
+          return;
+        }
+        // const found = users.findAll({
+        //   where:{
+        //     email: email
+        //   }
+        // }).then(function(found){
+        //   return found;
+        // });
+
+        // console.log("found filled");
+        // console.log(found);
+        
+        // if(found == []){
+        //   console.log("found nothing");
+        //   createUser(email, password);
+        //   res.status(200).json({token});
+        //   return;
+        // }
+        // else{
+        //     // user already exists
+        //     console.log("found user");
+        //     res.status(403).json({error: true, message: 'email exists'});
+        //     return;
+        // }
 
         // findUser(email, function(err, user) {
         //   console.log("beginning here!!!");
@@ -178,3 +217,6 @@ export default (req, res) => {
       );
     }
   };
+users.sync().then(
+    () => console.log("final sync complete")
+  );
