@@ -18,36 +18,27 @@ export const getStaticProps = async () => {
 }
 
 export default function Sell({ events }) {
-  // {events.map((event) => (
-  //   <EventItem event={event} />
-  // ))}
-
-  // const EventItem = ({ event }) => {
-  //   return (
-  //     <div>
-  //       <h3>{event.name}</h3>
-  //       <h5>{event.date}</h5>
-  //     </div>
-  //   )
-  // }
-   
   //iterate through events. parse each event object for its name. 
   // create an array with the naems
+  const [createEventError, setCreateEventError] = useState('');
   const [eventDate, setDate] = useState('');
   const [eventName, setEventName] = useState('');
+  const [eventDescription, setEventDescription] = useState('');
     // potentially we just need to store this in db? do we want manual entry
     // const [ownerID, setOwnerID] = useState('');
-  const [venmo, setVenmo] = useState ('');
+
+  //const [venmo, setVenmo] = useState ('');
 
   const handleChange = (e) => {
     setEventName(e.target.value);
-    setDate(e.target.value);
+    // setDate(e.target.value);
+    // setEventDescription(e.target.value);
   };
 
 
   function handleSubmit(e) {
       e.preventDefault();
-      fetch('/api/users', {
+      fetch('/api/events', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -55,14 +46,14 @@ export default function Sell({ events }) {
       body: JSON.stringify({
           eventDate,
           eventName,
-          venmo
+          
             // ownerID
         }),
       })
         .then((r) => r.json())
         .then((data) => {
           if (data && data.error) {
-            setSignupError(data.message);
+            setCreateEventError(data.message);
           }
           if (data && data.token) {
             //set cookie
@@ -114,13 +105,13 @@ export default function Sell({ events }) {
 
         <br />
 
-        <label htmlFor="ownerID">
-          Owner ID
+        <label htmlFor="eventDescription">
+          Event Description
           <input
-            value={venmo}
-            onChange={(e) => setOwnerID(e.target.value)}
-            name="ownerID"
-            type="ownerID"
+            value={eventDescription}
+            onChange={(e) => setEventDescription(e.target.value)}
+            name="eventDescription"
+            type="eventDescription"
           />
         </label>
 
@@ -129,6 +120,7 @@ export default function Sell({ events }) {
         <input type="submit" value="Submit" />
         {/* {signupError && <p style={{color: 'red'}}>{signupError}</p>} */}
       </form>
+      {setCreateEventError && <p style={{color: 'red'}}>{createEventError}</p>}
 
     </div>
     
@@ -139,100 +131,3 @@ export default function Sell({ events }) {
   );
 
 }
-
-// const Sell = () => {
-//     const [eventDate, setDate] = useState('');
-//     const [eventName, setEventName] = useState('');
-//     // potentially we just need to store this in db? do we want manual entry
-//     // const [ownerID, setOwnerID] = useState('');
-//     const [venmo, setVenmo] = useState ('');
-  
-//     function handleSubmit(e) {
-//       e.preventDefault();
-//       fetch('/api/users', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({
-//             eventDate,
-//             eventName,
-//             venmo
-//             // ownerID
-//         }),
-//       })
-//         .then((r) => r.json())
-//         .then((data) => {
-//           if (data && data.error) {
-//             setSignupError(data.message);
-//           }
-//           if (data && data.token) {
-//             //set cookie
-//             cookie.set('token', data.token, {expires: 2});
-//             Router.push('/');
-//           }
-//         });
-
-//     }
-//     return (
-
-//       <select name="Existing Events" id="existingEvents">
-//         <option value="action">Action</option>
-//         <option value="action2">Action2</option>
-//         <option value="action3">Action3</option>
-
-//       </select> 
-//       // <form onSubmit={handleSubmit}>
-//       //   <p>Sell Ticket</p>
-//       //   <label htmlFor="date">
-//       //     Ticket Date
-//       //     <input
-//       //       value={eventDate}
-//       //       onChange={(e) => setDate(e.target.value)}
-//       //       name="eventDate"
-//       //       type="date"
-//       //     />
-//       //   </label>
-  
-//       //   <br />
-
-//       //   <label htmlFor="eventName">
-//       //     Event Name
-//       //     <input
-//       //       value={eventName}
-//       //       onChange={(e) => setEventName(e.target.value)}
-//       //       name="eventName"
-//       //       type="eventName"
-//       //     />
-//       //   </label>
-
-//       //   <br />
-//       //   <label htmlFor="venmo">
-//       //     Venmo
-//       //     <input
-//       //       value={venmo}
-//       //       onChange={(e) => setEventName(e.target.value)}
-//       //       name="venmo"
-//       //       type="venmo"
-//       //     />
-//       //   </label>
-
-//         /* <label htmlFor="ownerID">
-//           Owner ID
-//           <input
-//             value={ownerID}
-//             onChange={(e) => setOwnerID(e.target.value)}
-//             name="ownerID"
-//             type="ownerID"
-//           />
-//         </label> */
-
-//         // <br />
-  
-//         // <input type="submit" value="Submit" />
-//         /* {signupError && <p style={{color: 'red'}}>{signupError}</p>} */
-//       // </form>
-//     );
-//   };
-  
-//   export default Sell;
