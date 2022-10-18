@@ -29,15 +29,14 @@ const sequelize = new Sequelize('ticketsitedb', 'ticketgroup', 'partytixstinks',
 //         });
 //     return found;
 //   }
-
-
-function Profile() {
+const { QueryTypes } = require('sequelize');
+const users = await sequelize.query("SELECT * FROM `users`", { type: QueryTypes.SELECT });
+// We didn't need to destructure the result here - the results were returned directly
+export default (req, res) => {
   sequelize.authenticate().then(() => {
     console.log('connected to sequelize mysql server');
-    let userlist = models.Users.findall();
-    let username = "not initialized"
-    if (length(userlist) > 0){
-        username = userlist[0].username;
+    if (users.length > 0){
+        username = users[0].username;
     } else {
         console.log("!!!!!!!!!!!!!!!!!!!!found no users!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
@@ -48,8 +47,3 @@ function Profile() {
   });
   
 }
-
-
-
-  
-  export default Profile
