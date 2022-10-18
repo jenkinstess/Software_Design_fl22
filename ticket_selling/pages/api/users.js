@@ -1,9 +1,10 @@
 import { NEXT_CLIENT_SSR_ENTRY_SUFFIX } from 'next/dist/shared/lib/constants';
+import { Query } from 'pg';
 //this is where connection to the DB will be made
 
 //this link shows how you would connect data to a mongodb. should be similar for sql?
 //https://dev.to/mgranados/how-to-build-a-simple-login-with-nextjs-and-react-hooks-255
-import Sequelize from 'sequelize'
+import Sequelize, { QueryTypes } from 'sequelize'
 
 const { DataTypes } = require('sequelize');
 const assert = require('assert');
@@ -13,8 +14,8 @@ const jwt = require('jsonwebtoken');
 const jwtSecret = 'SUPERSECRETE20220';
 
 const round = 10;
-const url = 'http://localhost:3000/';
-const dbName = 'ticketsdb';
+//const url = 'http://localhost:3000/';
+//const dbName = 'ticketsdb';
 
 const sequelize = new Sequelize('ticketsitedb', 'ticketgroup', 'partytixstinks',{
   host: 'ticket-site-db.cvddhqhvjcur.us-east-1.rds.amazonaws.com', 
@@ -53,27 +54,38 @@ users.sync().then(
   () => console.log("initial sync complete")
 );
 
-function findUser(email){
-  const found = users.findAll({
-        where:{
-          email: email
-        }
-      });
-  return found;
+async function findUser(email){
+  console.log("email: " + email);
+  const [resultFound] = await sequelize.query("SELECT * FROM ticketsitedb.users WHERE email = :email", 
+  {
+    replacements: {email: email},
+    type: QueryTypes.SELECT
+  });
+  // const found = users.findAll({
+  //       where:{
+  //         email: email
+  //       }
+  //     });
+  return resultFound;
 }
 
-function createUser(email, password) {
+async function createUser(email, password) {
   console.log("test before create hash");
-  bcrypt.hash(password, round, function(err, hash) {
+  bcrypt.hash(password, round, async function(err, hash) {
     console.log("test within create hash");
     console.log(hash)
     // Stores the hash in the password db
-    const newUser = users.create({
-      userid: v4(),
-      email: email,
-      password: hash
+    const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO users(userid, email, password) VALUES (:userid, :email, :password)',
+    {
+      replacements: {userid: v4(), email: email, password: hash},
+      type: QueryTypes.INSERT
     });
-    return newUser;
+    // const newUser = users.create({
+    //   userid: v4(),
+    //   email: email,
+    //   password: hash
+    // });
+    // return newUser;
   })
   console.log("test after create hash");
 }
@@ -137,19 +149,33 @@ export default (req, res) => {
 
         try{
           findUser(email);
+          //findUser(email).then(function(result){
+            console.log("result of findUser: " + JSON.stringify(findUser(email)));
+          //})
+          //console.log("result of findUser: " + findUser(email));
         }catch(e){
           console.log(e);
           res.status(403).json({error: true, message: 'email exists'});
           return;
         }
 
-        try{
-          createUser(email, password);
+        // tests that email (ie. user) does not already exist in the database
+
+        console.log("length: "+ Object.keys(findUser(email)).length)
+
+        if(Object.keys(findUser(email)).length == 0){
+            try{
+            createUser(email, password);
+          }
+          catch(err){
+            console.log(err);
+            return;
+          }
         }
-        catch(err){
-          console.log(err);
-          return;
+        else{
+          console.log("didnt'work!!")
         }
+        
         // const found = users.findAll({
         //   where:{
         //     email: email
