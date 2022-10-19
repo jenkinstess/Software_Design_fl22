@@ -5,17 +5,17 @@ import cookie from 'js-cookie';
 const db = require('/config/database');
 
 
-export const getStaticProps = async () => {
-  // pulling events data from events-data.js file
-  const res = await fetch('http://localhost:3000/api/events')
-  const events = await res.json()
+// export const getStaticProps = async () => {
+//   // pulling events data from events-data.js file
+//   const res = await fetch('http://localhost:3000/api/events')
+//   const events = await res.json()
 
-  return {
-      props: {
-          events,
-      },
-  }
-}
+//   return {
+//       props: {
+//           events,
+//       },
+//   }
+// }
 
 export default function Sell({ events }) {
   //iterate through events. parse each event object for its name. 
@@ -46,7 +46,8 @@ export default function Sell({ events }) {
       body: JSON.stringify({
           eventDate,
           eventName,
-          
+          eventDescription
+
             // ownerID
         }),
       })
@@ -64,11 +65,11 @@ export default function Sell({ events }) {
 
   }
 
-  function getEvents(){
-    return events.map((event) => {
-      return <option value={event.name}>{event.name}</option>;
-    });
-  }
+  // function getEvents(){
+  //   return events.map((event) => {
+  //     return <option value={event.name}>{event.name}</option>;
+  //   });
+  // }
 
   return( 
     
@@ -76,7 +77,7 @@ export default function Sell({ events }) {
       <p>Sell Ticket:</p>
       Existing Events: <select value="value" onChange={handleChange}>
         <option value="" />
-        {getEvents()}
+        {/* {getEvents()} */}
     </select> 
 
     <br></br><br></br>
