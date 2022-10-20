@@ -13,6 +13,7 @@ const db = require('/config/database');
 //     .then(() => console.log('Database connected...'))
 //     .catch(err => console.log("Error: " + err))
 
+
 function Home() {
   const {data, revalidate} = useSWR('/api/me', async function(args) {
     const res = await fetch(args);
