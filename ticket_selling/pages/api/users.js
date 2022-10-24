@@ -37,7 +37,11 @@ const sequelize = new Sequelize('ticketsitedb', 'ticketgroup', 'partytixstinks',
 const users = require("../../models/users");
 const tickets = require("../../models/tickets");
 
+// creates a relation between tickets and users. each ticket belongs to a user
 tickets.belongsTo(users);
+
+// creates a relation between tickets and users. each user owns one or many tickets
+// for somereason this didnt work. may have to manually make in workbench? look into
 users.hasMany(tickets);
 
 // syncs the models to the database
