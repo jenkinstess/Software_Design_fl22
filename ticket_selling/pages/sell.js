@@ -44,17 +44,16 @@ export default function Sell({ events }) {
           'Content-Type': 'application/json',
         },
       body: JSON.stringify({
-          eventDate,
           eventName,
           eventDescription,
           ticketPrice
-
             // ownerID
         }),
       })
         .then((r) => r.json())
         .then((data) => {
           if (data && data.error) {
+            setCreateEventError("Success! Selling Ticket");
             setCreateEventError(data.message);
           }
           if (data && data.token) {
@@ -64,6 +63,19 @@ export default function Sell({ events }) {
             Router.push('/');
           }
         });
+      //post new event to db if it's not already there
+      fetch('/api/events', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        body: JSON.stringify({
+            eventDate,
+            eventName,
+            eventDescription,
+              // ownerID
+          }),
+      })  
 
   }
 
