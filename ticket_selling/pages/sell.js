@@ -4,7 +4,6 @@ import Router from 'next/router';
 import cookie from 'js-cookie';
 const db = require('/config/database');
 
-
 // export const getStaticProps = async () => {
 //   // pulling events data from events-data.js file
 //   const res = await fetch('http://localhost:3000/api/events')
@@ -19,11 +18,12 @@ const db = require('/config/database');
 
 export default function Sell({ events }) {
   //iterate through events. parse each event object for its name. 
-  // create an array with the naems
+  // create an array with the names
   const [createEventError, setCreateEventError] = useState('');
   const [eventDate, setDate] = useState('');
   const [eventName, setEventName] = useState('');
   const [eventDescription, setEventDescription] = useState('');
+  const [ticketPrice, setTicketPrice] = useState('');
     // potentially we just need to store this in db? do we want manual entry
     // const [ownerID, setOwnerID] = useState('');
 
@@ -38,7 +38,7 @@ export default function Sell({ events }) {
 
   function handleSubmit(e) {
       e.preventDefault();
-      fetch('/api/events', {
+      fetch('/api/tickets', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -46,7 +46,8 @@ export default function Sell({ events }) {
       body: JSON.stringify({
           eventDate,
           eventName,
-          eventDescription
+          eventDescription,
+          ticketPrice
 
             // ownerID
         }),
@@ -58,8 +59,9 @@ export default function Sell({ events }) {
           }
           if (data && data.token) {
             //set cookie
+            setCreateEventError("Success! Selling Ticket");
             cookie.set('token', data.token, {expires: 2});
-            Router.push('/profile');
+            Router.push('/');
           }
         });
 
@@ -74,6 +76,7 @@ export default function Sell({ events }) {
   return( 
     
     <div>
+      <br />
       <p>Sell Ticket:</p>
       Existing Events: <select value="value" onChange={handleChange}>
         <option value="" />
@@ -115,11 +118,20 @@ export default function Sell({ events }) {
             type="eventDescription"
           />
         </label>
+        <br />
+        <label htmlFor="ticketPrice">
+          Ticket Price
+          <input
+            value={ticketPrice}
+            onChange={(e) => setTicketPrice(e.target.value)}
+            name="ticketPrice"
+            type="ticketPrice"
+          />
+        </label>
 
         <br />
   
         <input type="submit" value="Submit" />
-        {/* {signupError && <p style={{color: 'red'}}>{signupError}</p>} */}
       </form>
       {setCreateEventError && <p style={{color: 'red'}}>{createEventError}</p>}
 

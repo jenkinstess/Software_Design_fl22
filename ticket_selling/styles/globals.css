@@ -1,14 +1,15 @@
 * {
-    margin: 0;
-    padding: 0;
+    margin: 10;
+    padding: 10;
     box-sizing: border-box;
+    text-align: center;
   }
-  
+
   html,body, body * { 
     font-family: 'Open Sans', sans-serif; 
     color:inherit;
     background-color:inherit;
-   font-size: 62.5%;
+   font-size: 25px;
   }
   
   li {
@@ -22,7 +23,7 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 0;
+  padding: 10;
   }
   
   button:hover,

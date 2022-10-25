@@ -3,15 +3,13 @@
 // export default function handler(req, res) {
 //   res.status(200).json(events)
 // }
-
+import { NEXT_CLIENT_SSR_ENTRY_SUFFIX } from 'next/dist/shared/lib/constants';
+import { Query } from 'pg';
 import Sequelize, { QueryTypes } from 'sequelize'
 
 const { DataTypes } = require('sequelize');
 const assert = require('assert');
-// const bcrypt = require('bcrypt');
 const v4 = require('uuid').v4;
-// const jwt = require('jsonwebtoken');
-// const jwtSecret = 'SUPERSECRETE20220';
 
 const round = 10;
 //const url = 'http://localhost:3000/';
@@ -33,28 +31,10 @@ const sequelize = new Sequelize('ticketsitedb', 'ticketgroup', 'partytixstinks',
       idle: 10000
   },
 });
-//should clear the database every week if we're doing event as primary key
-const events = sequelize.define('events', {
-  id:{
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    unsigned: true,
-    primaryKey: true,
 
-  },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  date:{
-    type: DataTypes.DATE,
-    allowNull: false
-  },
-  description: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  }
-});
+//import models
+const events = require("../../../models/events");
+//should clear the database every week if we're doing event as primary key
 
 events.sync().then(
   () => console.log("initial sync complete")
@@ -71,18 +51,6 @@ async function findEvent(eventName){
 }
 
 async function createEvent(name, date, description) {
-  // console.log("test before create hash");
-  // bcrypt.hash(password, round, async function(err, hash) {
-  //   console.log("test within create hash");
-  //   console.log(hash)
-  //   // Stores the hash in the password db
-  //   const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO users(userid, email, password) VALUES (:userid, :email, :password)',
-  //   {
-  //     replacements: {userid: v4(), email: email, password: hash},
-  //     type: QueryTypes.INSERT
-  //   });
-  // })
-  // console.log("test after create hash");
 
   const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO events(name, date, description) VALUES (:name, :date, :description)',
   {

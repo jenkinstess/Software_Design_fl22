@@ -44,7 +44,8 @@ function Home() {
             }}>
             Logout
           </button>
-          <br></br>
+          
+          <br /><br />
           <button onClick={() => Router.push('/sell')}>
             Sell Tickets!
           </button>
