@@ -110,6 +110,7 @@ export default (req, res) => {
         if(Object.keys(findEvent(eventName)).length == 0){
             try{
             createTicket(eventName, price);
+            
           }
           catch(err){
             console.log(err);

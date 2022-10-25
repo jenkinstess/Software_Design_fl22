@@ -7,14 +7,16 @@ const db = require('/config/database');
 // export const getStaticProps = async () => {
 //   // pulling events data from events-data.js file
 //   const res = await fetch('http://localhost:3000/api/events')
-//   const events = await res.json()
-
+//   const events = await res.json();
+//   console.log(events);
 //   return {
 //       props: {
 //           events,
 //       },
 //   }
 // }
+
+
 
 export default function Sell({ events }) {
   //iterate through events. parse each event object for its name. 
@@ -28,6 +30,7 @@ export default function Sell({ events }) {
     // const [ownerID, setOwnerID] = useState('');
 
   //const [venmo, setVenmo] = useState ('');
+
 
   const handleChange = (e) => {
     setEventName(e.target.value);
@@ -76,6 +79,7 @@ export default function Sell({ events }) {
               // ownerID
           }),
       })  
+      
 
   }
 

@@ -42,7 +42,7 @@ events.sync().then(
 
 async function findEvent(eventName){
   console.log("event: " + eventName);
-  const [resultFound] = await sequelize.query("SELECT * FROM events WHERE name = :name", 
+  const [resultFound] = await sequelize.query("SELECT * FROM ticketsitedb.events WHERE name = :name", 
   {
     replacements: {name: eventName},
     type: QueryTypes.SELECT
@@ -50,8 +50,29 @@ async function findEvent(eventName){
   return resultFound;
 }
 
-async function createEvent(name, date, description) {
+//only touching here - adding functionality for pulling existing events
+// async function findEvents(){
+//   const [resultFound] = await sequelize.query("SELECT name FROM ticketsitedb.events",
+//   {
+//     type: QueryTypes.SELECT
+//   });
+//   console.log("JSON DATA: " + JSON.stringify(resultFound))
+//   return JSON.stringify(resultFound);
+// }
 
+// async function handler(req, res) {
+//   try {
+//     const result = await findEvents()
+//     res.status(200).json({ result })
+//   } catch (err) {
+//     res.status(500).json({ error: 'failed to load data' })
+//   }
+// }
+// export default handler;
+
+//end here
+
+async function createEvent(name, date, description) {
   const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO events(name, date, description) VALUES (:name, :date, :description)',
   {
       replacements: {name: name, date: date, description: description},
@@ -60,20 +81,9 @@ async function createEvent(name, date, description) {
   );
 }
 
-
 // }
 export default (req, res) => {
     if (req.method === 'POST') {
-      // signup!!
-      // try{
-      //   assert.notStrictEqual(null, req.body.date, 'email required');
-      //   assert.notStrictEqual(null, req.body.passowrd, 'password required');
-      // }
-      // catch(bodyError){
-      //   res.status(403).json({error: true, message: bodyError.message});
-      // }
-    
-      // verify the email does not already exist in the system
       sequelize.authenticate().then(() => {
 
         console.log('connected to sequelize mysql server');
@@ -85,19 +95,12 @@ export default (req, res) => {
 
         try{
           findEvent(eventName);
-          //findUser(email).then(function(result){
             console.log("result of findEvent: " + JSON.stringify(findEvent(eventName)));
-          //})
-          //console.log("result of findUser: " + findUser(email));
         }catch(e){
           console.log(e);
           res.status(403).json({error: true, message: 'event exists'});
           return;
         }
-
-        // tests that email (ie. user) does not already exist in the database
-
-
 
         if(Object.keys(findEvent(eventName)).length == 0){
             try{
@@ -111,6 +114,7 @@ export default (req, res) => {
         else{
           console.log("didnt'work!!")
         }
+        
       }).catch((error) => {
         console.error ('unable to connect to the db: ', error);
       });
