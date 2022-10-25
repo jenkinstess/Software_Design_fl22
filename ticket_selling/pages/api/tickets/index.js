@@ -56,7 +56,8 @@ async function findEvent(eventName){
     replacements: {name: eventName},
     type: QueryTypes.SELECT
   });
-  return resultFound;
+  console.log("JSON DATA: " + JSON.stringify(resultFound))
+  return JSON.stringify(resultFound);
 }
 
 async function createTicket(event, price) {
