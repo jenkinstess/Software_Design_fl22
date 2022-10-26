@@ -27,10 +27,6 @@ async function findUser(){
     {
       type: QueryTypes.SELECT
     });
-    if (resultFound.length > 0){
-        let result = resultFound[0];
-        return JSON.stringify(result); //need to make sure this is the right user
-    } 
     console.log("JSON DATA: " + JSON.stringify(resultFound))
     return JSON.stringify(resultFound);
   }
