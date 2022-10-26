@@ -27,11 +27,11 @@ const event = ({ event, event_tickets }) => {
 export const getStaticProps = async (context) => {
     // get event details
     let event_id = context.params.id
-    const event_res = await fetch(`http://localhost:3000/api/events/${event_id}`)
+    const event_res = await fetch(`http://localhost:3000/api/events_buy/${event_id}`)
     const event = await event_res.json()
 
     // get tickets associated with the event
-    const tickets_res = await fetch('http://localhost:3000/api/tickets')
+    const tickets_res = await fetch('http://localhost:3000/api/tickets_hard')
     const all_tickets = await tickets_res.json()
     const event_tickets = all_tickets.filter((ticket) => ticket.event_id == event_id)
 
@@ -45,7 +45,7 @@ export const getStaticProps = async (context) => {
 
 export const getStaticPaths = async () => {
     // render other event paths 
-    const res = await fetch(`http://localhost:3000/api/events`)
+    const res = await fetch(`http://localhost:3000/api/events_buy`)
   
     const events = await res.json()
   
