@@ -69,4 +69,7 @@ export default NextAuth({
     })
   ],
   adapter,
+  pages:{
+    signIn: "../../login.js"
+  }
 })
