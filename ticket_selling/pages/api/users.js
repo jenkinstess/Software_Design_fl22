@@ -62,7 +62,18 @@ async function findUser(email){
     replacements: {email: email},
     type: QueryTypes.SELECT
   });
-  return resultFound;
+  if (resultFound){
+    if (resultFound.length > 0){
+    let result = resultFound[0];
+    return JSON.stringify(result); //need to make sure this is the right user
+    } 
+    console.log("JSON DATA: " + JSON.stringify(resultFound))
+    return JSON.stringify(resultFound);
+  }
+  else{
+    return resultFound;
+  }
+  
 }
 
 // adds the user to the users table in the database
