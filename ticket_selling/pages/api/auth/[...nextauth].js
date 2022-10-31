@@ -3,6 +3,9 @@ import SequelizeAdapter, { models } from 'next-auth-sequelize-adapter'
 import Sequelize, { DataTypes } from 'sequelize'
 import CredentialsProvider from "next-auth/providers/credentials"
 
+const jwt = require('jsonwebtoken');
+const jwtSecret = 'SUPERSECRETE20220';
+
 const users = require("../../../models/users");
 
 // https://sequelize.org/master/manual/getting-started.html#connecting-to-a-database
@@ -29,10 +32,10 @@ const adapter = SequelizeAdapter(sequelize, {
 // Calling sync() is not recommended in production
 sequelize.sync()
 
-// For more information on each option (and a full list of options) go to
-// https://next-auth.js.org/configuration/options
 export default NextAuth({
-  // https://next-auth.js.org/providers/overview
+  session:{
+    jwt: true,
+  },
   providers: [
     CredentialsProvider({
       // The name to display on the sign in form (e.g. 'Sign in with...')
@@ -42,34 +45,35 @@ export default NextAuth({
       // e.g. domain, username, password, 2FA token, etc.
       // You can pass any HTML attribute to the <input> tag through the object.
       credentials:{
-        username: { label: "Username", type: "text", placeholder: "jdoe@wustl.edu" },
+        email: { label: "Email", type: "text", placeholder: "jdoe@wustl.edu" },
         password: { label: "Password", type: "password"}
       },
-      async authorize(credentials, req) {
-        // You need to provide your own logic here that takes the credentials
-        // submitted and returns either a object representing a user or value
-        // that is false/null if the credentials are invalid.
-        // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
-        // You can also use the `req` object to obtain additional parameters
-        // (i.e., the request IP address)
-        const res = await fetch("../users", {
-          method: 'POST',
-          body: JSON.stringify(credentials),
-          headers: { "Content-Type": "application/json" }
-        })
-        const user = await res.json()
+      async authorize(credentials) {
 
-        // If no error and we have user data, return it
-        if (res.ok && user) {
-          return user
-        }
-        // Return null if user data could not be retrieved
-        return null
+        // // You need to provide your own logic here that takes the credentials
+        // // submitted and returns either a object representing a user or value
+        // // that is false/null if the credentials are invalid.
+        // // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
+        // // You can also use the `req` object to obtain additional parameters
+        // // (i.e., the request IP address)
+        // const res = await fetch("../users", {
+        //   method: 'POST',
+        //   body: JSON.stringify(credentials),
+        //   headers: { "Content-Type": "application/json" }
+        // })
+        // const user = await res.json()
+
+        // // If no error and we have user data, return it
+        // if (res.ok && user) {
+        //   return user
+        // }
+        // // Return null if user data could not be retrieved
+        // return null
       }
     })
   ],
   adapter,
   pages:{
-    signIn: "../../login.js"
+    signIn: "/login"
   }
 })
