@@ -25,28 +25,44 @@ export const getStaticProps = async() => {
 }
 
 const Sell = ({currentEvents}) =>{
-  //iterate through events. parse each event object for its name. 
-  // create an array with the names
+
   const [createEventError, setCreateEventError] = useState('');
   const [eventDate, setDate] = useState('');
   const [eventName, setEventName] = useState('');
   const [eventDescription, setEventDescription] = useState('');
   const [ticketPrice, setTicketPrice] = useState('');
+  const existingEventNames = [];
     // potentially we just need to store this in db? do we want manual entry
     // const [ownerID, setOwnerID] = useState('');
 
   //const [venmo, setVenmo] = useState ('');
   
-  let json = JSON.stringify(currentEvents)
-  /*look back here
-  // let result = JSON.parse(currentEvents)
-  // let result = JSON.parse(json)
-  // let result_json = result.result
-  // let usable_result = JSON.parse(result_json)
-  // let existingEventNames = result_json.name
-    // console.log(usable_result);
-    */
-// }
+  //iterate through events. parse each event object for its name. 
+  // create an array with the names
+  const json = JSON.stringify(currentEvents)
+  var objs = JSON.parse(json);
+  // const results = JSON.parse(json)
+  // const result_json = results.result
+  // const result_json = results.name
+  // let results_final = JSON.parse(result_json)
+  // console.log(results_final.name)
+  // console.log(objs.result[1].name)
+  for (let i = 0; i<objs.result.length; i++){
+    existingEventNames.push(objs.result[i].name)
+    console.log(objs.result[i].name)
+  }
+
+  /*example
+  // const text = '{"name":"John", "birth":"1986-12-14", "city":"New York"}';
+  // const obj = JSON.parse(text, function (key, value) {
+  //   if (key == "birth") {
+  //     return new Date(value);
+  //   } else {
+  //     return value;
+  //   }
+  // });
+  */
+  
 
   const handleChange = (e) => {
     setEventName(e.target.value);
@@ -98,15 +114,14 @@ const Sell = ({currentEvents}) =>{
       
 
   }
-  
-  
-
   // function getEvents(){
-  //   return events.map((event) => {
-  //     return <option value={event.name}>{event.name}</option>;
-  //   });
+  //   let eventsList = existingEventNames.length > 0
+	// 	&& existingEventNames.map((item, i) => {
+	// 	return (
+	// 		<option key={i}>{item}</option>
+	// 	)
+	// }, this);
   // }
-
   return( 
     
     <div>
@@ -114,8 +129,8 @@ const Sell = ({currentEvents}) =>{
       
       <p>Sell Ticket:</p>
       Existing Events: <select value="value" onChange={handleChange}>
-        <option value="" />
-        {/* {existingEventNames} */}
+        {existingEventNames.map((eventName) => (
+          <option>{eventName}</option>))}
     </select> 
 
     <br></br><br></br>
