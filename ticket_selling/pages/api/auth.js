@@ -28,49 +28,66 @@ const sequelize = new Sequelize('ticketsitedb', 'ticketgroup', 'partytixstinks',
   },
 });
 
-async function findUser(email){
+/*
+module.exports.getUserByUsername = function(username,callback){
+    var query = {where: {username: username}};
+  return  User.findOne(query).then(user => {
+                                      console.log(user.get({ plain: true })); 
+                                       return user.dataValues;
+                                       //callback(user.dataValues)     
+                                              }).finally(() => {
+                                                                console.log('done!')
+                                                                });
+                                                                 } 
+                                                                 */
+async function findUser(email, callback){
   console.log("email: " + email);
-  const [resultFound] = await users.findAll({
-    where:{
-      email : email
-    }
-  });
-  return resultFound;
+  console.log("finding user");
+  // const [resultFound] = await users.findAll({
+  //   where:{
+  //     email : email
+  //   }
+  // });
+  users.findOne({ where: {email: email}, raw: true},).then( user => {
+    
+  })
+  
+  console.log("found user");
 }
 
-async function authUser(email, password){
+async function authUser(email, password, hash, callback){
   console.log("email: " + email);
-  const [resultFound] = await users.findAll({
-    where:{
-      email : email
-    }
-  });
-  if (resultFound){
-    if (resultFound.length > 0){
-      bcrypt.compare(password, resultFound.password, function(err, result){
-        if(err){
-          console.log(err);
-          return false;
-        }
-        else if (result){
-          console.log("result of pw comparison: " + result);
-          return JSON.stringify(resultFound);
-        }
-        else{
-          console.log("result of pw comparison: " + result);
-          res.status(403).json({error: true, message: 'incorrect pw'});
-          return false;
-        }
-      })
-    }
-  }
-  else{
-    console.log("user does not exist in system");
-    res.status(403).json({error: true, message: 'email does not exist in system'});
-    return false;
-  }
-  
+  console.log("authing user");
+  // const [resultFound] = await users.findAll({
+  //   where:{
+  //     email : email 
+  //   }
+  // });
+  // if (resultFound){
+    bcrypt.compare(password, hash, callback)
+      // bcrypt.compare(password, resultFound.password, function(err, result){
+      //   if(err){
+      //     console.log(err);
+      //     return JSON.stringify(false);
+      //   }
+      //   else if (result){
+      //     console.log("result of pw comparison: " + result);
+      //     return JSON.stringify(resultFound);
+      //   }
+      //   else{
+      //     console.log("result of pw comparison: " + result);
+      //     res.status(403).json({error: true, message: 'incorrect pw'});
+      //     return JSON.stringify(false);
+      //   }
+      // })
+  // }
+  // else{
+  //   console.log("user does not exist in system");
+  //   res.status(403).json({error: true, message: 'email does not exist in system'});
+  //   return JSON.stringify(false);
+  // }
 }
+
 
 export default (req, res) => {
   if (req.method === 'POST') {
@@ -93,27 +110,74 @@ export default (req, res) => {
       console.log("data grabbed");
       console.log(password);
 
-      try{
-        authUser(email, password)
-        const token = jwt.sign(
-          {userId: "user.userId", email: "user.email"},
-          jwtSecret,
-          {
-          expiresIn: 3000, //50 minutes
-          },
-        );
-        res.status(200).json({token});
-        return authUser(email, password);
-        //findUser(email);
-        //findUser(email).then(function(result){
-         // console.log("result of findUser: " + JSON.stringify(findUser(email)));
-        //})
-        //console.log("result of findUser: " + findUser(email));
-      }catch(e){
-        console.log(e);
-        res.status(500).json({error: true, message: 'auth failed'});
-        return false;
-      }
+      const token = jwt.sign(
+        {userId: "user.userId", email: "user.email"},
+        jwtSecret,
+        {
+        expiresIn: 3000, //50 minutes
+        },
+      );
+      res.status(200).json({token});
+      // findUser(email, function(err, user){
+      //   if (err){
+      //     res.status(500).json({error: true, message: 'Error finding User'});
+      //     console.log("error finding user");
+      //     return;
+      //   }
+      //   if (!user){
+      //     res.status(404).json({error: true, message: 'User not found'});
+      //     console.log('User not found')
+      //     return;
+      //   }
+      //   else{
+      //     authUser(email, password, user.password, function(err, match){ 
+      //       if(err) {
+      //         res.status(500).json({error: true, message: 'Auth Failed'});
+      //         console.log("auth failed");
+      //       }
+      //       if(match){
+      //         console.log("auth success!")
+      //         const token = jwt.sign(
+      //           {email: user.email},
+      //           jwtSecret,
+      //           {
+      //           expiresIn: 3000, //50 minutes
+      //           },
+      //         );
+      //         res.status(200).json({token});
+      //         return;
+      //       }
+      //       else{
+      //         res.status(401).json({error: true, message: 'Auth Failed'});
+      //         return;
+      //       }
+      //     })
+      //   }
+      // })
+
+      // try{
+      //   authUser(email, password, function(err, match){ 
+      //     if(err) {
+      //       res.status(500).json({error: true, message: 'Auth Failed'});
+      //     }
+      //     if(match){
+      //       const token = jwt.sign(
+      //         {userId: "user.userId", email: "user.email"},
+      //         jwtSecret,
+      //         {
+      //         expiresIn: 3000, //50 minutes
+      //         },
+      //       );
+      //     }
+      //   })
+      //   res.status(200).json({token});
+      //   return authUser(email, password);
+
+      // }catch(e){
+      //   console.log(e);
+      //   res.status(500).json({error: true, message: 'auth failed'});
+      //   return false;
+      // }
       
     }).catch((error) => {
       console.error ('unable to connect to the db: ', error);
