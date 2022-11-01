@@ -16,9 +16,15 @@ const db = require('/config/database');
 //   }
 // }
 
+export const getStaticProps = async() => {
+  const response = await fetch('http://localhost:3000/api/events_buy')
+  const data = await response.json()
+  return {
+    props: {currentEvents: data}
+  }
+}
 
-
-export default function Sell({ events }) {
+const Sell = ({currentEvents}) =>{
   //iterate through events. parse each event object for its name. 
   // create an array with the names
   const [createEventError, setCreateEventError] = useState('');
@@ -30,7 +36,17 @@ export default function Sell({ events }) {
     // const [ownerID, setOwnerID] = useState('');
 
   //const [venmo, setVenmo] = useState ('');
-
+  
+  let json = JSON.stringify(currentEvents)
+  /*look back here
+  // let result = JSON.parse(currentEvents)
+  // let result = JSON.parse(json)
+  // let result_json = result.result
+  // let usable_result = JSON.parse(result_json)
+  // let existingEventNames = result_json.name
+    // console.log(usable_result);
+    */
+// }
 
   const handleChange = (e) => {
     setEventName(e.target.value);
@@ -82,6 +98,8 @@ export default function Sell({ events }) {
       
 
   }
+  
+  
 
   // function getEvents(){
   //   return events.map((event) => {
@@ -93,10 +111,11 @@ export default function Sell({ events }) {
     
     <div>
       <br />
+      
       <p>Sell Ticket:</p>
       Existing Events: <select value="value" onChange={handleChange}>
         <option value="" />
-        {/* {getEvents()} */}
+        {/* {existingEventNames} */}
     </select> 
 
     <br></br><br></br>
@@ -153,10 +172,12 @@ export default function Sell({ events }) {
 
     </div>
     
-
+    
     
 
     //this will prepopulate the event spot, user still has to enter their own info
   );
+  
 
 }
+export default Sell;

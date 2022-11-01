@@ -28,49 +28,32 @@ const sequelize = new Sequelize('ticketsitedb', 'ticketgroup', 'partytixstinks',
   },
 });
 
-async function findUser(email){
+
+async function findUser(email, callback){
   console.log("email: " + email);
+  console.log("finding user");
   const [resultFound] = await users.findAll({
     where:{
       email : email
     }
   });
-  return resultFound;
+  // this callback allows us to define a function in the exports statement parameterized with the result of find user
+  callback(resultFound);
+  console.log("found user");
 }
 
-async function authUser(email, password){
+//to beter understand callbacks check out
+// https://developer.mozilla.org/en-US/docs/Glossary/Callback_function
+// https://flaviocopes.com/how-to-return-result-asynchronous-function/
+
+async function authUser(email, password, hash, callback){
   console.log("email: " + email);
-  const [resultFound] = await users.findAll({
-    where:{
-      email : email
-    }
-  });
-  if (resultFound){
-    if (resultFound.length > 0){
-      bcrypt.compare(password, resultFound.password, function(err, result){
-        if(err){
-          console.log(err);
-          return false;
-        }
-        else if (result){
-          console.log("result of pw comparison: " + result);
-          return JSON.stringify(resultFound);
-        }
-        else{
-          console.log("result of pw comparison: " + result);
-          res.status(403).json({error: true, message: 'incorrect pw'});
-          return false;
-        }
-      })
-    }
-  }
-  else{
-    console.log("user does not exist in system");
-    res.status(403).json({error: true, message: 'email does not exist in system'});
-    return false;
-  }
+  console.log("authing user");
+  // compares the users password to the hashed password
+  bcrypt.compare(password, hash, callback)
   
 }
+
 
 export default (req, res) => {
   if (req.method === 'POST') {
@@ -93,27 +76,41 @@ export default (req, res) => {
       console.log("data grabbed");
       console.log(password);
 
-      try{
-        authUser(email, password)
-        const token = jwt.sign(
-          {userId: "user.userId", email: "user.email"},
-          jwtSecret,
-          {
-          expiresIn: 3000, //50 minutes
-          },
-        );
-        res.status(200).json({token});
-        return authUser(email, password);
-        //findUser(email);
-        //findUser(email).then(function(result){
-         // console.log("result of findUser: " + JSON.stringify(findUser(email)));
-        //})
-        //console.log("result of findUser: " + findUser(email));
-      }catch(e){
-        console.log(e);
-        res.status(500).json({error: true, message: 'auth failed'});
-        return false;
-      }
+      // function used in line 76 is the call back defined aboce
+      findUser(email, function(user){
+        console.log("i am testing!!")
+        // if no user object is returned, then no user was found for the associated data.
+        if (!user){
+          res.status(404).json({error: true, message: 'User not found'});
+          console.log('User not found')
+          return;
+        }
+        else{
+          // user found, now authenticating 
+          authUser(email, password, user.password, function(err, match){ 
+            if(err) {
+              res.status(500).json({error: true, message: 'Auth Failed'});
+              console.log("auth failed");
+            }
+            if(match){
+              console.log("auth success!")
+              const token = jwt.sign(
+                {email: user.email},
+                jwtSecret,
+                {
+                expiresIn: 3000, //50 minutes
+                },
+              );
+              res.status(200).json({token});
+              return;
+            }
+            else{
+              res.status(401).json({error: true, message: 'Auth Failed'});
+              return;
+            }
+          })
+        }
+      })
       
     }).catch((error) => {
       console.error ('unable to connect to the db: ', error);

@@ -1802,10 +1802,10 @@
     "core-js" "^3.8.3"
     "regenerator-runtime" "^0.13.7"
 
-"next-auth@^4", "next-auth@^4.14.0":
-  "integrity" "sha512-pD5sin6kq/uIx3Cod2/0JFnViEnngBTTNy4CdfRaYc2QzV2zwpWAbQny2Ezlg0GjEozDhKC53JJxRRE4AmNKEw=="
-  "resolved" "https://registry.npmjs.org/next-auth/-/next-auth-4.14.0.tgz"
-  "version" "4.14.0"
+"next-auth@^4", "next-auth@^4.15.0":
+  "integrity" "sha512-IasNzGLM2VlmyioDdZaRwBBBm8b5xo+zbbqVWHFh0bY6iQUZ3vuudrsdHNdxkXV3LSHdKNaoWEpYr4BydB7mCw=="
+  "resolved" "https://registry.npmjs.org/next-auth/-/next-auth-4.15.0.tgz"
+  "version" "4.15.0"
   dependencies:
     "@babel/runtime" "^7.16.3"
     "@panva/hkdf" "^1.0.1"
@@ -2693,10 +2693,10 @@
   "resolved" "https://registry.npmjs.org/sequelize-pool/-/sequelize-pool-7.1.0.tgz"
   "version" "7.1.0"
 
-"sequelize@^6.25.2", "sequelize@^6.6.5":
-  "integrity" "sha512-TDHYBDF61zVnkmYetjSj0H5CbnTiM9PZiMrbMCv1wOqh+cspekBQ0f4Y3/5PI1t0SPW40ogr+BiYpMKK9W1DUw=="
-  "resolved" "https://registry.npmjs.org/sequelize/-/sequelize-6.25.2.tgz"
-  "version" "6.25.2"
+"sequelize@^6.25.3", "sequelize@^6.6.5":
+  "integrity" "sha512-sbbvDGft6UfSRdIC0dcZvMxxJYi6g0+IgWvIpTuk6ccEoIyLcr7Sk6nXWwGfkdlDabGeunhhhI4yH8PleVMvtw=="
+  "resolved" "https://registry.npmjs.org/sequelize/-/sequelize-6.25.3.tgz"
+  "version" "6.25.3"
   dependencies:
     "@types/debug" "^4.1.7"
     "@types/validator" "^13.7.1"

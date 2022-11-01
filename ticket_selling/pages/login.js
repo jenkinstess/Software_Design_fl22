@@ -3,7 +3,8 @@ import Link from 'next/link';
 import Router from 'next/router';
 import cookie from 'js-cookie';
 import Navbar from '../components/navbar';
-import UserContext from '../components/UserContext';
+//import UserContext from '../components/UserContext';
+//import { providers, signIn, getSession, csrfToken } from "next-auth/client";
 
 const Login = () => {
   const [loginError, setLoginError] = useState('');

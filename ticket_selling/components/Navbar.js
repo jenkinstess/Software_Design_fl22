@@ -17,8 +17,10 @@ const Navbar = () => {
                     <>
                     <Link href='/login'><a><li>Log In</li></a></Link>
                     <Link href='/signup'><a><li>Sign Up</li></a></Link>
+                    <Link href='/sell'><a><li>Sell Tickets</li></a></Link>
                     <Link href='/buy'><a><li>Buy</li></a></Link>
                     <Link href='/profile'><a><li>Profile</li></a></Link>
+
                     </>
             {/* )} */}
         </nav>
