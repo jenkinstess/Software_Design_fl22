@@ -4,18 +4,6 @@ import Router from 'next/router';
 import cookie from 'js-cookie';
 const db = require('/config/database');
 
-// export const getStaticProps = async () => {
-//   // pulling events data from events-data.js file
-//   const res = await fetch('http://localhost:3000/api/events')
-//   const events = await res.json();
-//   console.log(events);
-//   return {
-//       props: {
-//           events,
-//       },
-//   }
-// }
-
 export const getStaticProps = async() => {
   const response = await fetch('http://localhost:3000/api/events_buy')
   const data = await response.json()
@@ -26,7 +14,7 @@ export const getStaticProps = async() => {
 
 const Sell = ({currentEvents}) =>{
 
-  const [createEventError, setCreateEventError] = useState('');
+  const [createEventMessage, setCreateEventMessage] = useState('');
   const [eventDate, setDate] = useState('');
   const [eventName, setEventName] = useState('');
   const [eventDescription, setEventDescription] = useState('');
@@ -41,12 +29,6 @@ const Sell = ({currentEvents}) =>{
   // create an array with the names
   const json = JSON.stringify(currentEvents)
   var objs = JSON.parse(json);
-  // const results = JSON.parse(json)
-  // const result_json = results.result
-  // const result_json = results.name
-  // let results_final = JSON.parse(result_json)
-  // console.log(results_final.name)
-  // console.log(objs.result[1].name)
   for (let i = 0; i<objs.result.length; i++){
     existingEventNames.push(objs.result[i].name)
     console.log(objs.result[i].name)
@@ -88,14 +70,13 @@ const Sell = ({currentEvents}) =>{
         .then((r) => r.json())
         .then((data) => {
           if (data && data.error) {
-            setCreateEventError("Success! Selling Ticket");
-            setCreateEventError(data.message);
+            setCreateEventMessage(data.message);
           }
           if (data && data.token) {
             //set cookie
-            setCreateEventError("Success! Selling Ticket");
+            setCreateEventMessage("Success");
             cookie.set('token', data.token, {expires: 2});
-            Router.push('/');
+            // Router.push('/');
           }
         });
       //post new event to db if it's not already there
@@ -175,9 +156,10 @@ const Sell = ({currentEvents}) =>{
         <br />
   
         <input type="submit" value="Submit" />
-      </form>
-      {setCreateEventError && <p style={{color: 'red'}}>{createEventError}</p>}
+        {createEventMessage && <p style={{color: 'red'}}>{createEventMessage}</p>}
 
+      </form>
+      
     </div>
     
     
