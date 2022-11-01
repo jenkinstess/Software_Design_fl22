@@ -114,21 +114,13 @@ const Sell = ({currentEvents}) =>{
       
 
   }
-  // function getEvents(){
-  //   let eventsList = existingEventNames.length > 0
-	// 	&& existingEventNames.map((item, i) => {
-	// 	return (
-	// 		<option key={i}>{item}</option>
-	// 	)
-	// }, this);
-  // }
   return( 
     
     <div>
       <br />
       
       <p>Sell Ticket:</p>
-      Existing Events: <select value="value" onChange={handleChange}>
+      Existing Events: <select onChange={handleChange}>
         {existingEventNames.map((eventName) => (
           <option>{eventName}</option>))}
     </select> 
