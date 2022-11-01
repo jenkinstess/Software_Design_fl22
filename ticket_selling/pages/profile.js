@@ -29,7 +29,7 @@
 
 
 //   import {fetchUsers} from '..api/pages/'
-
+import { useSession } from 'next-auth/react'
 
   export const getStaticProps = async() =>{
     const response = await fetch('http://localhost:3000/api/profile')
@@ -39,6 +39,8 @@
     }
   }
 
+
+  
   const Profile = ({ profile }) =>{
     // profile = JSON.stringify(profile)
     // console.log("On profile client side. Here's profile !!!!!!!!!!!!!!!!!!"+ JSON.stringify(profile))
