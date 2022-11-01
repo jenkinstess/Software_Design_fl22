@@ -121,6 +121,7 @@ const Sell = ({currentEvents}) =>{
       
       <p>Sell Ticket:</p>
       Existing Events: <select onChange={handleChange}>
+        <option value="" />
         {existingEventNames.map((eventName) => (
           <option>{eventName}</option>))}
     </select> 
