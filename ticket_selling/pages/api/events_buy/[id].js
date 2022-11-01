@@ -1,8 +1,9 @@
-import { events } from '../../../events-data'
+import { server } from '../../../config';
 
-export default function handler({ query: { id } }, res) {
-    // get the event with the corresponding ID 
-    const filtered_events = events.filter((event) => event.id === id)
+export default async function handler({ query: { id } }, res) {
+    const events = await fetch(`${server}/api/events_buy/`)
+    const events_res = await events.json()
+    const filtered_events = events_res.result.filter((event) => event.id.toString() === id)
 
     if (filtered_events.length > 0) {
         res.status(200).json(filtered_events[0])
