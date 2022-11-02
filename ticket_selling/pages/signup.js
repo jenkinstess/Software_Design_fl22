@@ -10,6 +10,7 @@ const Signup = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [phoneNum, setPhoneNumber] = useState('');
+    const [venmo, setVenmo] = useState('');
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
   
     function handleSubmit(e) {
@@ -22,9 +23,10 @@ const Signup = () => {
         body: JSON.stringify({
           email,
           password,
-          // firstName,
-          // lastName,
-          // phoneNum
+          firstName,
+          lastName,
+          phoneNum,
+          venmo
         }),
       })
         .then((r) => {
@@ -93,6 +95,18 @@ const Signup = () => {
           />
         </label>
 
+        <br />
+
+        <label htmlFor="venmo">
+          Venmo Username
+          <input
+            value={venmo}
+            onChange={(e) => setVenmo(e.target.value)}
+            name="venmo"
+            type="venmo"
+          />
+        </label>
+  
         <br />
   
         <label htmlFor="password">

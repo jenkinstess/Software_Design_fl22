@@ -34,6 +34,10 @@ const users = sequelize.define('users', {
   password:{
     type: DataTypes.STRING,
     allowNull: false
+  },
+  venmo:{
+    type: DataTypes.STRING,
+    allowNull: false,
   }
 });
 

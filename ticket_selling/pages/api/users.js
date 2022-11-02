@@ -43,13 +43,13 @@ users.sync().then((result) => {
 
 
 // adds the user to the users table in the database
-async function createUser(email, password, callback) {
+async function createUser(email, password, venmo, callback) {
   bcrypt.hash(password, round, async function(err, hash) {
     console.log(hash)
     // Stores the hash in the password db
-    const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO users( email, password) VALUES (:email, :password)',
+    const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO users( email, password, venmo) VALUES (:email, :password, :venmo)',
     {
-      replacements: { email: email, password: hash},
+      replacements: { email: email, password: hash, venmo: venmo},
       type: QueryTypes.INSERT
     },
     function(err, userCreated){
@@ -77,10 +77,11 @@ export default (req, res) => {
       
         const email = req.body.email;
         const password = req.body.password;
+        const venmo = req.body.venmo;
         console.log("data grabbed");
         console.log(password);
 
-        createUser(email, password, function(err, success){
+        createUser(email, password, venmo, function(err, success){
           if (err) {
             res.status(500).json({error: true, message: 'error creating user'});
             return;
