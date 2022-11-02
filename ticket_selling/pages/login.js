@@ -33,6 +33,7 @@ const Login = () => {
         }
         if (data && data.token) {
           //set cookie
+          console.log("!!!!login redirect!!!!!")
           cookie.set('token', data.token, {expires: 2});
           Router.push('/');
         }

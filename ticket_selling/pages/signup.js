@@ -22,22 +22,25 @@ const Signup = () => {
         body: JSON.stringify({
           email,
           password,
-          firstName,
-          lastName,
-          phoneNum
+          // firstName,
+          // lastName,
+          // phoneNum
         }),
       })
-        .then((r) => r.json())
+        .then((r) => {
+          return r.json();
+        })
         .then((data) => {
           if (data && data.error) {
+            console.log("!!!!error w data!!!!!")
             setSignupError(data.message);
           }
           if (data && data.token) {
+            console.log("!!!!!good data!!!!")
             //set cookie
-            cookie.set('token', data.token, {expires: 2}); // sets the cookie from the token obtained and sets its expiration for days
-            // having the cookie set, whenever additional requests are made, that cookie is sent to the server as well and then we can decrypt it and review if the user
-            //  has been properly authenticated and that the auth is valid
-            Router.push('/');
+            cookie.set('token', data.token, {expires: 2}); // sets the cookie from the token obtained and sets its expiration for days having the cookie set, whenever
+            Router.push('/');                              //   additional requests are made, that cookie is sent to the server as well and then we can decrypt it 
+                                                           //   and review if the user has been properly authenticated and that the auth is valid
           }
         });
     }

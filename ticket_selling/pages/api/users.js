@@ -86,19 +86,22 @@ export default (req, res) => {
             return;
           }
           if (success){
+            console.log("user created!");
             const token = jwt.sign(
-            {email: email},
-            jwtSecret,
-            {
-              expiresIn: 3000, // 50 minutes
-            }
-          );
-          res.status(200).json({token});
-          return;
+              {email: email},
+              jwtSecret,
+              {
+                expiresIn: 3000, // 50 minutes
+              }
+            );
+            res.status(200).json({token});
+            return;
           }
-          
+          else{
+            res.status(401).json({error: true, message: 'User not created'});
+            return;
+          }
         });
-        
       }).catch((error) => {
         console.error ('unable to connect to the db: ', error);
       });
@@ -112,6 +115,3 @@ export default (req, res) => {
       res.status(200).json({users: ['John Doe']});
     }
   };
-users.sync().then(
-    () => console.log("final sync complete")
-  );
