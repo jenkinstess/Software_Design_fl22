@@ -13,7 +13,7 @@ const Signup = () => {
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
   
     function handleSubmit(e) {
-      e.preventDefault();
+      e.preventDefault(); // tells user agent that if the event (hitting submit) does not get handled, this action (fetching) should not be taken 
       fetch('/api/users', {
         method: 'POST',
         headers: {
@@ -34,7 +34,9 @@ const Signup = () => {
           }
           if (data && data.token) {
             //set cookie
-            cookie.set('token', data.token, {expires: 2});
+            cookie.set('token', data.token, {expires: 2}); // sets the cookie from the token obtained and sets its expiration for days
+            // having the cookie set, whenever additional requests are made, that cookie is sent to the server as well and then we can decrypt it and review if the user
+            //  has been properly authenticated and that the auth is valid
             Router.push('/');
           }
         });

@@ -18,7 +18,7 @@ function Home() {
   const {data, revalidate} = useSWR('/api/me', async function(args) {
     const res = await fetch(args);
     return res.json();
-  });
+  },{refreshInterval:10});
   if (!data) return <h1>Loading...</h1>;
   let loggedIn = false;
   if (data.email) {
@@ -30,7 +30,7 @@ function Home() {
   return (
     <div>
       <Head>
-        <title>Welcome to landing page</title>
+        <title>Party Tix !</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <h1>PARTY TICKETS</h1>
@@ -40,7 +40,8 @@ function Home() {
           <button
             onClick={() => {
               cookie.remove('token');
-              revalidate();
+              Router.push("/")
+              revalidate;
             }}>
             Logout
           </button>

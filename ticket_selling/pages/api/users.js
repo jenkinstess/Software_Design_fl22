@@ -11,8 +11,6 @@ const jwt = require('jsonwebtoken');
 const jwtSecret = 'SUPERSECRETE20220';
 
 const round = 10;
-//const url = 'http://localhost:3000/';
-//const dbName = 'ticketsdb';
 
 const sequelize = new Sequelize('ticketsitedb', 'ticketgroup', 'partytixstinks',{
   host: 'ticket-site-db.cvddhqhvjcur.us-east-1.rds.amazonaws.com', 
@@ -20,7 +18,6 @@ const sequelize = new Sequelize('ticketsitedb', 'ticketgroup', 'partytixstinks',
   define:{
     timestamps: false
   },
-  // dialectModule:'mysql2',
   operatorsAliases: false,
 
   pool: {
@@ -83,60 +80,24 @@ export default (req, res) => {
         console.log("data grabbed");
         console.log(password);
 
-        //findUser(email, function(err, user){
-          // if (err) {
-          //   res.status(500).json({error: true, message: 'Error finding User'});
-          //   return;
-          // }
-          // if (!user){
-            // create user
-            createUser(email, password, function(err, success){
-              if (err) {
-                res.status(500).json({error: true, message: 'error creating user'});
-                return;
-              }
-              if (success){
-                const token = jwt.sign(
-                {email: email},
-                jwtSecret,
-                {
-                  expiresIn: 3000, // 50 minutes
-                }
-              );
-              res.status(200).json({token});
-              return;
-              }
-              
-            });
-        //   }
-        //   else{
-        //     // User exists
-        //     res.status(403).json({error: true, message: 'Email exists'});
-        //   }
-        // });
-
-        // try{
-        //   findUser(email);
-        //   //findUser(email).then(function(result){
-        //     console.log("result of findUser: " + JSON.stringify(findUser(email)));
-        //   //})
-        //   //console.log("result of findUser: " + findUser(email));
-        // }catch(e){
-        //   console.log(e);
-        //   res.status(403).json({error: true, message: 'email exists'});
-        //   return;
-        // }
-
-        // console.log("length: "+ Object.keys(findUser(email)).length)
-
-        // // adds user to users table in database
-        // try{
-        //   createUser(email, password);
-        // }
-        // catch(err){
-        //   console.log(err);
-        //   return;
-        // }
+        createUser(email, password, function(err, success){
+          if (err) {
+            res.status(500).json({error: true, message: 'error creating user'});
+            return;
+          }
+          if (success){
+            const token = jwt.sign(
+            {email: email},
+            jwtSecret,
+            {
+              expiresIn: 3000, // 50 minutes
+            }
+          );
+          res.status(200).json({token});
+          return;
+          }
+          
+        });
         
       }).catch((error) => {
         console.error ('unable to connect to the db: ', error);
