@@ -47,9 +47,6 @@ function Home() {
           </button>
           
           <br /><br />
-          <button onClick={() => Router.push('/sell')}>
-            Sell Tickets!
-          </button>
         </>
       )}
     </div>
