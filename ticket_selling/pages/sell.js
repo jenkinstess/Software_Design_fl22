@@ -198,7 +198,7 @@ const Sell = ({currentEvents}) =>{
           />
         </label>
 
-        <br />
+        {/* <br />
 
         <label htmlFor="ticketCode">
           Unique ticket code
@@ -208,7 +208,7 @@ const Sell = ({currentEvents}) =>{
             name="text"
             type="text"
           />
-        </label>
+        </label> */}
 
         <br />
   
