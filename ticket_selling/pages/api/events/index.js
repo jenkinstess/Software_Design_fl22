@@ -40,17 +40,22 @@ events.sync().then(
   () => console.log("initial sync complete")
 );
 
-async function findEvent(eventName){
-  console.log("event: " + eventName);
-  const [resultFound] = await sequelize.query("SELECT * FROM ticketsitedb.events WHERE name = :name", 
-  {
-    replacements: {name: eventName},
-    type: QueryTypes.SELECT
+async function findEvent(eventName, callback){
+  console.log("eventName Test: " + eventName);
+  console.log("finding event");
+  const [resultFound] = await events.findAll({
+    where:{
+      name : eventName
+    }
   });
-  return resultFound;
+  // this callback allows us to define a function in the exports statement parameterized with the result of find user
+  callback(resultFound);
+  console.log("found event");
 }
 
+
 async function createEvent(name, date, description) {
+  
   const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO events(name, date, description) VALUES (:name, :date, :description)',
   {
       replacements: {name: name, date: date, description: description},
@@ -71,27 +76,18 @@ export default (req, res) => {
         const eventDescription = req.body.eventDescription;
         console.log("data grabbed");
 
-        try{
-          findEvent(eventName);
-            console.log("result of findEvent: " + JSON.stringify(findEvent(eventName)));
-        }catch(e){
-          console.log(e);
-          res.status(403).json({error: true, message: 'event exists'});
-          return;
-        }
-
-        if(Object.keys(findEvent(eventName)).length == 0){
-            try{
+        findEvent(eventName, function(event){
+          if(!event){
             createEvent(eventName, eventDate, eventDescription);
+            res.status(404).json({error: false, message: 'Event Created'});
           }
-          catch(err){
-            console.log(err);
+          else{
+            res.status(401).json({error: false, message: 'Event Already Exists'});
             return;
           }
-        }
-        else{
-          console.log("didnt'work!!")
-        }
+
+
+        })
         
       }).catch((error) => {
         console.error ('unable to connect to the db: ', error);

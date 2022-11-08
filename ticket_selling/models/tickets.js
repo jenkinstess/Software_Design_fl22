@@ -25,7 +25,7 @@ const tickets = sequelize.define('tickets', {
     type: DataTypes.INTEGER,
     allowNull: false,
     primaryKey: true,
-
+    autoIncrement: true,
   },
   price: {
     type: DataTypes.INTEGER,

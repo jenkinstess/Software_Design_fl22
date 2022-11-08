@@ -45,9 +45,9 @@ const events = require("../../../models/events");
 // tickets.belongsTo(events);
 
 
-tickets.sync()
+events.sync()
 .then(() => {
-  events.sync().then(() => {
+  tickets.sync().then(() => {
     console.log("new syncing complete")
   });
 })
@@ -83,12 +83,25 @@ tickets.sync()
 // }
 
 
+async function findEventID(eventName, callback){
+  console.log("eventName Test: " + eventName);
+  console.log("finding event");
+  const [resultFound] = await events.findAll({
+    where:{
+      name : eventName
+    }
+  });
+  // this callback allows us to define a function in the exports statement parameterized with the result of find user
+  callback(resultFound);
+  console.log("LOOK HERE " + JSON.stringify(resultFound));
+}
 
-async function createTicket(event, price) {
+
+async function createTicket(event, price, eventID) {
   // console.log("WHAT IS THE CORRENT EVENTID? " + eventID);
-  const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO tickets(id_tickets, price, event) VALUES (:id_tickets, :price, :event)',
+  const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO tickets(price, event, event_id) VALUES (:price, :event, :event_id)',
   {
-      replacements: {id_tickets: v4(), price: price, event: event},
+      replacements: { price: price, event: event, event_id: eventID},
       type: QueryTypes.INSERT
     }
   );
@@ -107,8 +120,17 @@ export default (req, res) => {
         const eventName = req.body.eventName;
         const price = req.body.ticketPrice;
         console.log("data grabbed");
-
-        createTicket(eventName, price);
+        findEventID(eventName, function(eventInfo){
+          if(!eventInfo){
+            res.status(404).json({error: true, message: 'Event not found'});
+            console.log('event not found')
+            return;
+          }
+          else{
+            createTicket(eventName, price, eventInfo.id);
+          }
+        })
+        
 
 
         // // tests that email (ie. user) does not already exist in the database
