@@ -4,10 +4,11 @@ import preprocessImage from './preprocess';
 import Link from 'next/link';
 import Router from 'next/router';
 import cookie from 'js-cookie';
+import { server } from '../config';
 const db = require('/config/database');
 
 export const getStaticProps = async() => {
-  const response = await fetch('http://localhost:3000/api/events_buy')
+  const response = await fetch(`${server}/api/events_buy`)
   const data = await response.json()
   return {
     props: {currentEvents: data}
@@ -161,6 +162,7 @@ const Sell = ({currentEvents}) =>{
             onChange={(e) => setDate(e.target.value)}
             name="eventDate"
             type="date"
+            required
           />
         </label>
   
@@ -173,6 +175,7 @@ const Sell = ({currentEvents}) =>{
             onChange={(e) => setEventName(e.target.value)}
             name="eventName"
             type="eventName"
+            required
           />
         </label>
 
@@ -195,6 +198,7 @@ const Sell = ({currentEvents}) =>{
             onChange={(e) => setTicketPrice(e.target.value)}
             name="ticketPrice"
             type="ticketPrice"
+            required
           />
         </label>
 
