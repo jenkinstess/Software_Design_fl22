@@ -97,21 +97,21 @@ export default (req, res) => {
         //   return;
         // }
 
-        // tests that email (ie. user) does not already exist in the database
-        findTicketPrices(eventName, function(coolEvent){
-          console.log("test!!!");
+        // // tests that email (ie. user) does not already exist in the database
+        // findTicketPrices(eventName, function(coolEvent){
+        //   console.log("test!!!");
 
-          if (!coolEvent) {
-            res.status(404).json({error: true, message: 'Tickets not found'});
-            console.log('cool event not found')
-            return;
-          }
-          else{
-            console.log(coolEvent)
-            res.status(200).json({coolEvent})
-            return;
-          }
-        })
+        //   if (!coolEvent) {
+        //     res.status(404).json({error: true, message: 'Tickets not found'});
+        //     console.log('cool event not found')
+        //     return;
+        //   }
+        //   else{
+        //     console.log(coolEvent)
+        //     res.status(200).json({coolEvent})
+        //     return;
+        //   }
+        // })
 
 
         if(Object.keys(findEvent(eventName)).length == 0){

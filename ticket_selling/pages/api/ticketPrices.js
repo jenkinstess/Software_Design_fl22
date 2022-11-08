@@ -2,15 +2,6 @@ import { NEXT_CLIENT_SSR_ENTRY_SUFFIX } from 'next/dist/shared/lib/constants';
 import { Query } from 'pg';
 import Sequelize, { QueryTypes } from 'sequelize'
 
-const { DataTypes } = require('sequelize');
-const assert = require('assert');
-const bcrypt = require('bcrypt');
-const v4 = require('uuid').v4;
-const jwt = require('jsonwebtoken');
-const jwtSecret = 'SUPERSECRETE20220';
-
-const round = 10;
-
 const sequelize = new Sequelize('ticketsitedb', 'ticketgroup', 'partytixstinks',{
   host: 'ticket-site-db.cvddhqhvjcur.us-east-1.rds.amazonaws.com', 
   dialect: 'mysql',
@@ -27,7 +18,7 @@ const sequelize = new Sequelize('ticketsitedb', 'ticketgroup', 'partytixstinks',
       idle: 10000
   },
 });
-
+// const { QueryTypes } = require('sequelize');
 //import models
 const tickets = require("../../models/tickets");
 //should clear the database every week if we're doing event as primary key
@@ -72,13 +63,10 @@ export default (req, res) => {
           }
         })
       }).catch((error) => {
-        console.error ('unable to connect to the db: ', error);
+        console.error ('HERE!!!! unable to connect to the db: ', error);
       });
-      events.sync().then(
+      tickets.sync().then(
         () => console.log("final sync complete")
       );
     }
   };
-tickets.sync().then(
-    () => console.log("final sync complete")
-  );
