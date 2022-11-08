@@ -34,6 +34,18 @@ const tickets = sequelize.define('tickets', {
   event:{
     type: DataTypes.STRING,
     allowNull: false
+  },
+  userUserid:{
+    type: DataTypes.STRING,
+  },
+
+  event_id:{
+    type: DataTypes.INTEGER,
+    allowNul: false,
+    references: {
+      model: 'events',
+      key: 'id'
+    }
   }
 });
 

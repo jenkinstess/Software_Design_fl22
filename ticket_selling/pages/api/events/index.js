@@ -14,7 +14,7 @@ const v4 = require('uuid').v4;
 const round = 10;
 //const url = 'http://localhost:3000/';
 //const dbName = 'ticketsdb';
-
+//make eventName not unique key, but just make it so you cant add new
 const sequelize = new Sequelize('ticketsitedb', 'ticketgroup', 'partytixstinks',{
   host: 'ticket-site-db.cvddhqhvjcur.us-east-1.rds.amazonaws.com', 
   dialect: 'mysql',
