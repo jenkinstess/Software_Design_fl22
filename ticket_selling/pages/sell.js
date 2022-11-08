@@ -64,7 +64,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
   //   console.log("TESTING HERE!!!" + objs2.result[i])
   // }
 
-  
+
 
   const handleChange = (e) => {
     // setDate(e.target.value);
@@ -183,6 +183,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
 
     <br></br><br></br>
     <form onSubmit={handleSubmit}>
+          
         <label htmlFor="date">
           Ticket Date
           <input
