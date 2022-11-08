@@ -1,4 +1,6 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
+import Tesseract from 'tesseract.js';
+import preprocessImage from './preprocess';
 import Link from 'next/link';
 import Router from 'next/router';
 import cookie from 'js-cookie';
@@ -20,6 +22,11 @@ const Sell = ({currentEvents}) =>{
   const [eventDescription, setEventDescription] = useState('');
   const [ticketPrice, setTicketPrice] = useState('');
   const existingEventNames = [];
+
+  const [image, setImage] = useState('');
+  const [text, setText] = useState('');
+  const canvasRef = useRef(null);
+  const imageRef = useRef(null);
     // potentially we just need to store this in db? do we want manual entry
     // const [ownerID, setOwnerID] = useState('');
 
@@ -52,6 +59,9 @@ const Sell = ({currentEvents}) =>{
     // setEventDescription(e.target.value);
   };
 
+  const handleOTHERChange = (event) => {
+    setImage(URL.createObjectURL(event.target.files[0]))
+  }
 
   function handleSubmit(e) {
       e.preventDefault();
@@ -92,9 +102,44 @@ const Sell = ({currentEvents}) =>{
               // ownerID
           }),
       })  
-      
-
   }
+
+  const handleClick = () => {
+
+    console.log("handling this click !");
+    
+    const canvas = canvasRef.current;
+    canvas.width = imageRef.current.width;
+    canvas.height = imageRef.current.height;
+    const ctx = canvas.getContext('2d');
+
+    ctx.drawImage(imageRef.current, 0, 0);
+    ctx.putImageData(preprocessImage(canvas),0,0);
+    const dataUrl = canvas.toDataURL("image/jpeg");
+  
+    Tesseract.recognize(
+      dataUrl,'eng',
+      { 
+        logger: m => console.log(m) 
+      }
+    )
+    .catch (err => {
+      console.log("error here");
+      console.error(err);
+    })
+    .then(result => {
+      console.log("getting the result");
+      // Get Confidence score
+      let confidence = result.confidence
+      // Get full output
+      let text = result.text
+      console.log(text)
+  
+      setText(text);
+      // setPin(patterns);
+    })
+  }
+
   return( 
     
     <div>
@@ -154,12 +199,45 @@ const Sell = ({currentEvents}) =>{
         </label>
 
         <br />
+
+        <label htmlFor="ticketCode">
+          Unique ticket code
+          <input
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            name="text"
+            type="text"
+          />
+        </label>
+
+        <br />
   
         <input type="submit" value="Submit" />
         {createEventMessage && <p style={{color: 'red'}}>{createEventMessage}</p>}
 
       </form>
-      
+
+      <br />
+
+      <div className="App">
+      <main className="App-main">
+        <h3>Actual image uploaded</h3>
+        <img 
+           src={image} className="App-logo" alt="logo"
+           ref={imageRef} 
+           />
+        <h3>Canvas</h3>
+        <canvas ref={canvasRef} width={700} height={300}></canvas>
+          <h3>Extracted text</h3>
+          {text}
+        <div className="pin-box">
+          <p> {text} </p>
+        </div>
+        <input type="file" onChange={handleOTHERChange} />
+        <button onClick={handleClick} style={{height:50}}>Convert to text</button>
+      </main>
+    </div>
+
     </div>
     
     
