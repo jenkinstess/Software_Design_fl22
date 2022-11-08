@@ -38,50 +38,12 @@ const tickets = require("../../../models/tickets");
 const events = require("../../../models/events");
 //should clear the database every week if we're doing event as primary key
 
-// events.hasMany(tickets, {
-//   foreignKey: 'event_id',
-//   as: 'new_event_id'
-// });
-// tickets.belongsTo(events);
-
-
 events.sync()
 .then(() => {
   tickets.sync().then(() => {
     console.log("new syncing complete")
   });
 })
-
-
-//flip events and tickets
-
-
-// events.sync({force:true}).then(
-//   () => console.log("initial sync complete")
-// );
-// tickets.sync({force:true}).then(
-//   () => console.log("initial sync complete")
-// );
-
-
-
-
-//this is to find the eventID to use as the foreign key
-// async function findEvent(eventName){
-//   console.log("event: " + eventName);
-//   //https://sebhastian.com/sequelize-where/
-//   // const [resultFound] = await Event.findAll({
-//   //   where: {name: eventName}
-//   // })
-//   const eventID = await sequelize.query("SELECT id FROM events WHERE name = :name", 
-//   {
-//     replacements: {name: eventName},
-//     type: QueryTypes.SELECT
-//   });
-//   console.log("LOOK HERE " + JSON.stringify(eventID))
-//   return JSON.stringify(eventID);
-// }
-
 
 async function findEventID(eventName, callback){
   console.log("eventName Test: " + eventName);
@@ -98,7 +60,6 @@ async function findEventID(eventName, callback){
 
 
 async function createTicket(event, price, eventID) {
-  // console.log("WHAT IS THE CORRENT EVENTID? " + eventID);
   const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO tickets(price, event, event_id) VALUES (:price, :event, :event_id)',
   {
       replacements: { price: price, event: event, event_id: eventID},
@@ -107,8 +68,6 @@ async function createTicket(event, price, eventID) {
   );
 }
 
-
-// }
 export default (req, res) => {
     if (req.method === 'POST') {
     
@@ -128,42 +87,9 @@ export default (req, res) => {
           }
           else{
             createTicket(eventName, price, eventInfo.id);
+            res.status(404).json({error: false, message: 'Ticket on Market!'});
           }
         })
-        
-
-
-        // // tests that email (ie. user) does not already exist in the database
-        // findTicketPrices(eventName, function(coolEvent){
-        //   console.log("test!!!");
-
-        //   if (!coolEvent) {
-        //     res.status(404).json({error: true, message: 'Tickets not found'});
-        //     console.log('cool event not found')
-        //     return;
-        //   }
-        //   else{
-        //     console.log(coolEvent)
-        //     res.status(200).json({coolEvent})
-        //     return;
-        //   }
-        // })
-
-        
-        // if(Object.keys(findEvent(eventName)).length == 0){
-        //     try{
-        //     createTicket(eventName, price);
-            
-        //   }
-        //   catch(err){
-        //     console.log(err);
-        //     console.log("test here");
-        //     return;
-        //   }
-        // }
-        // else{
-        //   console.log("didnt'work!!")
-        // }
       }).catch((error) => {
         console.error ('unable to connect to the db: ', error);
       });
