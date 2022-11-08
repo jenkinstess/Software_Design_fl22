@@ -9,19 +9,24 @@ const db = require('/config/database');
 
 export const getStaticProps = async() => {
   const response = await fetch(`${server}/api/events_buy`)
+  const response2 = await fetch(`${server}/api/ticketPrices`)
   const data = await response.json()
+  const data2 = await response2.json()
+  // const response2 = await fetch(`${server}/api/ticketPrices`)
+  // const data2 = await response2.json()
   return {
-    props: {currentEvents: data}
+    props: {currentEvents: data, existingTickets: data2}
   }
 }
 
-const Sell = ({currentEvents}) =>{
+const Sell = ({currentEvents, existingTickets}) =>{
 
   const [createEventMessage, setCreateEventMessage] = useState('');
   const [eventDate, setDate] = useState('');
   const [eventName, setEventName] = useState('');
   const [eventDescription, setEventDescription] = useState('');
   const [ticketPrice, setTicketPrice] = useState('');
+  //const eventData = new Map();
   const existingEventNames = [];
 
   const [image, setImage] = useState('');
@@ -29,35 +34,40 @@ const Sell = ({currentEvents}) =>{
   const canvasRef = useRef(null);
   const imageRef = useRef(null);
     // potentially we just need to store this in db? do we want manual entry
-    // const [ownerID, setOwnerID] = useState('');
-
-  //const [venmo, setVenmo] = useState ('');
   
   //iterate through events. parse each event object for its name. 
   // create an array with the names
   const json = JSON.stringify(currentEvents)
   var objs = JSON.parse(json);
   for (let i = 0; i<objs.result.length; i++){
+    //come back to this to also populate date
+    //eventData.set(objs.result[i].name, objs.result[i].date)
     existingEventNames.push(objs.result[i].name)
-    console.log(objs.result[i].name)
   }
 
-  /*example
-  // const text = '{"name":"John", "birth":"1986-12-14", "city":"New York"}';
-  // const obj = JSON.parse(text, function (key, value) {
-  //   if (key == "birth") {
-  //     return new Date(value);
-  //   } else {
-  //     return value;
-  //   }
-  // });
-  */
-  
+  //getting ticket prices
+  const ticketJson = JSON.stringify(existingTickets)
+  var objs2 = JSON.parse(ticketJson);
+  for (let i = 0; i<objs2.result.length; i++){
+    //come back to this to also populate date
+    //eventData.set(objs.result[i].name, objs.result[i].date)
+    console.log("TESTING HERE!!!" + objs2.result[i])
+  }
 
   const handleChange = (e) => {
-    setEventName(e.target.value);
     // setDate(e.target.value);
     // setEventDescription(e.target.value);
+    e.preventDefault();
+    setEventName(e.target.value);
+    fetch('/api/tickets', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        eventName
+      }),
+    })
   };
 
   const handleOTHERChange = (event) => {

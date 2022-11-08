@@ -50,28 +50,6 @@ async function findEvent(eventName){
   return resultFound;
 }
 
-//only touching here - adding functionality for pulling existing events
-// async function findEvents(){
-//   const [resultFound] = await sequelize.query("SELECT name FROM ticketsitedb.events",
-//   {
-//     type: QueryTypes.SELECT
-//   });
-//   console.log("JSON DATA: " + JSON.stringify(resultFound))
-//   return JSON.stringify(resultFound);
-// }
-
-// async function handler(req, res) {
-//   try {
-//     const result = await findEvents()
-//     res.status(200).json({ result })
-//   } catch (err) {
-//     res.status(500).json({ error: 'failed to load data' })
-//   }
-// }
-// export default handler;
-
-//end here
-
 async function createEvent(name, date, description) {
   const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO events(name, date, description) VALUES (:name, :date, :description)',
   {

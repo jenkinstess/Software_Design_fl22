@@ -60,6 +60,8 @@ async function findEvent(eventName){
   return JSON.stringify(resultFound);
 }
 
+
+
 async function createTicket(event, price) {
   const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO tickets(id_tickets, price, event) VALUES (:id_tickets, :price, :event)',
   {
@@ -73,14 +75,6 @@ async function createTicket(event, price) {
 // }
 export default (req, res) => {
     if (req.method === 'POST') {
-      // signup!!
-      // try{
-      //   assert.notStrictEqual(null, req.body.date, 'email required');
-      //   assert.notStrictEqual(null, req.body.passowrd, 'password required');
-      // }
-      // catch(bodyError){
-      //   res.status(403).json({error: true, message: bodyError.message});
-      // }
     
       // verify the email does not already exist in the system
       sequelize.authenticate().then(() => {
@@ -104,7 +98,20 @@ export default (req, res) => {
         // }
 
         // tests that email (ie. user) does not already exist in the database
+        findTicketPrices(eventName, function(coolEvent){
+          console.log("test!!!");
 
+          if (!coolEvent) {
+            res.status(404).json({error: true, message: 'Tickets not found'});
+            console.log('cool event not found')
+            return;
+          }
+          else{
+            console.log(coolEvent)
+            res.status(200).json({coolEvent})
+            return;
+          }
+        })
 
 
         if(Object.keys(findEvent(eventName)).length == 0){
@@ -129,6 +136,10 @@ export default (req, res) => {
       );
     }
   };
+  
 events.sync().then(
     () => console.log("final sync complete")
   );
+tickets.sync().then(
+  () => console.log("final sync complete")
+);
