@@ -58,6 +58,11 @@ async function findEventID(eventName, callback){
   console.log("LOOK HERE " + JSON.stringify(resultFound));
 }
 
+// //updatenumticket(int) {
+//   insert into eventsdb where eventid=eventID values (int)
+//    ++ counter
+// }
+
 
 async function createTicket(event, price, eventID) {
   const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO tickets(price, event, event_id) VALUES (:price, :event, :event_id)',
@@ -66,6 +71,7 @@ async function createTicket(event, price, eventID) {
       type: QueryTypes.INSERT
     }
   );
+  //updatenum
 }
 
 export default (req, res) => {

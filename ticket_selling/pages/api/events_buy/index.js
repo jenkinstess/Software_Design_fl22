@@ -36,3 +36,4 @@ async function getEvents(){
     }
   }
   
+// after confirm page, decrement counter associated with the eventid
