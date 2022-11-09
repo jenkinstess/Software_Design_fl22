@@ -81,7 +81,7 @@ export default (req, res) => {
         console.log("data grabbed");
         findEventID(eventName, function(eventInfo){
           if(!eventInfo){
-            res.status(404).json({error: true, message: 'Event not found'});
+            //res.status(404).json({error: true, message: 'Event not found'});
             console.log('event not found')
             return;
           }
