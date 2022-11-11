@@ -226,7 +226,9 @@ const Sell = ({currentEvents, existingTickets}) =>{
             value={ticketPrice}
             onChange={(e) => setTicketPrice(e.target.value)}
             name="ticketPrice"
-            type="ticketPrice"
+            type="number" //setting type to number restricts input to be a number
+            // depending on the browser being used this will either be checked while typing or 
+            //   upon submission. e is accepted due to e representing an integer (ie. 13e3 = 13*10^3)
             required
           />
         </label>

@@ -56,6 +56,8 @@ const Signup = () => {
             onChange={(e) => setEmail(e.target.value)}
             name="email"
             type="email"
+            required placeholder="johnDoe@gmail.com"
+            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
           />
         </label>
   
@@ -68,6 +70,7 @@ const Signup = () => {
             onChange={(e) => setFirstName(e.target.value)}
             name="firstName"
             type="firstName"
+            required placeholder="John"
           />
         </label>
 
@@ -80,6 +83,7 @@ const Signup = () => {
             onChange={(e) => setLastName(e.target.value)}
             name="lastName"
             type="lastName"
+            required placeholder="Doe"
           />
         </label>
 
@@ -92,6 +96,8 @@ const Signup = () => {
             onChange={(e) => setPhoneNumber(e.target.value)}
             name="phoneNum"
             type="phoneNum"
+            required placeholder="xxx xxx xxxx"
+            pattern="[0-9]{10}"
           />
         </label>
 
@@ -104,6 +110,7 @@ const Signup = () => {
             onChange={(e) => setVenmo(e.target.value)}
             name="venmo"
             type="venmo"
+            required placeholder="John_Doe"
           />
         </label>
   
