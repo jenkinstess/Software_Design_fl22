@@ -30,7 +30,7 @@ function Home() {
   return (
     <div>
       <Head>
-        <title>Party Tix !</title>
+        <title>Welcome to WashU Party Tix!</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <h1>PARTY TICKETS</h1>
