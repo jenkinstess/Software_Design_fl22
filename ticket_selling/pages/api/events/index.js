@@ -6,11 +6,14 @@
 import { NEXT_CLIENT_SSR_ENTRY_SUFFIX } from 'next/dist/shared/lib/constants';
 import { Query } from 'pg';
 import Sequelize, { QueryTypes } from 'sequelize'
+import React, {useState, useRef} from 'react';
 
 const { DataTypes } = require('sequelize');
 const assert = require('assert');
 const v4 = require('uuid').v4;
+const [numTickets, setNumTickets] = useState('');
 
+//have to pull the current counter value and then add one
 const round = 10;
 //const url = 'http://localhost:3000/';
 //const dbName = 'ticketsdb';
@@ -56,7 +59,7 @@ async function findEvent(eventName, callback){
 
 async function createEvent(name, date, description) {
   
-  const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO events(name, date, description) VALUES (:name, :date, :description)',
+  const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO events(name, date, description, num) VALUES (:name, :date, :description)',
   {
       replacements: {name: name, date: date, description: description},
       type: QueryTypes.INSERT
@@ -80,8 +83,13 @@ export default (req, res) => {
           if(!event){
             createEvent(eventName, eventDate, eventDescription);
             res.status(404).json({error: false, message: 'Event Created'});
+            //add one to counter after pulling the existing counter
           }
           else{
+            
+            setNumTickets(event.numTickets)
+            console.log("TESTING RIGHT HERE INA: " + numTickets)
+            //have to make numTickets global variable 
             res.status(401).json({error: false, message: 'Event Already Exists'});
             return;
           }

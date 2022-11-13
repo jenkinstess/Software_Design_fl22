@@ -39,6 +39,10 @@ const events = sequelize.define('events', {
   description: {
     type: DataTypes.TEXT,
     allowNull: true,
+  },
+  numTickets:{
+    type: DataTypes.INTEGER,
+    allowNull: false
   }
 });
 

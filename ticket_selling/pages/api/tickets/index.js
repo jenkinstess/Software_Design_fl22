@@ -14,6 +14,13 @@ const v4 = require('uuid').v4;
 const jwt = require('jsonwebtoken');
 const jwtSecret = 'SUPERSECRETE20220';
 
+module.exports = {
+  env: {
+    ticketAdded: false,
+  },
+}
+
+
 const round = 10;
 
 const sequelize = new Sequelize('ticketsitedb', 'ticketgroup', 'partytixstinks',{
@@ -93,6 +100,7 @@ export default (req, res) => {
           }
           else{
             createTicket(eventName, price, eventInfo.id);
+            ticketAdded = true;
             res.status(404).json({error: false, message: 'Ticket on Market!'});
           }
         })
