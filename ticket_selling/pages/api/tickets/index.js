@@ -14,12 +14,6 @@ const v4 = require('uuid').v4;
 const jwt = require('jsonwebtoken');
 const jwtSecret = 'SUPERSECRETE20220';
 
-module.exports = {
-  env: {
-    ticketAdded: false,
-  },
-}
-
 
 const round = 10;
 
@@ -65,6 +59,10 @@ async function findEventID(eventName, callback){
   console.log("LOOK HERE " + JSON.stringify(resultFound));
 }
 
+
+//COME BACK TO HERE!!!!
+// async function addNumTicketToEvents();
+
 // //updatenumticket(int) {
 //   insert into eventsdb where eventid=eventID values (int)
 //    ++ counter
@@ -100,7 +98,6 @@ export default (req, res) => {
           }
           else{
             createTicket(eventName, price, eventInfo.id);
-            ticketAdded = true;
             res.status(404).json({error: false, message: 'Ticket on Market!'});
           }
         })
