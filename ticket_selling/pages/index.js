@@ -30,10 +30,10 @@ function Home() {
   return (
     <div>
       <Head>
-        <title>Welcome to WashU Party Tix!</title>
+        <title>WashU Party Tix!</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <h1>PARTY TICKETS</h1>
+      <h1>WashU Party Tix</h1>
       {loggedIn && (
         <>
           <p>Welcome {data.email}!</p>
