@@ -61,7 +61,7 @@ async function createEvent(name, date, description) {
   
   const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO events(name, date, description, numTickets) VALUES (:name, :date, :description, :numTickets)',
   {
-      replacements: {name: name, date: date, description: description, numTickets: 1},
+      replacements: {name: name, date: date, description: description, numTickets: 0},
       type: QueryTypes.INSERT
     }
   );

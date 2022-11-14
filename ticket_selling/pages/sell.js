@@ -92,8 +92,40 @@ const Sell = ({currentEvents, existingTickets}) =>{
     setImage(URL.createObjectURL(event.target.files[0]))
   }
 
+  // function getEvents(){
+  //   return fetch('/api/events', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //   body: JSON.stringify({
+  //       eventDate,
+  //       eventName,
+  //       eventDescription,
+  //         // ownerID
+  //     }),
+  // }) .then((response) => response.json())
+  // };
+
+  // function getTickets(){
+  //   return fetch('/api/tickets', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //   body: JSON.stringify({
+  //       eventName,
+  //       eventDescription,
+  //       ticketPrice
+  //         // ownerID
+  //     }),
+  //   }).then((response) => response.json())
+  // };
+
+
   function handleSubmit(e) {
       e.preventDefault();
+
       fetch('/api/events', {
         method: 'POST',
         headers: {
@@ -106,7 +138,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
             // ownerID
         }),
     }) 
-      fetch('/api/tickets', {
+    .then(() => {fetch('/api/tickets', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -117,8 +149,8 @@ const Sell = ({currentEvents, existingTickets}) =>{
           ticketPrice
             // ownerID
         }),
-      })
-        .then((r) => r.json())
+      })})
+        // .then((r) => r.json())
         .then((data) => {
           if (data && data.error) {
             setCreateEventMessage(data.message);
