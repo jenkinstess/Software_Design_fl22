@@ -11,7 +11,7 @@ import React, {useState, useRef} from 'react';
 const { DataTypes } = require('sequelize');
 const assert = require('assert');
 const v4 = require('uuid').v4;
-const [numTickets, setNumTickets] = useState('');
+// const [numTickets, setNumTickets] = useState('');
 
 //have to pull the current counter value and then add one
 const round = 10;
@@ -59,9 +59,9 @@ async function findEvent(eventName, callback){
 
 async function createEvent(name, date, description) {
   
-  const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO events(name, date, description, num) VALUES (:name, :date, :description)',
+  const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO events(name, date, description, numTickets) VALUES (:name, :date, :description, :numTickets)',
   {
-      replacements: {name: name, date: date, description: description},
+      replacements: {name: name, date: date, description: description, numTickets: 0},
       type: QueryTypes.INSERT
     }
   );
@@ -87,8 +87,8 @@ export default (req, res) => {
           }
           else{
             
-            setNumTickets(event.numTickets)
-            console.log("TESTING RIGHT HERE INA: " + numTickets)
+            // setNumTickets(event.numTickets)
+            // console.log("TESTING RIGHT HERE INA: " + numTickets)
             //have to make numTickets global variable 
             res.status(401).json({error: false, message: 'Event Already Exists'});
             return;
