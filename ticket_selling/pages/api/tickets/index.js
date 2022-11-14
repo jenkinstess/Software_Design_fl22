@@ -46,6 +46,10 @@ events.sync()
   });
 })
 
+tickets.sync().then(() => {
+  console.log("new syncing complete")
+});
+
 async function findEventID(eventName, callback){
   console.log("eventName Test: " + eventName);
   console.log("finding event");
@@ -78,10 +82,10 @@ async function addNumTicketToEvents(eventID, currentNumTickets){
   
 }
 
-async function createTicket(event, price, eventID) {
-  const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO tickets(price, event, event_id) VALUES (:price, :event, :event_id)',
+async function createTicket(event, price, eventID, specID) {
+  const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO tickets(price, event, event_id, specific_id) VALUES (:price, :event, :event_id, :specific_id)',
   {
-      replacements: { price: price, event: event, event_id: eventID},
+      replacements: { price: price, event: event, event_id: eventID, specific_id: specID},
       type: QueryTypes.INSERT
     }
   );
@@ -98,6 +102,7 @@ export default (req, res) => {
  
         const eventName = req.body.eventName;
         const price = req.body.ticketPrice;
+        const specificID = req.body.numResult;
         console.log("data grabbed");
         findEventID(eventName, function(eventInfo){
           if(!eventInfo){
@@ -106,7 +111,7 @@ export default (req, res) => {
             return;
           }
           else{
-            createTicket(eventName, price, eventInfo.id);
+            createTicket(eventName, price, eventInfo.id, specificID);
             //fetch event numTickets
             //add one to that
             console.log("INA IS TESTING RIGHT HERE: " + eventInfo.numTickets);
