@@ -102,7 +102,9 @@ export default (req, res) => {
  
         const eventName = req.body.eventName;
         const price = req.body.ticketPrice;
-        const specificID = req.body.numResult;
+        const specificID = req.body.text;
+        console.log("data passed: "+ req.body);
+        console.log("SEE IF THERE IS A VALUE HERE: " + specificID);
         console.log("data grabbed");
         findEventID(eventName, function(eventInfo){
           if(!eventInfo){

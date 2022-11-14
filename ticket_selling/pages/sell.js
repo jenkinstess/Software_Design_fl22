@@ -27,8 +27,7 @@ export const getStaticProps = async() => {
 // }
 */
 
-// const Sell = ({currentEvents, existingTickets}) =>{
-const Sell = ({currentEvents}) =>{
+const Sell = ({currentEvents, existingTickets}) =>{
 
   const [createEventMessage, setCreateEventMessage] = useState('');
   const [eventDate, setDate] = useState('');
@@ -72,8 +71,6 @@ const Sell = ({currentEvents}) =>{
     // setEventDescription(e.target.value);
     e.preventDefault();
     setEventName(e.target.value);
-
-
     //GET BACK TO THIS
     // console.log('EVENT NAME RIGHT NOW IS +' + eventName)
     // fetch('/api/ticketPrices', {
@@ -92,35 +89,37 @@ const Sell = ({currentEvents}) =>{
   const handleOTHERChange = (event) => {
     console.log(event.target.files[0]);
     setImage(URL.createObjectURL(event.target.files[0]))
+    //handleClick(event);
+    
   }
 
   function handleSubmit(e) {
       e.preventDefault();
       console.log("handling this click !");
 
-      Tesseract.recognize(
-        image,'eng',
-        { 
-          logger: m => console.log(m) 
-        }
-      )
-      .catch (err => {
-        console.log("error here");
-        console.error(err);
-      })
-      .then(result => {
-        console.log("getting the result");
-        console.log("result is: " + JSON.stringify(result));
-        console.log("text is: " + result.data.text);
-        let numResult = (result.data.text).replaceAll(/[^0-9]/gi, '');
-        console.log("text w only numbers is " + numResult);
+      // Tesseract.recognize(
+      //   image,'eng',
+      //   { 
+      //     logger: m => console.log(m) 
+      //   }
+      // )
+      // .catch (err => {
+      //   console.log("error here");
+      //   console.error(err);
+      // })
+      // .then(result => {
+      //   console.log("getting the result");
+      //   console.log("result is: " + JSON.stringify(result));
+      //   console.log("text is: " + result.data.text);
+      //   let numResult = (result.data.text).replaceAll(/[^0-9]/gi, '');
+      //   console.log("text w only numbers is " + numResult);
 
-        // Get full output
-        let text = numResult;
-        console.log(text)
+      //   // Get full output
+      //   let text = numResult;
+      //   console.log(text)
     
-        setText(text);
-      })
+      //   setText(text);
+      // })
 
       fetch('/api/events', {
         method: 'POST',
@@ -282,15 +281,7 @@ const Sell = ({currentEvents}) =>{
         </label> */}
 
         <br />
-  
-        <input type="submit" value="Submit" />
-        {createEventMessage && <p style={{color: 'red'}}>{createEventMessage}</p>}
-
-      </form>
-
-      <br />
-
-      <div className="App">
+        <div className="App">
       <main className="App-main">
         <h3>Upload Ticket in PNG or JPG format</h3>
         <img 
@@ -305,9 +296,19 @@ const Sell = ({currentEvents}) =>{
           <p> {text} </p>
         </div>
         <input type="file" onChange={handleOTHERChange} />
-        <button onClick={handleClick} style={{height:50}}> convert to text</button>
+        <br/>
+        <button onClick={handleClick}> Grab Unique ID from Ticket</button>
       </main>
-    </div>
+      </div>
+      <br/>
+  
+        <input type="submit" value="Submit" />
+        {createEventMessage && <p style={{color: 'red'}}>{createEventMessage}</p>}
+
+      </form>
+
+      <br />
+
 
     </div>
     

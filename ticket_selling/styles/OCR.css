@@ -24,3 +24,9 @@
     border-radius: 5px;
     text-align: center;
   }
+  .App-main button{
+    color: red;
+    outline-style: auto;
+    background-color: rgb(227, 152, 152);
+    
+  }
