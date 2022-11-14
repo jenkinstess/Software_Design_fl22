@@ -283,21 +283,24 @@ const Sell = ({currentEvents, existingTickets}) =>{
         <br />
         <div className="App">
       <main className="App-main">
-        <h3>Upload Ticket in PNG or JPG format</h3>
+        <h3>Upload Ticket in format of <h7>[bmp, jpg, png, pbm, webp]</h7></h3>
+        <h4>(Only the QR/bar code and numeric value under it should be visible)</h4>
+        <br/>
         <img 
            src={image} className="App-logo" alt="logo"
           //  ref={imageRef} 
            />
         {/* <h3>Canvas</h3>
         <canvas ref={canvasRef}></canvas> */}
-          <h3>Extracted text</h3>
+          {/* <h3>Extracted text</h3> */}
           {/* {text} */}
         <div className="text-box">
-          <p> {text} </p>
+          {/* <p> {text} </p> */}
         </div>
         <input type="file" onChange={handleOTHERChange} />
         <br/>
-        <button onClick={handleClick}> Grab Unique ID from Ticket</button>
+        Confirm this is the right ticket
+        <button onClick={handleClick}>CORRECT</button>
       </main>
       </div>
       <br/>

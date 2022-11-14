@@ -25,8 +25,17 @@
     text-align: center;
   }
   .App-main button{
-    color: red;
+    color: green;
     outline-style: auto;
-    background-color: rgb(227, 152, 152);
+    background-color: rgba(38, 122, 38, 0.36);
     
+  }
+
+  h7{
+    font-family: monospace;
+  }
+
+  h4{
+    font-style: italic;
+    font-size: medium;
   }
