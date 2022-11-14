@@ -8,7 +8,7 @@ const EventList = ({ events }) => {
     return (
         // TODO: add filtering here for here for next week, day, etc. and sorting by event date
         <div className={eventStyles.list}>
-            {events && events.result && events.result.map((event) => (
+            {events && events.map((event) => (
                 <EventItem event={event} />
             ))}
         </div>

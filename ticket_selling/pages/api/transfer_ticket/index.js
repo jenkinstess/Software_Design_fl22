@@ -19,7 +19,7 @@ const sequelize = new Sequelize('ticketsitedb', 'ticketgroup', 'partytixstinks',
 
 // TODO: update func. to transfer ownership of ticket to new user 
 async function transferOwner(ticket_id, new_owner_id){
-    const resultFound = await sequelize.query("UPDATE ticketsitedb.tickets SET userUserid = :user_id WHERE id_tickets = :ticket_id",
+    const resultFound = await sequelize.query("UPDATE ticketsitedb.tickets SET userUserid = :user_id, is_sold = 1 WHERE id_tickets = :ticket_id",
     {
       replacements: {user_id: new_owner_id, ticket_id: ticket_id}, 
       type: QueryTypes.UPDATE

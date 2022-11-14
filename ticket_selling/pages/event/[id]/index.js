@@ -34,7 +34,8 @@ export const getStaticProps = async (context) => {
     const tickets_res = await fetch(`${server}/api/tickets_hard`)
     
     const all_tickets = await tickets_res.json()
-    const event_tickets = all_tickets.result.filter((ticket) => ticket.event_id == event_id)
+    // filter for matching event and ticket not already sold
+    const event_tickets = all_tickets.result.filter((ticket) => ticket.event_id == event_id && !ticket.is_sold)
 
     return {
       props: {
