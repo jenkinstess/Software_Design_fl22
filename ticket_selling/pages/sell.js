@@ -280,8 +280,6 @@ const Sell = ({currentEvents, existingTickets}) =>{
 
         <br />
   
-        <input type="submit" value="Submit" />
-        {createEventMessage && <p style={{color: 'red'}}>{createEventMessage}</p>}
 
       </form>
 
@@ -305,6 +303,9 @@ const Sell = ({currentEvents, existingTickets}) =>{
         <button onClick={handleClick} style={{height:50}}>Convert to text</button>
       </main>
     </div>
+
+    <input type="submit" value="Submit" />
+        {createEventMessage && <p style={{color: 'red'}}>{createEventMessage}</p>}
 
     </div>
     
