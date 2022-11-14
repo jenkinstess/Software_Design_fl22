@@ -94,6 +94,18 @@ const Sell = ({currentEvents, existingTickets}) =>{
 
   function handleSubmit(e) {
       e.preventDefault();
+      fetch('/api/events', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      body: JSON.stringify({
+          eventDate,
+          eventName,
+          eventDescription,
+            // ownerID
+        }),
+    }) 
       fetch('/api/tickets', {
         method: 'POST',
         headers: {
@@ -119,18 +131,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
           }
         });
       //post new event to db if it's not already there
-      fetch('/api/events', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        body: JSON.stringify({
-            eventDate,
-            eventName,
-            eventDescription,
-              // ownerID
-          }),
-      })  
+       
   }
 
   const handleClick = () => {

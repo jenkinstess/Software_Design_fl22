@@ -68,6 +68,15 @@ async function findEventID(eventName, callback){
 //    ++ counter
 // }
 
+async function addNumTicketToEvents(eventID, currentNumTickets){
+  events.update(
+    { numTickets: currentNumTickets + 1},
+    { where: { id:  eventID} }
+  )
+  .catch(err =>
+    console.error ('cannot add to events: ', err));
+  
+}
 
 async function createTicket(event, price, eventID) {
   const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO tickets(price, event, event_id) VALUES (:price, :event, :event_id)',
@@ -98,6 +107,10 @@ export default (req, res) => {
           }
           else{
             createTicket(eventName, price, eventInfo.id);
+            //fetch event numTickets
+            //add one to that
+            console.log("INA IS TESTING RIGHT HERE: " + eventInfo.numTickets);
+            addNumTicketToEvents(eventInfo.id, eventInfo.numTickets)
             res.status(404).json({error: false, message: 'Ticket on Market!'});
           }
         })
@@ -116,3 +129,5 @@ events.sync().then(
 tickets.sync().then(
   () => console.log("final sync complete")
 );
+//4FAUL6
+//4BYUZX
