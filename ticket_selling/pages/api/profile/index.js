@@ -34,6 +34,7 @@ async function findUser(){
   export default async function handler(req, res) {
     try {
       const result = await findUser()
+      console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + JSON.stringify(result))
       res.status(200).json({ result })
     } catch (err) {
       res.status(500).json({ error: 'failed to load data' })
