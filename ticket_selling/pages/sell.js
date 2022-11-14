@@ -92,37 +92,6 @@ const Sell = ({currentEvents, existingTickets}) =>{
     setImage(URL.createObjectURL(event.target.files[0]))
   }
 
-  // function getEvents(){
-  //   return fetch('/api/events', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //   body: JSON.stringify({
-  //       eventDate,
-  //       eventName,
-  //       eventDescription,
-  //         // ownerID
-  //     }),
-  // }) .then((response) => response.json())
-  // };
-
-  // function getTickets(){
-  //   return fetch('/api/tickets', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //   body: JSON.stringify({
-  //       eventName,
-  //       eventDescription,
-  //       ticketPrice
-  //         // ownerID
-  //     }),
-  //   }).then((response) => response.json())
-  // };
-
-
   function handleSubmit(e) {
       e.preventDefault();
 
@@ -152,14 +121,17 @@ const Sell = ({currentEvents, existingTickets}) =>{
       })})
         // .then((r) => r.json())
         .then((data) => {
+          //still have to check for error
+          Router.push('/buy');
           if (data && data.error) {
             setCreateEventMessage(data.message);
           }
           if (data && data.token) {
+            
             //set cookie
             setCreateEventMessage("Success");
             cookie.set('token', data.token, {expires: 2});
-            // Router.push('/');
+
           }
         });
       //post new event to db if it's not already there
@@ -280,6 +252,8 @@ const Sell = ({currentEvents, existingTickets}) =>{
 
         <br />
   
+        <input type="submit" value="Submit" />
+        {createEventMessage && <p style={{color: 'red'}}>{createEventMessage}</p>}
 
       </form>
 
@@ -303,9 +277,6 @@ const Sell = ({currentEvents, existingTickets}) =>{
         <button onClick={handleClick} style={{height:50}}>Convert to text</button>
       </main>
     </div>
-
-    <input type="submit" value="Submit" />
-        {createEventMessage && <p style={{color: 'red'}}>{createEventMessage}</p>}
 
     </div>
     
