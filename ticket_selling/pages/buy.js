@@ -80,7 +80,10 @@ export async function getStaticProps() {
         return event_date.getTime() >= today.getTime();
     }) 
     // sort for events in chronological order
-    const events = upcoming_events.sort((a, b) => new Date(a.date) - new Date(b.date))
+    const sorted_events = upcoming_events.sort((a, b) => new Date(a.date) - new Date(b.date))
+
+    // filter for only events with tickets 
+    const events = sorted_events.filter(event => { return event.numTickets && (event.numTickets > 0) })
 
     return {
         props: {
