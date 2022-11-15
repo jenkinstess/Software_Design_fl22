@@ -218,9 +218,8 @@ const Sell = ({currentEvents, existingTickets}) =>{
      
     <div>
        <AuthRedirection />
-      <br />
-      
-      <p>Sell Ticket:</p>
+      <h2>Sell Ticket</h2>
+      <br></br>
       Existing Events: <select onChange={handleChange}>
         <option value="" />
         {existingEventNames.map((eventName) => (
@@ -300,8 +299,11 @@ const Sell = ({currentEvents, existingTickets}) =>{
         <br />
         <div className="App">
       <main className="App-main">
-        <h3>Upload Ticket in format of <h7>[bmp, jpg, png, pbm, webp]</h7></h3>
-        <h4>(Only the QR/bar code and numeric value under it should be visible)</h4>
+        <br></br>
+        <br></br>
+        <h4>Upload Ticket:</h4>
+        <p>Upload Ticket in format of <i>bmp, jpg, png, pbm, or webp</i></p>
+        <p><i>Note:</i> Only the QR/bar code and numeric value under it should be visible</p>
         <br/>
         <img 
            src={image} className="App-logo" alt="logo"
