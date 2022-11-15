@@ -234,6 +234,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
             name="eventDate"
             type="date"
             required
+            min={new Date().toISOString().split("T")[0]}
           />
         </label>
         )}
