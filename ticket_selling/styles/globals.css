@@ -3,9 +3,10 @@
     padding: 10;
     box-sizing: border-box;
     text-align: center;
-    background-color: blanchedalmond;
+    /* background-color: blanchedalmond; */
   }
 
+/* 
   html,body, body * { 
     font-family: 'Open Sans', sans-serif; 
     color:inherit;
@@ -35,4 +36,4 @@
   button:focus {
     outline: none;
   
-  }
+  } */
