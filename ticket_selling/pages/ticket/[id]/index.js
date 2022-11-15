@@ -10,7 +10,6 @@ async function getUser(callback) {
   const loggedin_user = await loggedin_user_res.json()
   if (!('email' in loggedin_user)) {
     // user not logged in
-    console.log('Doesnt have email')
     callback(false)
   } else {
     const users_res = await fetch(`${server}/api/all_users`)
@@ -48,20 +47,20 @@ const Ticket = ({ticket, ticket_owner, event}) => {
         <>
             
             <div>
-                <h1>Ticket Details</h1>
-                <h3>Event: {event.name}</h3>
-                <p>Venmo: {ticket_owner.venmo}</p>
-                <p>Price: {ticket.price}</p>
+                <h2>Ticket Details</h2>
+                <p>Event: <i>{event.name}</i></p>
+                <p>Venmo: <i>{ticket_owner.venmo}</i></p>
+                <p>Price: <i>${ticket.price}</i></p>
                 {!transferred && (
                   <>
-                  <p><i>Instructions:</i> please venmo the account above with the listed price, and confirm below.</p>
-                  <button onClick={() => handleTransfer(ticket, user)}>Venmo Sent</button>
+                  <p><i>Instructions:</i> please venmo the account above with the listed price, and confirm payment below:</p>
+                  <button class="btn btn-primary" onClick={() => handleTransfer(ticket, user)}>Venmo Sent &#10003;</button>
                   </>
                 )}
                 {transferred && (
                   <>
                   <p>The ticket is now transferred to your account!</p>
-                  <p>You can access the ticket document in your profile <Link href='/profile'><a><li>here.</li></a></Link></p>
+                  <p>You can access the ticket in your profile <Link href='/profile'><a><li>here.</li></a></Link></p>
                   </>
                 )}
             </div>
