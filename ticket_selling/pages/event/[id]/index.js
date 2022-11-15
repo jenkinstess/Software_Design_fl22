@@ -1,9 +1,11 @@
 import Link from 'next/link'
 import { server } from '../../../config';
+import AuthRedirection from '../../../components/AuthRedirection';
 
 const event = ({ event, event_tickets }) => {
     return (
         <>
+            <AuthRedirection/>
             <div>
                 <h1>{event.name}</h1>
                 <h3>{event.date}</h3>

@@ -1,12 +1,14 @@
 import { server } from "../../../config";
 import React, {useState} from 'react';
 import Link from 'next/link'
+import AuthRedirection from "../../../components/AuthRedirection";
 
 const Ticket = ({ticket, ticket_owner}) => {
     const [transferred, setTransferred] = useState(false);
   
     return (
         <>
+            <AuthRedirection/>
             <div>
                 <h1>Ticket Details</h1>
                 <p>Venmo: {ticket_owner.venmo}</p>

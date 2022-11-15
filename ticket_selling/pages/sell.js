@@ -6,6 +6,7 @@ import Router from 'next/router';
 import cookie from 'js-cookie';
 import { server } from '../config';
 const db = require('/config/database');
+import AuthRedirection from '../components/AuthRedirection';
 
 export const getStaticProps = async() => {
   const response = await fetch(`${server}/api/events_buy`)
@@ -223,8 +224,9 @@ const Sell = ({currentEvents, existingTickets}) =>{
   }
 
   return( 
-    
+     
     <div>
+       <AuthRedirection />
       <br />
       
       <p>Sell Ticket:</p>

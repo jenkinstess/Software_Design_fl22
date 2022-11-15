@@ -4,6 +4,7 @@ import EventList from '../components/EventList';
 import {useState, useCallback} from 'react';
 import { server } from '../config';
 import { createModuleResolutionCache } from 'typescript';
+import AuthRedirection from '../components/AuthRedirection';
 
 // import UserContext from '../components/UserContext';
 const db = require('/config/database');
@@ -41,6 +42,7 @@ export default function Buy({ events }) {
     
     return (
         <>
+        <AuthRedirection />
         <div>
             <h2>Upcoming Events</h2>
             <h3>Please select from below to purchase a ticket</h3>

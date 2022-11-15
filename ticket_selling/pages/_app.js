@@ -1,4 +1,5 @@
 import Navbar from '../components/Navbar'
+import AuthRedirection from '../components/AuthRedirection'
 import UserContext from '../components/UserContext'
 import '../styles/globals.css'
 import '../styles/Navbar.css'
