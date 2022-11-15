@@ -9,8 +9,6 @@ import { createModuleResolutionCache } from 'typescript';
 const db = require('/config/database');
 
 export default function Buy({ events }) {
-    // NOTE: current issue is that the date from db is being converted to central time from UST, whereas current date is already in CST (so doesn't lose 6 hrs)
-    // TODO: find a way to get them into the same format / units to compare directly
     
     const [query, setQuery] = useState('')
     const [cur_events, setEvents] = useState(events)
@@ -24,21 +22,39 @@ export default function Buy({ events }) {
             const search_results = cur_events.filter(event => event.name.toLowerCase().includes(query.toLowerCase()))
             setEvents(search_results)
         } else {
-          setEvents(events)
+          setEvents(cur_events)
         }
       }, [])
+
+    // date filtering functionality
+    const filterDates = (e) => {
+        const to_date = e.target.valueAsNumber;
+        if (to_date) {
+            const events_within = cur_events.filter(event => new Date(event.date).getTime() <= to_date)
+            setEvents(events_within)
+        } else {
+            setEvents(events)
+        }
+    }
+
+    // TODO: get the search and date filter working in sync
     
     return (
         <>
         <div>
             <h2>Upcoming Events</h2>
-            <input
+            <h3>Please select from below to purchase a ticket</h3>
+            <p>Search events: <input
                 onChange={onChange}
-                placeholder='Search events:'
+                placeholder='Event name...'
                 type='text'
                 value={query}
-            />
-            <h3>Please select from below to purchase a ticket</h3>
+            /></p>
+            <p>View events until: <input
+                type='date'
+                onChange={filterDates}
+                min={new Date().toISOString().split("T")[0]} // after current date
+            /></p>
             <EventList events={cur_events} />
         </div>
         </>
@@ -52,8 +68,15 @@ export async function getStaticProps() {
     const all_events = events_json ? events_json.result : []
 
     // filter events for those on or after current date
-    // NOTE: 
-    const upcoming_events = all_events.filter(event => new Date(event.date) >= new Date()) 
+    const upcoming_events = all_events.filter(event => {
+        // adjust for time zone differences:
+        // date from db is being converted to central (or browser's) time from UST by subtracting hours (6 in case of CST)
+        var now = new Date();
+        var today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() ));
+        var event_date = new Date(event.date)
+        event_date.setDate(event_date.getDate()+1) // add day back to account for lost hours in conversion
+        return event_date.getTime() >= today.getTime();
+    }) 
     // sort for events in chronological order
     const events = upcoming_events.sort((a, b) => new Date(a.date) - new Date(b.date))
 
