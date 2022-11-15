@@ -1,13 +1,12 @@
 import EventItem from './EventItem'
-import eventStyles from '../styles/Event.module.css'
+//import eventStyles from '../styles/Event.module.css'
 
 
 const EventList = ({ events }) => {
-    console.log("events JSON:")
-    console.log(typeof events.result)
+    
     return (
-        // TODO: add filtering here for here for next week, day, etc. and sorting by event date
-        <div className={eventStyles.list}>
+        // className={eventStyles.list}
+        <div  class="container w-50 mx-auto">
             {events && events.map((event) => (
                 <EventItem event={event} />
             ))}
