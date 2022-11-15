@@ -43,6 +43,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
 
   const [image, setImage] = useState('');
   const [text, setText] = useState('');
+  const [imgConfirm, setImgConfirm] = useState('');
   const canvasRef = useRef(null);
   const imageRef = useRef(null);
 
@@ -208,6 +209,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
       console.log(text)
   
       setText(text);
+      setImgConfirm("image chosen")
       // setPin(patterns);
     })
   }
@@ -316,6 +318,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
         <br/>
         Confirm this is the right ticket
         <button onClick={handleClick}>CORRECT</button>
+        {imgConfirm && <p style={{color: 'green'}}> {imgConfirm}</p>}
       </main>
       </div>
       <br/>
