@@ -93,7 +93,21 @@ const Sell = ({currentEvents, existingTickets}) =>{
     
   }
 
-  function handleSubmit(e) {
+  async function findSellerID(){
+    const loggedin_user_res = await fetch(`${server}/api/me`)
+    const loggedin_user = await loggedin_user_res.json()
+  
+    // get logged in user's id for ticket sold
+    const users_res = await fetch(`${server}/api/all_users`)
+    const users = await users_res.json()
+    const current_user = users.result.filter((user) => user.email.toString() == loggedin_user.email.toString())[0]
+    console.log('logged in ID: ' + current_user.userid)
+  
+    const user_id = current_user.userid;
+    return user_id;
+  }
+
+  async function handleSubmit(e) {
       e.preventDefault();
       console.log("handling this click !");
 
@@ -121,6 +135,10 @@ const Sell = ({currentEvents, existingTickets}) =>{
       //   setText(text);
       // })
 
+      // get logged in user's ID:
+      const ownerID = await findSellerID();
+      //console.log('Owner ID: ' + ownerID)
+
       fetch('/api/events', {
         method: 'POST',
         headers: {
@@ -130,7 +148,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
           eventDate,
           eventName,
           eventDescription,
-            // ownerID
+          //ownerID,
         }),
     }) 
     .then(() => {fetch('/api/tickets', {
@@ -142,8 +160,8 @@ const Sell = ({currentEvents, existingTickets}) =>{
           eventName,
           eventDescription,
           ticketPrice,
-          text
-            // ownerID
+          text,
+          ownerID
         }),
       })})
         // .then((r) => r.json())

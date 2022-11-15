@@ -6,6 +6,7 @@
 import { NEXT_CLIENT_SSR_ENTRY_SUFFIX } from 'next/dist/shared/lib/constants';
 import { Query } from 'pg';
 import Sequelize, { QueryTypes } from 'sequelize'
+import { isConditionalExpression } from 'typescript';
 import { server } from "../../../config";
 
 const { DataTypes } = require('sequelize');
@@ -92,24 +93,11 @@ async function createTicket(event, price, sellerID, eventID, specID) {
   );
   //updatenum
 }
-async function findSellerID(){
-  const loggedin_user_res = await fetch(`${server}/api/me`)
-  const loggedin_user = await loggedin_user_res.json()
-
-  // get logged in user's id for ticket sold
-  const users_res = await fetch(`${server}/api/all_users`)
-  const users = await users_res.json()
-  const current_user = users.result.filter((user) => user.email.toString() == loggedin_user.email.toString())[0]
-  console.log('logged in ID: ' + current_user.userid)
-
-  const user_id = current_user.userid;
-  return user_id;
-}
 
 
 export default (req, res) => {
     if (req.method === 'POST') {
-    
+      console.log(req)
       // verify the email does not already exist in the system
       sequelize.authenticate().then(() => {
 
@@ -118,19 +106,20 @@ export default (req, res) => {
         const eventName = req.body.eventName;
         const price = req.body.ticketPrice;
         const specificID = req.body.text;
+        const seller_id = req.body.ownerID;
         // console.log("data passed: "+ req.body);
         // console.log("SEE IF THERE IS A VALUE HERE: " + specificID);
         // console.log("data grabbed");
 
 
-        findEventID(eventName, function(eventInfo){
+        findEventID(eventName, async function(eventInfo){
           if(!eventInfo){
             //res.status(404).json({error: true, message: 'Event not found'});
             console.log('event not found')
             return;
           }
           else{
-            const seller_id = findSellerID();
+            //const seller_id = await findSellerID();
             console.log("INA IS HERE: " + seller_id);
             createTicket(eventName, price, seller_id, eventInfo.id, specificID);
             //fetch event numTickets
