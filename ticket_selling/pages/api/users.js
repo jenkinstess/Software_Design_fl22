@@ -99,27 +99,42 @@ export default (req, res) => {
 
           // if no user object is returned, then we should go ahead and create the user
           if (!user){
-            createUser(email, password, venmo, function(err, success){
+            // createUser(email, password, venmo, function(err, success){
+            createUser(email, password, venmo, function(err){
               if (err) {
                 res.status(500).json({error: true, message: 'error creating user'});
                 return;
               }
-              if (success){
+              else{
                 console.log("user created!");
                 const token = jwt.sign(
                   {email: email},
                   jwtSecret,
                   {
                     expiresIn: 3000, // 50 minutes
-                  }
+                  },
                 );
+                // res.status(200);
                 res.status(200).json({token});
                 return;
               }
-              else{
-                res.status(401).json({error: true, message: 'User not created'});
-                return;
-              }
+              // if (success){
+              //   console.log("user created!");
+              //   const token = jwt.sign(
+              //     {email: email},
+              //     jwtSecret,
+              //     {
+              //       expiresIn: 3000, // 50 minutes
+              //     },
+              //   );
+              //   // res.status(200);
+              //   res.status(200).json({token});
+              //   return;
+              // }
+              // else{
+              //   res.status(401).json({error: true, message: 'User not created'});
+              //   return;
+              // }
             });
           }
           else{

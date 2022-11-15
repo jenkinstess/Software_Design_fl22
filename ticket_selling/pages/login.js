@@ -28,6 +28,7 @@ const Login = () => {
         return r.json();
       })
       .then((data) => {
+        console.log("logging data" + JSON.stringify(data));
         if (data && data.error) {
           setLoginError(data.message);
         }

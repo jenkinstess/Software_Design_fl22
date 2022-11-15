@@ -29,11 +29,11 @@ const Signup = () => {
           venmo
         }),
       })
-        .then((r) => {
-          console.log("!!!!not getting to next section!!!!!")
-          return r.json();
-        })
-        .then((data) => {
+      .then((r) => {
+        return r.json();
+      })
+      .then((data) => {
+          console.log("logging data: " + data);
           if (data && data.error) {
             console.log("!!!!error w data!!!!!")
             setSignupError(data.message);
@@ -42,7 +42,7 @@ const Signup = () => {
             console.log("!!!!!good data!!!!")
             //set cookie
             cookie.set('token', data.token, {expires: 2}); // sets the cookie from the token obtained and sets its expiration for days having the cookie set, whenever
-            Router.push('/login');                              //   additional requests are made, that cookie is sent to the server as well and then we can decrypt it 
+            Router.push('/');                              //   additional requests are made, that cookie is sent to the server as well and then we can decrypt it 
                                                            //   and review if the user has been properly authenticated and that the auth is valid
           }
         });
