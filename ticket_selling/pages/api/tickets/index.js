@@ -6,6 +6,7 @@
 import { NEXT_CLIENT_SSR_ENTRY_SUFFIX } from 'next/dist/shared/lib/constants';
 import { Query } from 'pg';
 import Sequelize, { QueryTypes } from 'sequelize'
+import { server } from "../../../config";
 
 const { DataTypes } = require('sequelize');
 const assert = require('assert');
@@ -82,15 +83,29 @@ async function addNumTicketToEvents(eventID, currentNumTickets){
   
 }
 
-async function createTicket(event, price, eventID, specID) {
-  const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO tickets(price, event, event_id, specific_id) VALUES (:price, :event, :event_id, :specific_id)',
+async function createTicket(event, price, sellerID, eventID, specID) {
+  const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO tickets(price, event, userUserid, event_id, specific_id) VALUES (:price, :event, :userUserid, :event_id, :specific_id)',
   {
-      replacements: { price: price, event: event, event_id: eventID, specific_id: specID},
+      replacements: { price: price, event: event, userUserid: sellerID, event_id: eventID, specific_id: specID},
       type: QueryTypes.INSERT
     }
   );
   //updatenum
 }
+async function findSellerID(){
+  const loggedin_user_res = await fetch(`${server}/api/me`)
+  const loggedin_user = await loggedin_user_res.json()
+
+  // get logged in user's id for ticket sold
+  const users_res = await fetch(`${server}/api/all_users`)
+  const users = await users_res.json()
+  const current_user = users.result.filter((user) => user.email.toString() == loggedin_user.email.toString())[0]
+  console.log('logged in ID: ' + current_user.userid)
+
+  const user_id = current_user.userid;
+  return user_id;
+}
+
 
 export default (req, res) => {
     if (req.method === 'POST') {
@@ -103,9 +118,11 @@ export default (req, res) => {
         const eventName = req.body.eventName;
         const price = req.body.ticketPrice;
         const specificID = req.body.text;
-        console.log("data passed: "+ req.body);
-        console.log("SEE IF THERE IS A VALUE HERE: " + specificID);
-        console.log("data grabbed");
+        // console.log("data passed: "+ req.body);
+        // console.log("SEE IF THERE IS A VALUE HERE: " + specificID);
+        // console.log("data grabbed");
+
+
         findEventID(eventName, function(eventInfo){
           if(!eventInfo){
             //res.status(404).json({error: true, message: 'Event not found'});
@@ -113,7 +130,9 @@ export default (req, res) => {
             return;
           }
           else{
-            createTicket(eventName, price, eventInfo.id, specificID);
+            const seller_id = findSellerID();
+            console.log("INA IS HERE: " + seller_id);
+            createTicket(eventName, price, seller_id, eventInfo.id, specificID);
             //fetch event numTickets
             //add one to that
             console.log("INA IS TESTING RIGHT HERE: " + eventInfo.numTickets);
@@ -136,5 +155,3 @@ events.sync().then(
 tickets.sync().then(
   () => console.log("final sync complete")
 );
-//4FAUL6
-//4BYUZX
