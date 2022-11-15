@@ -71,8 +71,6 @@ const Sell = ({currentEvents, existingTickets}) =>{
     // setEventDescription(e.target.value);
     e.preventDefault();
     setEventName(e.target.value);
-
-
     //GET BACK TO THIS
     // console.log('EVENT NAME RIGHT NOW IS +' + eventName)
     // fetch('/api/ticketPrices', {
@@ -89,12 +87,53 @@ const Sell = ({currentEvents, existingTickets}) =>{
   };
 
   const handleOTHERChange = (event) => {
+    console.log(event.target.files[0]);
     setImage(URL.createObjectURL(event.target.files[0]))
+    //handleClick(event);
+    
   }
 
   function handleSubmit(e) {
       e.preventDefault();
-      fetch('/api/tickets', {
+      console.log("handling this click !");
+
+      // Tesseract.recognize(
+      //   image,'eng',
+      //   { 
+      //     logger: m => console.log(m) 
+      //   }
+      // )
+      // .catch (err => {
+      //   console.log("error here");
+      //   console.error(err);
+      // })
+      // .then(result => {
+      //   console.log("getting the result");
+      //   console.log("result is: " + JSON.stringify(result));
+      //   console.log("text is: " + result.data.text);
+      //   let numResult = (result.data.text).replaceAll(/[^0-9]/gi, '');
+      //   console.log("text w only numbers is " + numResult);
+
+      //   // Get full output
+      //   let text = numResult;
+      //   console.log(text)
+    
+      //   setText(text);
+      // })
+
+      fetch('/api/events', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      body: JSON.stringify({
+          eventDate,
+          eventName,
+          eventDescription,
+            // ownerID
+        }),
+    }) 
+    .then(() => {fetch('/api/tickets', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -102,52 +141,45 @@ const Sell = ({currentEvents, existingTickets}) =>{
       body: JSON.stringify({
           eventName,
           eventDescription,
-          ticketPrice
+          ticketPrice,
+          text
             // ownerID
         }),
-      })
-        .then((r) => r.json())
+      })})
+        // .then((r) => r.json())
         .then((data) => {
+          //still have to check for error
+          Router.push('/buy');
           if (data && data.error) {
             setCreateEventMessage(data.message);
           }
           if (data && data.token) {
+            
             //set cookie
             setCreateEventMessage("Success");
             cookie.set('token', data.token, {expires: 2});
-            // Router.push('/');
+
           }
         });
       //post new event to db if it's not already there
-      fetch('/api/events', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        body: JSON.stringify({
-            eventDate,
-            eventName,
-            eventDescription,
-              // ownerID
-          }),
-      })  
+       
   }
 
-  const handleClick = () => {
-
+  const handleClick = (e) => {
+    e.preventDefault();
     console.log("handling this click !");
     
-    const canvas = canvasRef.current;
-    canvas.width = imageRef.current.width;
-    canvas.height = imageRef.current.height;
-    const ctx = canvas.getContext('2d');
+    // const canvas = canvasRef.current;
+    // canvas.width = imageRef.current.width;
+    // canvas.height = imageRef.current.height;
+    // const ctx = canvas.getContext('2d');
 
-    ctx.drawImage(imageRef.current, 0, 0);
-    ctx.putImageData(preprocessImage(canvas),0,0);
-    const dataUrl = canvas.toDataURL("image/jpeg");
+    // ctx.drawImage(imageRef.current, 0, 0);
+    // ctx.putImageData(preprocessImage(canvas),0,0);
+    // const dataUrl = canvas.toDataURL("image/jpeg");
   
     Tesseract.recognize(
-      dataUrl,'eng',
+      image,'eng',
       { 
         logger: m => console.log(m) 
       }
@@ -158,10 +190,13 @@ const Sell = ({currentEvents, existingTickets}) =>{
     })
     .then(result => {
       console.log("getting the result");
-      // Get Confidence score
-      let confidence = result.confidence
+      console.log("result is: " + JSON.stringify(result));
+      console.log("text is: " + result.data.text);
+      let numResult = (result.data.text).replaceAll(/[^0-9]/gi, '');
+      console.log("text w only numbers is " + numResult);
+
       // Get full output
-      let text = result.text
+      let text = numResult;
       console.log(text)
   
       setText(text);
@@ -246,6 +281,29 @@ const Sell = ({currentEvents, existingTickets}) =>{
         </label> */}
 
         <br />
+        <div className="App">
+      <main className="App-main">
+        <h3>Upload Ticket in format of <h7>[bmp, jpg, png, pbm, webp]</h7></h3>
+        <h4>(Only the QR/bar code and numeric value under it should be visible)</h4>
+        <br/>
+        <img 
+           src={image} className="App-logo" alt="logo"
+          //  ref={imageRef} 
+           />
+        {/* <h3>Canvas</h3>
+        <canvas ref={canvasRef}></canvas> */}
+          {/* <h3>Extracted text</h3> */}
+          {/* {text} */}
+        <div className="text-box">
+          {/* <p> {text} </p> */}
+        </div>
+        <input type="file" onChange={handleOTHERChange} />
+        <br/>
+        Confirm this is the right ticket
+        <button onClick={handleClick}>CORRECT</button>
+      </main>
+      </div>
+      <br/>
   
         <input type="submit" value="Submit" />
         {createEventMessage && <p style={{color: 'red'}}>{createEventMessage}</p>}
@@ -254,24 +312,6 @@ const Sell = ({currentEvents, existingTickets}) =>{
 
       <br />
 
-      <div className="App">
-      <main className="App-main">
-        <h3>Actual image uploaded</h3>
-        <img 
-           src={image} className="App-logo" alt="logo"
-           ref={imageRef} 
-           />
-        <h3>Canvas</h3>
-        <canvas ref={canvasRef} width={700} height={300}></canvas>
-          <h3>Extracted text</h3>
-          {text}
-        <div className="pin-box">
-          <p> {text} </p>
-        </div>
-        <input type="file" onChange={handleOTHERChange} />
-        <button onClick={handleClick} style={{height:50}}>Convert to text</button>
-      </main>
-    </div>
 
     </div>
     

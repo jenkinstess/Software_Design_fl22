@@ -16,6 +16,29 @@ const sequelize = new Sequelize('ticketsitedb', 'ticketgroup', 'partytixstinks',
         idle: 10000
     },
   });
+//decrement counter when ticket transferred
+// const events = require("../../../models/events");
+// async function findEventNumTickets(eventID, callback){
+//   const [resultFound] = await events.findAll({
+//     where:{
+//       id : eventID
+//     }
+//   });
+//   // this callback allows us to define a function in the exports statement parameterized with the result of find user
+//   callback(resultFound);
+//   console.log(JSON.stringify(resultFound));
+// }
+
+// async function findEventID(ticketID, callback){
+//   const [resultFound] = await ticketsitedb.tickets.findAll({
+//     where:{
+//       id_tickets : ticketID
+//     }
+//   });
+//   // this callback allows us to define a function in the exports statement parameterized with the result of find user
+//   callback(resultFound);
+//   console.log(JSON.stringify(resultFound));
+// }
 
 // TODO: update func. to transfer ownership of ticket to new user 
 async function transferOwner(ticket_id, new_owner_id){
@@ -26,12 +49,39 @@ async function transferOwner(ticket_id, new_owner_id){
     });
   }
 
+// async function subtractNumTicketToEvents(eventID, currentNumTickets){
+//   events.update(
+//     { numTickets: currentNumTickets - 1},
+//     { where: { id:  eventID} }
+//   )
+//     .catch(err =>
+//       console.error ('cannot add to events: ', err));
+    
+// }
+
   // TODO: update to accept request with new ticket owner id, 
   export default async function handler(req, res) {
     
     try {
       if (req.method === 'POST') {
-        transferOwner(req.body.ticket_id, req.body.user_id)
+        transferOwner(req.body.ticket_id, req.body.user_id),
+
+        // findEventID(req.body.ticket_id, function(eventID){
+        //   findEventNumTickets(eventID.id, function(ticketNum){
+        //     if(!ticketNum){
+        //       //res.status(404).json({error: true, message: 'Event not found'});
+        //       console.log('event not found')
+        //       return;
+        //     }
+        //     else{
+        //       subtractNumTicketToEvents(ticketNum.id, ticketNum.numTickets);
+        //     }
+        //   })
+
+
+        // })
+        
+
         res.status(200).json({error: false, message: 'Ownership Transferred!'});
       }
     } catch (err) {

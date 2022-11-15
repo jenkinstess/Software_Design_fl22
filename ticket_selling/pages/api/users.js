@@ -42,6 +42,19 @@ users.sync().then((result) => {
 });
 
 
+async function findUser(email, callback){
+  console.log("email: " + email);
+  console.log("finding user");
+  const [resultFound] = await users.findAll({
+    where:{
+      email : email
+    }
+  });
+  // this callback allows us to define a function in the exports statement parameterized with the result of find user
+  callback(resultFound);
+  console.log("found user");
+}
+
 // adds the user to the users table in the database
 async function createUser(email, password, venmo, callback) {
   bcrypt.hash(password, round, async function(err, hash) {
@@ -81,28 +94,41 @@ export default (req, res) => {
         console.log("data grabbed");
         console.log(password);
 
-        createUser(email, password, venmo, function(err, success){
-          if (err) {
-            res.status(500).json({error: true, message: 'error creating user'});
-            return;
-          }
-          if (success){
-            console.log("user created!");
-            const token = jwt.sign(
-              {email: email},
-              jwtSecret,
-              {
-                expiresIn: 3000, // 50 minutes
+        findUser(email, function(user){
+          console.log("testing for find user!");
+
+          // if no user object is returned, then we should go ahead and create the user
+          if (!user){
+            createUser(email, password, venmo, function(err, success){
+              if (err) {
+                res.status(500).json({error: true, message: 'error creating user'});
+                return;
               }
-            );
-            res.status(200).json({token});
-            return;
+              if (success){
+                console.log("user created!");
+                const token = jwt.sign(
+                  {email: email},
+                  jwtSecret,
+                  {
+                    expiresIn: 3000, // 50 minutes
+                  }
+                );
+                res.status(200).json({token});
+                return;
+              }
+              else{
+                res.status(401).json({error: true, message: 'User not created'});
+                return;
+              }
+            });
           }
           else{
-            res.status(401).json({error: true, message: 'User not created'});
+            res.status(500).json({error: true, message: 'user already exists'});
             return;
           }
-        });
+        })
+
+        
       }).catch((error) => {
         console.error ('unable to connect to the db: ', error);
       });

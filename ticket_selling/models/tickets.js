@@ -27,14 +27,17 @@ const tickets = sequelize.define('tickets', {
     primaryKey: true,
     autoIncrement: true,
   },
+
   price: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+
   event:{
     type: DataTypes.STRING,
     allowNull: false
   },
+
   userUserid:{
     type: DataTypes.STRING,
   },
@@ -46,6 +49,10 @@ const tickets = sequelize.define('tickets', {
       model: 'events',
       key: 'id'
     }
+  },
+
+  specific_id:{
+    type: DataTypes.STRING,
   }
 });
 

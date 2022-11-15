@@ -2,6 +2,7 @@ import Navbar from '../components/Navbar'
 import UserContext from '../components/UserContext'
 import '../styles/globals.css'
 import '../styles/Navbar.css'
+import '../styles/OCR.css'
 import { SessionProvider } from "next-auth/react"
  
 function MyApp({ Component, pageProps: { session, ...pageProps }}) {
