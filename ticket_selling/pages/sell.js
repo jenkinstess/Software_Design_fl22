@@ -156,7 +156,8 @@ const Sell = ({currentEvents, existingTickets}) =>{
         // .then((r) => r.json())
         .then((data) => {
           //still have to check for error
-          Router.push('/buy');
+          //Router.push('/buy');
+          alert("Event Uploaded!")
           if (data && data.error) {
             setCreateEventMessage(data.message);
           }
