@@ -7,9 +7,12 @@ import cookie from 'js-cookie';
 import { server } from '../config';
 const db = require('/config/database');
 
+
 export const getStaticProps = async() => {
   const response = await fetch(`${server}/api/events_buy`)
   const data = await response.json()
+
+
 
   // const response2 = await fetch(`${server}/api/ticketPrices`)
   // const data2 = await response2.json()
@@ -41,6 +44,9 @@ const Sell = ({currentEvents, existingTickets}) =>{
   const [text, setText] = useState('');
   const canvasRef = useRef(null);
   const imageRef = useRef(null);
+
+  const [showMe, setShowMe] = useState(true);
+
     // potentially we just need to store this in db? do we want manual entry
   
   //iterate through events. parse each event object for its name. 
@@ -53,37 +59,10 @@ const Sell = ({currentEvents, existingTickets}) =>{
     existingEventNames.push(objs.result[i].name)
   }
 
-
-  //GET BACK TO THIS
-  // const ticketJson = JSON.stringify(existingTickets)
-  // console.log(ticketJson);
-  //var objs2 = JSON.parse(ticketJson);
-  // for (let i = 0; i<objs2.result.length; i++){
-  //   //come back to this to also populate date
-  //   //eventData.set(objs.result[i].name, objs.result[i].date)
-  //   console.log("TESTING HERE!!!" + objs2.result[i])
-  // }
-
-
-
   const handleChange = (e) => {
-    // setDate(e.target.value);
-    // setEventDescription(e.target.value);
     e.preventDefault();
     setEventName(e.target.value);
-    //GET BACK TO THIS
-    // console.log('EVENT NAME RIGHT NOW IS +' + eventName)
-    // fetch('/api/ticketPrices', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     eventName
-    //   }),
-    // })
-
-
+    setShowMe(!showMe);
   };
 
   const handleOTHERChange = (event) => {
@@ -137,6 +116,8 @@ const Sell = ({currentEvents, existingTickets}) =>{
 
       // get logged in user's ID:
       const ownerID = await findSellerID();
+
+
       //console.log('Owner ID: ' + ownerID)
 
       fetch('/api/events', {
@@ -145,9 +126,9 @@ const Sell = ({currentEvents, existingTickets}) =>{
           'Content-Type': 'application/json',
         },
       body: JSON.stringify({
-          eventDate,
+          //eventDate,
           eventName,
-          eventDescription,
+          //eventDescription,
           //ownerID,
         }),
     }) 
@@ -236,7 +217,8 @@ const Sell = ({currentEvents, existingTickets}) =>{
 
     <br></br><br></br>
     <form onSubmit={handleSubmit}>
-          
+        
+        {showMe && (
         <label htmlFor="date">
           Ticket Date
           <input
@@ -246,7 +228,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
             type="date"
             required
           />
-        </label>
+        </label>)}
   
         <br />
 
@@ -263,6 +245,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
 
         <br />
 
+        {showMe && (
         <label htmlFor="eventDescription">
           Event Description
           <input
@@ -271,7 +254,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
             name="eventDescription"
             type="eventDescription"
           />
-        </label>
+        </label>)}
         <br />
         <label htmlFor="ticketPrice">
           Ticket Price
