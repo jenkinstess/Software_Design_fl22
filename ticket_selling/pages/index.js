@@ -35,7 +35,7 @@ function Home() {
       <h1>WashU Party Tix</h1>
       {loggedIn && (
         <>
-          <p>Welcome {data.email}!</p>
+          <p>Welcome <i>{data.email}!</i></p>
           <button
             onClick={() => {
               cookie.remove('token');
