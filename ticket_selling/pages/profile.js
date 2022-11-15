@@ -50,7 +50,7 @@ const Profile = ({tickets, users}) =>{
   let num_tix = (tickets_json).length
   for (let j = 0; j < num_tix; j++){
     if (user_id == JSON.stringify(tickets_json[j].userUserid).replaceAll('"', '')){
-      let ticket = [JSON.stringify((tickets_json[j].event).replaceAll('"', '')), JSON.stringify(tickets_json[j].price), JSON.stringify(tickets_json[j].is_sold), JSON.stringify(tickets_json[j].event_id), JSON.stringify(tickets_json[j].id_tickets)]
+      let ticket = [((JSON.stringify(tickets_json[j].event)).replaceAll('"', '')), JSON.stringify(tickets_json[j].price), JSON.stringify(tickets_json[j].is_sold), JSON.stringify(tickets_json[j].event_id), JSON.stringify(tickets_json[j].id_tickets)]
       users_tix.push(ticket)
     }
   }
