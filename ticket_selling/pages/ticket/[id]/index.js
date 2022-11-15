@@ -1,22 +1,61 @@
 import { server } from "../../../config";
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Link from 'next/link'
 import AuthRedirection from "../../../components/AuthRedirection";
+import { useRouter } from 'next/router';
 
-const Ticket = ({ticket, ticket_owner}) => {
+async function getUser(callback) {
+  // get currently logged in user's details with email
+  const loggedin_user_res = await fetch(`${server}/api/me`)
+  const loggedin_user = await loggedin_user_res.json()
+  if (!('email' in loggedin_user)) {
+    // user not logged in
+    console.log('Doesnt have email')
+    callback(false)
+  } else {
+    const users_res = await fetch(`${server}/api/all_users`)
+    const users = await users_res.json()
+    const current_user = users.result.filter((user) => user.email.toString() == loggedin_user.email.toString())[0]
+    callback(current_user)
+  }
+}
+
+const Ticket = ({ticket, ticket_owner, event}) => {
     const [transferred, setTransferred] = useState(false);
-  
+    const [user, setUser] = useState({});
+    const router = useRouter();
+
+    useEffect(() => {
+      // TODO: refactor this so that the checking of user log in isn't redundent and we can just use exisitng component
+      // if ticket sold or current user already owns ticket, redirect to event page
+      getUser(function (current_user) {
+        // checks that user logged in first 
+        if (current_user) {
+          if (ticket.is_sold || current_user.userid == ticket.userUserid) {
+            router.push(`/event/${event.id}`);
+          } else {
+            setUser(current_user)
+          }
+        } else {
+          // route back to login if not already signed in
+          router.push('/login')
+        }
+      })
+    }, []) 
+    
+    console.log(user)
     return (
         <>
-            <AuthRedirection/>
+            
             <div>
                 <h1>Ticket Details</h1>
+                <h3>Event: {event.name}</h3>
                 <p>Venmo: {ticket_owner.venmo}</p>
                 <p>Price: {ticket.price}</p>
                 {!transferred && (
                   <>
                   <p><i>Instructions:</i> please venmo the account above with the listed price, and confirm below.</p>
-                  <button onClick={() => handleTransfer(ticket)}>Venmo Sent</button>
+                  <button onClick={() => handleTransfer(ticket, user)}>Venmo Sent</button>
                   </>
                 )}
                 {transferred && (
@@ -29,21 +68,12 @@ const Ticket = ({ticket, ticket_owner}) => {
         </>
     )
 
-    async function handleTransfer(ticket) {
-      console.log('transfer button selected')
-      // get logged in user's email
-      const loggedin_user_res = await fetch(`${server}/api/me`)
-      const loggedin_user = await loggedin_user_res.json()
+    async function handleTransfer(ticket, user) {
+      //console.log('transfer button selected')
       
-      // get logged in user's id
-      const users_res = await fetch(`${server}/api/all_users`)
-      const users = await users_res.json()
-      const current_user = users.result.filter((user) => user.email.toString() == loggedin_user.email.toString())[0]
-      console.log('logged in ID: ' + current_user.userid)
-      
-      const user_id = current_user.userid
       const ticket_id = ticket.id_tickets
-      
+      const user_id = user.userid
+
       // update ticket's owner to current user 
       const transfer_res = await fetch(`${server}/api/transfer_ticket`, {
         method: 'POST',
@@ -70,6 +100,11 @@ export const getStaticProps = async (context) => {
   const ticket_res = await fetch(`${server}/api/tickets/${ticket_id}`)
   const ticket = await ticket_res.json()
 
+  // get event details
+  const events_res = await fetch(`${server}/api/events_buy`)
+  const events = await events_res.json()
+  const event = events.result.filter((event) => event.id.toString() == ticket.event_id.toString())[0]
+
   // get owner's details 
   const users_res = await fetch(`${server}/api/all_users`)
   const users = await users_res.json()
@@ -79,6 +114,7 @@ export const getStaticProps = async (context) => {
     props: {
       ticket: ticket,
       ticket_owner: ticket_owner,
+      event: event,
     },
   }
 }
