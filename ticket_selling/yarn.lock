@@ -358,6 +358,11 @@
   "resolved" "https://registry.npmjs.org/@panva/hkdf/-/hkdf-1.0.2.tgz"
   "version" "1.0.2"
 
+"@popperjs/core@^2.11.6":
+  "integrity" "sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw=="
+  "resolved" "https://registry.npmjs.org/@popperjs/core/-/core-2.11.6.tgz"
+  "version" "2.11.6"
+
 "@rushstack/eslint-patch@^1.1.3":
   "integrity" "sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg=="
   "resolved" "https://registry.npmjs.org/@rushstack/eslint-patch/-/eslint-patch-1.2.0.tgz"
@@ -647,6 +652,11 @@
   "integrity" "sha512-vHdS19CnY3hwiNdkaqk93DvjVLfbEcI8mys4UjuWrlX1haDmroo8o4xCzh4wD6DGV6HxRCyauwhHRqMTfERtjw=="
   "resolved" "https://registry.npmjs.org/bmp-js/-/bmp-js-0.1.0.tgz"
   "version" "0.1.0"
+
+"bootstrap@^5.2.2":
+  "integrity" "sha512-dEtzMTV71n6Fhmbg4fYJzQsw1N29hJKO1js5ackCgIpDcGid2ETMGC6zwSYw09v05Y+oRdQ9loC54zB1La3hHQ=="
+  "resolved" "https://registry.npmjs.org/bootstrap/-/bootstrap-5.2.2.tgz"
+  "version" "5.2.2"
 
 "brace-expansion@^1.1.7":
   "integrity" "sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA=="
@@ -1956,7 +1966,7 @@
   dependencies:
     "moment" ">= 2.9.0"
 
-"moment@^2.29.1", "moment@>= 2.9.0":
+"moment@^2.29.1", "moment@^2.29.4", "moment@>= 2.9.0":
   "integrity" "sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w=="
   "resolved" "https://registry.npmjs.org/moment/-/moment-2.29.4.tgz"
   "version" "2.29.4"
