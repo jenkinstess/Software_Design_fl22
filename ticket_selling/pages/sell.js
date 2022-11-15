@@ -62,7 +62,14 @@ const Sell = ({currentEvents, existingTickets}) =>{
   const handleChange = (e) => {
     e.preventDefault();
     setEventName(e.target.value);
-    setShowMe(!showMe);
+    console.log("TEST HERE SHOWME:" + e.target.value)
+    if(e.target.value.length == 0){
+      setShowMe(true);
+    }
+    else{
+      setShowMe(false);
+    }
+    
   };
 
   const handleOTHERChange = (event) => {
@@ -126,9 +133,9 @@ const Sell = ({currentEvents, existingTickets}) =>{
           'Content-Type': 'application/json',
         },
       body: JSON.stringify({
-          //eventDate,
+          eventDate,
           eventName,
-          //eventDescription,
+          eventDescription,
           //ownerID,
         }),
     }) 
@@ -227,8 +234,11 @@ const Sell = ({currentEvents, existingTickets}) =>{
             name="eventDate"
             type="date"
             required
+            min={new Date().toISOString().split("T")[0]}
           />
-        </label>)}
+        </label>
+        )}
+        
   
         <br />
 
@@ -254,7 +264,8 @@ const Sell = ({currentEvents, existingTickets}) =>{
             name="eventDescription"
             type="eventDescription"
           />
-        </label>)}
+        </label>
+        )}
         <br />
         <label htmlFor="ticketPrice">
           Ticket Price 
