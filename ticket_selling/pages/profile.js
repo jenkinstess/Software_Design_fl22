@@ -59,17 +59,17 @@ const Profile = ({tickets, users}) =>{
   
   return (
     <div>
-      <Head>
+    {/*<Head>
         <title>Profile</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head>
-      <h1>Profile</h1>
+      </Head>*/}
+      <h2>Profile</h2>
       {loggedIn && (
         <>
-          <h3>Welcome to the profile page {data.email}!</h3>
+          <p><b>Welcome to the profile page <i>{data.email}!</i></b></p>
           <p>You can find relevant account information here: </p>
           
-          <p>Venmo: {cur_venmo}</p>
+          <p>Venmo: <i>{cur_venmo}</i></p>
 
       <h5>Your Tickets: </h5>
       <div>

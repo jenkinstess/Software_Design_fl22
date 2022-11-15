@@ -7,20 +7,26 @@ const event = ({ event, event_tickets }) => {
         <>
             <AuthRedirection/>
             <div>
-                <h1>{event.name}</h1>
-                <h3>{event.date}</h3>
-                <p>{event.description}</p>
+                <h2>Event Details</h2>
+                <p>Name: <i>{event.name}</i></p>
+                <p>Date: <i>{event.date}</i></p>
+                <p>Details: <i>{event.description}</i></p>
             </div>
             <div>
-                <h2>Event Tickets:</h2>
-                <p>Select one to purchase it.</p>
-                {event_tickets.map((ticket) => (
-                    <li key={ticket}>
-                        <Link href={`/ticket/${ticket.id_tickets}`}>
-                            <a><p>{ticket.price} &rarr;</p></a>
-                        </Link>
-                    </li>
-                ))}
+                <h4>Event Tickets:</h4>
+                <p>Select from the tickets below to purchase:</p>
+                <div class="card text-center mx-auto" style={{width: '18rem'}}>
+                    <ul class="list-group list-group-flush">
+                    {event_tickets.map((ticket) => (
+                        <li key={ticket} class="list-group-item">
+                            <p>
+                                $<b>{ticket.price} &emsp;</b>
+                                <a href={`/ticket/${ticket.id_tickets}`}  class="btn btn-primary btn-sm">Buy Now &rarr;</a>
+                            </p>
+                        </li>
+                    ))}
+                    </ul>
+                </div>
             </div>
         </>
     )
