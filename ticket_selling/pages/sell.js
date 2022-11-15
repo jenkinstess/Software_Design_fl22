@@ -45,7 +45,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
   const canvasRef = useRef(null);
   const imageRef = useRef(null);
 
-  // const [showMe, setShowMe] = useState(true);
+  const [showMe, setShowMe] = useState(true);
 
     // potentially we just need to store this in db? do we want manual entry
   
@@ -62,7 +62,14 @@ const Sell = ({currentEvents, existingTickets}) =>{
   const handleChange = (e) => {
     e.preventDefault();
     setEventName(e.target.value);
-    // setShowMe(!showMe);
+    console.log("TEST HERE SHOWME:" + e.target.value)
+    if(e.target.value.length == 0){
+      setShowMe(true);
+    }
+    else{
+      setShowMe(false);
+    }
+    
   };
 
   const handleOTHERChange = (event) => {
@@ -218,7 +225,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
     <br></br><br></br>
     <form onSubmit={handleSubmit}>
         
-        {/* {showMe && ( */}
+        {showMe && (
         <label htmlFor="date">
           Ticket Date
           <input
@@ -229,7 +236,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
             required
           />
         </label>
-        {/* )} */}
+        )}
         
   
         <br />
@@ -247,7 +254,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
 
         <br />
 
-        {/* {showMe && ( */}
+        {showMe && (
         <label htmlFor="eventDescription">
           Event Description
           <input
@@ -257,7 +264,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
             type="eventDescription"
           />
         </label>
-        {/* )} */}
+        )}
         <br />
         <label htmlFor="ticketPrice">
           Ticket Price 
