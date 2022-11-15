@@ -61,15 +61,21 @@ async function createUser(email, password, venmo, callback) {
     console.log(hash)
     // Stores the hash in the password db
     const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO users( email, password, venmo) VALUES (:email, :password, :venmo)',
-    {
-      replacements: { email: email, password: hash, venmo: venmo},
-      type: QueryTypes.INSERT
-    },
-    function(err, userCreated){
-      assert.strictEqual(err, null);
-      callback(userCreated)
-    },);
-  })
+      {
+        replacements: { email: email, password: hash, venmo: venmo},
+        type: QueryTypes.INSERT
+      },
+      // function(err, userCreated){
+      //   assert.strictEqual(err, null);
+      //   callback(userCreated)
+      // },
+    );
+    callback(resultsCreate);
+    // function(err, resultsCreate){
+    //   assert.strictEqual(err, null);
+    //   callback(resultsCreate)
+    // }
+  });
 }
 
 export default (req, res) => {
@@ -100,12 +106,8 @@ export default (req, res) => {
           // if no user object is returned, then we should go ahead and create the user
           if (!user){
             // createUser(email, password, venmo, function(err, success){
-            createUser(email, password, venmo, function(err){
-              if (err) {
-                res.status(500).json({error: true, message: 'error creating user'});
-                return;
-              }
-              else{
+            createUser(email, password, venmo, function(newUser){
+              if (newUser) {
                 console.log("user created!");
                 const token = jwt.sign(
                   {email: email},
