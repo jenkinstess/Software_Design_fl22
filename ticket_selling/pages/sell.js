@@ -257,8 +257,8 @@ const Sell = ({currentEvents, existingTickets}) =>{
         </label>)}
         <br />
         <label htmlFor="ticketPrice">
-          Ticket Price
-          <input
+          Ticket Price 
+          <input 
             value={ticketPrice}
             onChange={(e) => setTicketPrice(e.target.value)}
             name="ticketPrice"
