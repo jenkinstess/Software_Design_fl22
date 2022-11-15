@@ -97,7 +97,7 @@ async function createTicket(event, price, sellerID, eventID, specID) {
 
 export default (req, res) => {
     if (req.method === 'POST') {
-      console.log(req)
+      //console.log(req)
       // verify the email does not already exist in the system
       sequelize.authenticate().then(() => {
 
