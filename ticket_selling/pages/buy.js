@@ -45,7 +45,7 @@ export default function Buy({ events }) {
         <AuthRedirection />
         <div>
             <h2>Upcoming Events</h2>
-            <h3>Please select from below to purchase a ticket</h3>
+            <br></br>
             <p>Search events: <input
                 onChange={onChange}
                 placeholder='Event name...'
@@ -57,6 +57,7 @@ export default function Buy({ events }) {
                 onChange={filterDates}
                 min={new Date().toISOString().split("T")[0]} // after current date
             /></p>
+            <p>Please select from the events below to purchase a ticket:</p>
             <EventList events={cur_events} />
         </div>
         </>
