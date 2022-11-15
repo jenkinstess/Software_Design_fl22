@@ -7,8 +7,8 @@ import { server } from '../config';
 
 
   export const getStaticProps = async() =>{
-    // const response = await fetch('http://localhost:3000/api/profile') //local
-    const response = await fetch('http://ec2-3-141-164-182.us-east-2.compute.amazonaws.com:3000/api/profile') //ec2
+    const response = await fetch(`${server}/api/profile`) //local
+    // const response = await fetch('http://ec2-3-141-164-182.us-east-2.compute.amazonaws.com:3000/api/profile') //ec2
 
     //only absolute urls supported ^^^^^
     const data = await response.json()
