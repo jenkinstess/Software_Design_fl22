@@ -6,6 +6,8 @@
 import { NEXT_CLIENT_SSR_ENTRY_SUFFIX } from 'next/dist/shared/lib/constants';
 import { Query } from 'pg';
 import Sequelize, { QueryTypes } from 'sequelize'
+import { isConditionalExpression } from 'typescript';
+import { server } from "../../../config";
 
 const { DataTypes } = require('sequelize');
 const assert = require('assert');
@@ -82,19 +84,20 @@ async function addNumTicketToEvents(eventID, currentNumTickets){
   
 }
 
-async function createTicket(event, price, eventID, specID) {
-  const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO tickets(price, event, event_id, specific_id) VALUES (:price, :event, :event_id, :specific_id)',
+async function createTicket(event, price, sellerID, eventID, specID) {
+  const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO tickets(price, event, userUserid, event_id, specific_id) VALUES (:price, :event, :userUserid, :event_id, :specific_id)',
   {
-      replacements: { price: price, event: event, event_id: eventID, specific_id: specID},
+      replacements: { price: price, event: event, userUserid: sellerID, event_id: eventID, specific_id: specID},
       type: QueryTypes.INSERT
     }
   );
   //updatenum
 }
 
+
 export default (req, res) => {
     if (req.method === 'POST') {
-    
+      console.log(req)
       // verify the email does not already exist in the system
       sequelize.authenticate().then(() => {
 
@@ -102,16 +105,23 @@ export default (req, res) => {
  
         const eventName = req.body.eventName;
         const price = req.body.ticketPrice;
-        const specificID = req.body.numResult;
-        console.log("data grabbed");
-        findEventID(eventName, function(eventInfo){
+        const specificID = req.body.text;
+        const seller_id = req.body.ownerID;
+        // console.log("data passed: "+ req.body);
+        // console.log("SEE IF THERE IS A VALUE HERE: " + specificID);
+        // console.log("data grabbed");
+
+
+        findEventID(eventName, async function(eventInfo){
           if(!eventInfo){
             //res.status(404).json({error: true, message: 'Event not found'});
             console.log('event not found')
             return;
           }
           else{
-            createTicket(eventName, price, eventInfo.id, specificID);
+            //const seller_id = await findSellerID();
+            console.log("INA IS HERE: " + seller_id);
+            createTicket(eventName, price, seller_id, eventInfo.id, specificID);
             //fetch event numTickets
             //add one to that
             console.log("INA IS TESTING RIGHT HERE: " + eventInfo.numTickets);
@@ -134,5 +144,3 @@ events.sync().then(
 tickets.sync().then(
   () => console.log("final sync complete")
 );
-//4FAUL6
-//4BYUZX

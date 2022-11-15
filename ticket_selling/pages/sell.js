@@ -7,9 +7,12 @@ import cookie from 'js-cookie';
 import { server } from '../config';
 const db = require('/config/database');
 
+
 export const getStaticProps = async() => {
   const response = await fetch(`${server}/api/events_buy`)
   const data = await response.json()
+
+
 
   // const response2 = await fetch(`${server}/api/ticketPrices`)
   // const data2 = await response2.json()
@@ -27,8 +30,7 @@ export const getStaticProps = async() => {
 // }
 */
 
-// const Sell = ({currentEvents, existingTickets}) =>{
-const Sell = ({currentEvents}) =>{
+const Sell = ({currentEvents, existingTickets}) =>{
 
   const [createEventMessage, setCreateEventMessage] = useState('');
   const [eventDate, setDate] = useState('');
@@ -42,6 +44,9 @@ const Sell = ({currentEvents}) =>{
   const [text, setText] = useState('');
   const canvasRef = useRef(null);
   const imageRef = useRef(null);
+
+  const [showMe, setShowMe] = useState(true);
+
     // potentially we just need to store this in db? do we want manual entry
   
   //iterate through events. parse each event object for its name. 
@@ -54,73 +59,66 @@ const Sell = ({currentEvents}) =>{
     existingEventNames.push(objs.result[i].name)
   }
 
-
-  //GET BACK TO THIS
-  // const ticketJson = JSON.stringify(existingTickets)
-  // console.log(ticketJson);
-  //var objs2 = JSON.parse(ticketJson);
-  // for (let i = 0; i<objs2.result.length; i++){
-  //   //come back to this to also populate date
-  //   //eventData.set(objs.result[i].name, objs.result[i].date)
-  //   console.log("TESTING HERE!!!" + objs2.result[i])
-  // }
-
-
-
   const handleChange = (e) => {
-    // setDate(e.target.value);
-    // setEventDescription(e.target.value);
     e.preventDefault();
     setEventName(e.target.value);
-
-
-    //GET BACK TO THIS
-    // console.log('EVENT NAME RIGHT NOW IS +' + eventName)
-    // fetch('/api/ticketPrices', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     eventName
-    //   }),
-    // })
-
-
+    setShowMe(!showMe);
   };
 
   const handleOTHERChange = (event) => {
     console.log(event.target.files[0]);
     setImage(URL.createObjectURL(event.target.files[0]))
+    //handleClick(event);
+    
   }
 
-  function handleSubmit(e) {
+  async function findSellerID(){
+    const loggedin_user_res = await fetch(`${server}/api/me`)
+    const loggedin_user = await loggedin_user_res.json()
+  
+    // get logged in user's id for ticket sold
+    const users_res = await fetch(`${server}/api/all_users`)
+    const users = await users_res.json()
+    const current_user = users.result.filter((user) => user.email.toString() == loggedin_user.email.toString())[0]
+    console.log('logged in ID: ' + current_user.userid)
+  
+    const user_id = current_user.userid;
+    return user_id;
+  }
+
+  async function handleSubmit(e) {
       e.preventDefault();
       console.log("handling this click !");
 
-      Tesseract.recognize(
-        image,'eng',
-        { 
-          logger: m => console.log(m) 
-        }
-      )
-      .catch (err => {
-        console.log("error here");
-        console.error(err);
-      })
-      .then(result => {
-        console.log("getting the result");
-        console.log("result is: " + JSON.stringify(result));
-        console.log("text is: " + result.data.text);
-        let numResult = (result.data.text).replaceAll(/[^0-9]/gi, '');
-        console.log("text w only numbers is " + numResult);
+      // Tesseract.recognize(
+      //   image,'eng',
+      //   { 
+      //     logger: m => console.log(m) 
+      //   }
+      // )
+      // .catch (err => {
+      //   console.log("error here");
+      //   console.error(err);
+      // })
+      // .then(result => {
+      //   console.log("getting the result");
+      //   console.log("result is: " + JSON.stringify(result));
+      //   console.log("text is: " + result.data.text);
+      //   let numResult = (result.data.text).replaceAll(/[^0-9]/gi, '');
+      //   console.log("text w only numbers is " + numResult);
 
-        // Get full output
-        let text = numResult;
-        console.log(text)
+      //   // Get full output
+      //   let text = numResult;
+      //   console.log(text)
     
-        setText(text);
-      })
+      //   setText(text);
+      // })
+
+      // get logged in user's ID:
+      const ownerID = await findSellerID();
+
+
+      //console.log('Owner ID: ' + ownerID)
 
       fetch('/api/events', {
         method: 'POST',
@@ -128,10 +126,10 @@ const Sell = ({currentEvents}) =>{
           'Content-Type': 'application/json',
         },
       body: JSON.stringify({
-          eventDate,
+          //eventDate,
           eventName,
-          eventDescription,
-            // ownerID
+          //eventDescription,
+          //ownerID,
         }),
     }) 
     .then(() => {fetch('/api/tickets', {
@@ -143,8 +141,8 @@ const Sell = ({currentEvents}) =>{
           eventName,
           eventDescription,
           ticketPrice,
-          text
-            // ownerID
+          text,
+          ownerID
         }),
       })})
         // .then((r) => r.json())
@@ -219,7 +217,8 @@ const Sell = ({currentEvents}) =>{
 
     <br></br><br></br>
     <form onSubmit={handleSubmit}>
-          
+        
+        {showMe && (
         <label htmlFor="date">
           Ticket Date
           <input
@@ -229,7 +228,7 @@ const Sell = ({currentEvents}) =>{
             type="date"
             required
           />
-        </label>
+        </label>)}
   
         <br />
 
@@ -246,6 +245,7 @@ const Sell = ({currentEvents}) =>{
 
         <br />
 
+        {showMe && (
         <label htmlFor="eventDescription">
           Event Description
           <input
@@ -254,11 +254,11 @@ const Sell = ({currentEvents}) =>{
             name="eventDescription"
             type="eventDescription"
           />
-        </label>
+        </label>)}
         <br />
         <label htmlFor="ticketPrice">
-          Ticket Price
-          <input
+          Ticket Price 
+          <input 
             value={ticketPrice}
             onChange={(e) => setTicketPrice(e.target.value)}
             name="ticketPrice"
@@ -282,6 +282,29 @@ const Sell = ({currentEvents}) =>{
         </label> */}
 
         <br />
+        <div className="App">
+      <main className="App-main">
+        <h3>Upload Ticket in format of <h7>[bmp, jpg, png, pbm, webp]</h7></h3>
+        <h4>(Only the QR/bar code and numeric value under it should be visible)</h4>
+        <br/>
+        <img 
+           src={image} className="App-logo" alt="logo"
+          //  ref={imageRef} 
+           />
+        {/* <h3>Canvas</h3>
+        <canvas ref={canvasRef}></canvas> */}
+          {/* <h3>Extracted text</h3> */}
+          {/* {text} */}
+        <div className="text-box">
+          {/* <p> {text} </p> */}
+        </div>
+        <input type="file" onChange={handleOTHERChange} />
+        <br/>
+        Confirm this is the right ticket
+        <button onClick={handleClick}>CORRECT</button>
+      </main>
+      </div>
+      <br/>
   
         <input type="submit" value="Submit" />
         {createEventMessage && <p style={{color: 'red'}}>{createEventMessage}</p>}
@@ -290,24 +313,6 @@ const Sell = ({currentEvents}) =>{
 
       <br />
 
-      <div className="App">
-      <main className="App-main">
-        <h3>Upload Ticket in PNG or JPG format</h3>
-        <img 
-           src={image} className="App-logo" alt="logo"
-          //  ref={imageRef} 
-           />
-        {/* <h3>Canvas</h3>
-        <canvas ref={canvasRef}></canvas> */}
-          <h3>Extracted text</h3>
-          {/* {text} */}
-        <div className="text-box">
-          <p> {text} </p>
-        </div>
-        <input type="file" onChange={handleOTHERChange} />
-        <button onClick={handleClick} style={{height:50}}> convert to text</button>
-      </main>
-    </div>
 
     </div>
     

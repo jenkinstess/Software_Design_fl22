@@ -24,3 +24,18 @@
     border-radius: 5px;
     text-align: center;
   }
+  .App-main button{
+    color: green;
+    outline-style: auto;
+    background-color: rgba(38, 122, 38, 0.36);
+    
+  }
+
+  h7{
+    font-family: monospace;
+  }
+
+  h4{
+    font-style: italic;
+    font-size: medium;
+  }
