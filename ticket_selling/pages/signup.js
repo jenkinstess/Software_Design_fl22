@@ -49,9 +49,11 @@ const Signup = () => {
     }
     return (
       <form onSubmit={handleSubmit}>
-        <p>Sign Up</p>
+        <h2>Sign Up</h2>
+        <br></br>
+        
         <label htmlFor="email">
-          email
+          Email: &emsp;
           <input
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -62,10 +64,11 @@ const Signup = () => {
           />
         </label>
   
-        <br />
+        <br></br>
+        <br></br>
 
         <label htmlFor="firstName">
-          First Name
+          First Name: &emsp;
           <input
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
@@ -75,10 +78,11 @@ const Signup = () => {
           />
         </label>
 
-        <br />
+        <br></br>
+        <br></br>
 
         <label htmlFor="lastName">
-          Last Name
+          Last Name: &emsp;
           <input
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
@@ -88,10 +92,11 @@ const Signup = () => {
           />
         </label>
 
-        <br />
+        <br></br>
+        <br></br>
 
         <label htmlFor="phoneNum">
-          Phone Number
+          Phone Number: &emsp;
           <input
             value={phoneNum}
             onChange={(e) => setPhoneNumber(e.target.value)}
@@ -102,10 +107,11 @@ const Signup = () => {
           />
         </label>
 
-        <br />
+        <br></br>
+        <br></br>
 
         <label htmlFor="venmo">
-          Venmo Username
+          Venmo Username: &emsp;
           <input
             value={venmo}
             onChange={(e) => setVenmo(e.target.value)}
@@ -115,10 +121,11 @@ const Signup = () => {
           />
         </label>
   
-        <br />
+        <br></br>
+        <br></br>
   
         <label htmlFor="password">
-          Password
+          Password: &emsp;
           <input
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -127,9 +134,10 @@ const Signup = () => {
           />
         </label>
   
-        <br />
-  
-        <input type="submit" value="Submit" />
+        
+        <br></br>
+        <br></br>
+        <input type="submit" value="Submit" class="btn btn-primary"/>
         {signupError && <p style={{color: 'red'}}>{signupError}</p>}
       </form>
     );
