@@ -60,7 +60,7 @@ const Ticket = ({ticket, ticket_owner, event}) => {
                 {transferred && (
                   <>
                   <p>The ticket is now transferred to your account!</p>
-                  <p>You can access the ticket in your profile <Link href='/profile'><a><li>here.</li></a></Link></p>
+                  <p>You can access the ticket in your profile <Link href='/profile'><a>here.</a></Link></p>
                   </>
                 )}
             </div>

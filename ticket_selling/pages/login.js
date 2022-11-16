@@ -41,21 +41,32 @@ const Login = () => {
   }
   return (
     <form onSubmit={handleSubmit}>
-      <p>Login</p>
-      <input
-        name="email"
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required placeholder="johnDoe@gmail.com"
-      />
-      <input
-        name="password"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <input type="submit" value="Submit" />
+      <h2>Login</h2>
+      <br></br>
+      <label htmlFor='email'>
+        Email: &emsp;
+        <input
+          name="email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required placeholder="johnDoe@gmail.com"
+        />
+      </label>
+      <br></br>
+        <br></br>
+      <label htmlFor='password'>
+        Password: &emsp;
+        <input
+          name="password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </label>
+      <br></br>
+      <br></br>
+      <input type="submit" value="Submit" class="btn btn-primary"/>
       {loginError && <p style={{color: 'red'}}>{loginError}</p>}
     </form>
   );

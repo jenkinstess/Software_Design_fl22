@@ -50,7 +50,7 @@ const Profile = ({tickets, users}) =>{
   let num_tix = (tickets_json).length
   for (let j = 0; j < num_tix; j++){
     if (user_id == JSON.stringify(tickets_json[j].userUserid).replaceAll('"', '')){
-      let ticket = [JSON.stringify(tickets_json[j].event), JSON.stringify(tickets_json[j].price), JSON.stringify(tickets_json[j].is_sold), JSON.stringify(tickets_json[j].event_id), JSON.stringify(tickets_json[j].id_tickets)]
+      let ticket = [((JSON.stringify(tickets_json[j].event)).replaceAll('"', '')), JSON.stringify(tickets_json[j].price), JSON.stringify(tickets_json[j].is_sold), JSON.stringify(tickets_json[j].event_id), JSON.stringify(tickets_json[j].id_tickets)]
       users_tix.push(ticket)
     }
   }
@@ -73,16 +73,21 @@ const Profile = ({tickets, users}) =>{
 
       <h5>Your Tickets: </h5>
       <div>
+      <div class="card text-center mx-auto" style={{width: '18rem'}}>
+        <ul class="list-group list-group-flush">
           {users_tix.map((ticket) =>
-            <ul><li>
-             <a href = {`${server}/event/${ticket[3]}`} ><strong>Event:</strong> {ticket[0]}</a> 
-              {/* <strong>Event:</strong> {ticket[0]} */}
-            <li><a href = {`${server}/ticket/${ticket[4]}`} >Price: {ticket[1]}</a></li>
+            <li key={ticket} class="list-group-item">
+             {/* <a href = {`${server}/event/${ticket[3]}`} ><strong>Event:</strong> {ticket[0]}</a> 
+              <strong>Event:</strong> {ticket[0]}
+            <li><a href = {`${server}/ticket/${ticket[4]}`} >Price: {ticket[1]}</a></li> */}
+              <p><a href = {`${server}/event/${ticket[3]}`}><i>Event</i></a>: {ticket[0]}</p>
+              <p><i>Price:</i> $<b>{ticket[1]}</b></p>
             </li>
-            </ul>
+            
           )}
+          </ul>
           </div>
-          
+        </div>
           {/* JSON.parse(JSON.stringify(user_arr))['email'] */}
           
           <br /><br />
