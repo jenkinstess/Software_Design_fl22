@@ -43,10 +43,12 @@ async function findEventID(ticketID, callback){
 }
 
 // TODO: update func. to transfer ownership of ticket to new user 
-async function transferOwner(ticket_id, new_owner_id){
-    const resultFound = await sequelize.query("UPDATE ticketsitedb.tickets SET userUserid = :user_id, is_sold = 1 WHERE id_tickets = :ticket_id",
+  //notes: maybe we have to run a select query first to get the previous owner's id; then put that in the sold_from col
+  //  set the is_confirmed col to false, will be handled on the profile side
+async function transferOwner(ticket_id, new_owner_id, prev_owner){
+    const resultFound = await sequelize.query("UPDATE ticketsitedb.tickets SET userUserid = :user_id, is_sold = 1, is_confirmed = 0, sold_from = :prev_owner WHERE id_tickets = :ticket_id",
     {
-      replacements: {user_id: new_owner_id, ticket_id: ticket_id}, 
+      replacements: {user_id: new_owner_id, ticket_id: ticket_id, prev_owner: prev_owner}, 
       type: QueryTypes.UPDATE
     });
   }
@@ -66,7 +68,9 @@ async function subtractNumTicketToEvents(eventID, currentNumTickets){
     
     try {
       if (req.method === 'POST') {
-        transferOwner(req.body.ticket_id, req.body.user_id),
+        let prev_owner = req.body.prev_owner_email;
+        console.log("GETTING PREVIOUS OWNER: " + prev_owner)
+        transferOwner(req.body.ticket_id, req.body.user_id, prev_owner),
 
         findEventID(req.body.ticket_id, function(eventID){
           findEventNumTickets(eventID.event_id, function(ticketNum){

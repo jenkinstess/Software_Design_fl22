@@ -19,7 +19,9 @@ async function getUser(callback) {
   }
 }
 
+
 const Ticket = ({ticket, ticket_owner, event}) => {
+  let ticket_owner_email = ticket_owner.email
     const [transferred, setTransferred] = useState(false);
     const [user, setUser] = useState({});
     const router = useRouter();
@@ -41,7 +43,6 @@ const Ticket = ({ticket, ticket_owner, event}) => {
         }
       })
     }, []) 
-    
     console.log(user)
     return (
         <>
@@ -54,7 +55,7 @@ const Ticket = ({ticket, ticket_owner, event}) => {
                 {!transferred && (
                   <>
                   <p><i>Instructions:</i> please venmo the account above with the listed price, and confirm payment below:</p>
-                  <button class="btn btn-primary" onClick={() => handleTransfer(ticket, user)}>Venmo Sent &#10003;</button>
+                  <button class="btn btn-primary" onClick={() => handleTransfer(ticket, user, ticket_owner_email)}>Venmo Sent &#10003;</button>
                   </>
                 )}
                 {transferred && (
@@ -67,10 +68,11 @@ const Ticket = ({ticket, ticket_owner, event}) => {
         </>
     )
 
-    async function handleTransfer(ticket, user) {
+    async function handleTransfer(ticket, user, ticket_owner_email) {
       //console.log('transfer button selected')
-      
+
       const ticket_id = ticket.id_tickets
+      const prev_owner_email = ticket_owner_email
       const user_id = user.userid
 
       // update ticket's owner to current user 
@@ -82,6 +84,7 @@ const Ticket = ({ticket, ticket_owner, event}) => {
         body: JSON.stringify({
           ticket_id,
           user_id,
+          prev_owner_email,
         }),
       })
         .then((r) => r.json())

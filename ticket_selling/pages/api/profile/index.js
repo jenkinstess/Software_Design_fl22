@@ -48,39 +48,6 @@ async function findUser(){
   }
 
 }
-//   async function getUser() {
-//     console.log("HELLLOOOOOOOOOOOOO from inside get user1")
-//           // get logged in user's email
-//           const loggedin_user_res = await fetch(`${server}/api/me`)
-//           const loggedin_user = await loggedin_user_res.json()
-//           console.log(JSON.stringify(loggedin_user))
-          
-//           // get logged in user's id
-//           const users_res = await fetch(`${server}/api/all_users`)
-//           const users = await users_res.json()
-//           console.log("BUTTS")
-//           console.log("USERS: " + JSON.stringify(users))
-//           const current_user = users.result.filter((user) => user.email.toString() == loggedin_user.email.toString())[0]
-//           console.log(current_user)
-//           console.log('logged in ID: ' + current_user.userid)
-          
-//           const user_id = current_user.userid
-//           // console.log("!!!!!!!!!!!!!!!!!!!!!!!!! user id: " + user_id)
-//           return user_id
-//   }
-
-// async function findUser(){
-//   console.log("HELLLOOOOOOOOOOOOO")
-//     const user_id = await getUser();
-
-//     console.log("!!!!!!!!!!!!!!!!!!!!!!!!! user id: " + user_id)
-//     const [resultFound] = await sequelize.query("SELECT * FROM ticketsitedb.users WHERE userid =:user_id",
-//     {
-//       replacements: {user_id: user_id},
-//       type: QueryTypes.SELECT
-//     });
-//     return JSON.stringify(resultFound);
-//   }
 
 async function getUsers(){
     const users_res = await fetch(`${server}/api/all_users`)

@@ -84,10 +84,10 @@ async function addNumTicketToEvents(eventID, currentNumTickets){
   
 }
 
-async function createTicket(event, price, sellerID, eventID, specID) {
-  const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO tickets(price, event, userUserid, event_id, specific_id) VALUES (:price, :event, :userUserid, :event_id, :specific_id)',
+async function createTicket(event, price, sellerID, eventID, specID, confirmed) {
+  const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO tickets(price, event, userUserid, event_id, specific_id, is_confirmed) VALUES (:price, :event, :userUserid, :event_id, :specific_id, :is_confirmed)',
   {
-      replacements: { price: price, event: event, userUserid: sellerID, event_id: eventID, specific_id: specID},
+      replacements: { price: price, event: event, userUserid: sellerID, event_id: eventID, specific_id: specID, is_confirmed: confirmed},
       type: QueryTypes.INSERT
     }
   );
@@ -121,7 +121,8 @@ export default (req, res) => {
           else{
             //const seller_id = await findSellerID();
             console.log("INA IS HERE: " + seller_id);
-            createTicket(eventName, price, seller_id, eventInfo.id, specificID);
+            let confirmed = true;
+            createTicket(eventName, price, seller_id, eventInfo.id, specificID, confirmed);
             //fetch event numTickets
             //add one to that
             console.log("INA IS TESTING RIGHT HERE: " + eventInfo.numTickets);
