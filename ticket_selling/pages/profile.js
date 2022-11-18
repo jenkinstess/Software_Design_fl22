@@ -3,6 +3,10 @@ import fetch from 'isomorphic-unfetch';
 import useSWR from 'swr';
 import { server } from '../config';
 import { QueryTypes, Sequelize } from 'sequelize';
+import { StyleRegistry } from 'styled-jsx';
+
+
+
 
 
 
@@ -19,29 +23,44 @@ import { QueryTypes, Sequelize } from 'sequelize';
     }
   }
 
-  // export async function getServerSideProps(){
-  //   const {data, revalidate} = useSWR('/api/me', async function(args) {
-  //     const res = await fetch(args);
-  //     return res.json();
-  //   },{refreshInterval:10});
-  //   if (!data) return <h1>Loading...</h1>;
-  //   let loggedIn = false;
-    
-  //   //extract user information from full list of users
-  //   if (data.email) {
-  //     loggedIn = true;
-  //    const result = await sequelize.query("SELECT userUserid FROM ticketsitedb.users WHERE email =: user_email", {
-  //     replacements: {user_email: data.email},
-  //     type: QueryTypes.SELECT
-  //    });
-    
-  //   }
-  //   const json = await result.json() 
-  //   console.log("JSON RESULT HERE" +json)
-  //   return {
-  //     props: {user_id: json.userUserid}
-  //   }
-  // }
+  async function listTicket(ticket_id) {
+
+
+    // update ticket's owner to current user 
+    const transfer_res = await fetch(`${server}/api/update_ticket/list_ticket`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ticket_id,
+      }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+      });
+      location.reload();
+  }
+
+  async function claimTicket(ticket_id) {
+
+
+    // update ticket's owner to current user 
+    const transfer_res = await fetch(`${server}/api/update_ticket/claim_ticket`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ticket_id,
+      }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+      });
+      location.reload();
+  }
+
 
 
 const Profile = ({tickets, users}) =>{
@@ -78,10 +97,11 @@ const Profile = ({tickets, users}) =>{
     if (user_id == JSON.stringify(tickets_json[j].userUserid).replaceAll('"', '')){
       let is_sold =  JSON.stringify(tickets_json[j].is_sold).replaceAll('"', '')
       if (is_sold == 0){
-        is_sold = " | On Market"
+        is_sold = false
       } else {
-        is_sold = ""
+        is_sold = true
       }
+      
       let ticket = [((JSON.stringify(tickets_json[j].event)).replaceAll('"', '')), JSON.stringify(tickets_json[j].price), is_sold, JSON.stringify(tickets_json[j].event_id), JSON.stringify(tickets_json[j].id_tickets)]
       users_tix.push(ticket)
     } else if (data.email == JSON.stringify(tickets_json[j].sold_from).replaceAll('"', '')) {
@@ -111,14 +131,25 @@ const Profile = ({tickets, users}) =>{
       <div class="card text-center mx-auto" style={{width: '18rem'}}>
         <ul class="list-group list-group-flush">
           {users_tix.map((ticket) =>
+             ticket[2] ? (
             <li key={ticket} class="list-group-item">
              {/* <a href = {`${server}/event/${ticket[3]}`} ><strong>Event:</strong> {ticket[0]}</a> 
               <strong>Event:</strong> {ticket[0]}
             <li><a href = {`${server}/ticket/${ticket[4]}`} >Price: {ticket[1]}</a></li> */}
-              <p><a href = {`${server}/event/${ticket[3]}`}><i>Event</i></a>: {ticket[0]} {ticket[2]}</p>
+              <p><a href = {`${server}/event/${ticket[3]}`}><i>Event</i></a>: {ticket[0]}</p>
               <p><i>Price:</i> $<b>{ticket[1]}</b></p>
+              <button onClick={()=>listTicket(ticket[4])}>Resell Ticket</button>
             </li>
             
+          ) : 
+          <li key={ticket} class="list-group-item">
+             {/* <a href = {`${server}/event/${ticket[3]}`} ><strong>Event:</strong> {ticket[0]}</a> 
+              <strong>Event:</strong> {ticket[0]}
+            <li><a href = {`${server}/ticket/${ticket[4]}`} >Price: {ticket[1]}</a></li> */}
+              <p><a href = {`${server}/event/${ticket[3]}`}><i>Event</i></a>: {ticket[0]} | On Market</p>
+              <p><i>Price:</i> $<b>{ticket[1]}</b></p>
+              <button onClick={()=>claimTicket(ticket[4])}>Claim Ticket</button>
+            </li>
           )}
           </ul>
           </div>
