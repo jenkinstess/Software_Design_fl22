@@ -260,7 +260,7 @@ const Profile = ({tickets, users}) =>{
             <li><a href = {`${server}/ticket/${ticket[4]}`} >Price: {ticket[1]}</a></li> */}
               <p><a href = {`${server}/event/${ticket[3]}`}><i>Event</i></a>: {ticket[0]}</p>
               <p><i>Price:</i> $<b>{ticket[1]}</b></p>
-              <button onClick={()=>removeTicket(ticket[4])}>Unremove Ticket</button>
+              <button onClick={()=>unremoveTicket(ticket[4])}>Unremove Ticket</button>
             </li>
 
           )}
