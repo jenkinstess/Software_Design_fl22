@@ -90,7 +90,7 @@ export default (req, res) => {
             // setNumTickets(event.numTickets)
             // console.log("TESTING RIGHT HERE INA: " + numTickets)
             //have to make numTickets global variable 
-            res.status(401).json({error: false, message: 'Event Already Exists'});
+            res.status(401).json({error: true, message: 'Event Already Exists'});
             return;
           }
 

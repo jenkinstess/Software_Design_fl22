@@ -44,6 +44,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
   const [image, setImage] = useState('');
   const [text, setText] = useState('');
   const [imgConfirm, setImgConfirm] = useState('');
+  const [imgData, setImgData] = useState('');
   const canvasRef = useRef(null);
   const imageRef = useRef(null);
 
@@ -76,6 +77,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
 
   const handleOTHERChange = (event) => {
     console.log(event.target.files[0]);
+    setImgData(event.target.files[0]);
     setImage(URL.createObjectURL(event.target.files[0]))
     //handleClick(event);
     
@@ -154,16 +156,26 @@ const Sell = ({currentEvents, existingTickets}) =>{
           ownerID
         }),
       })})
+      .then(() => {fetch('/api/img_tickets', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      body: JSON.stringify({
+          // imgData,
+          image,
+          text
+        }),
+      })})
         // .then((r) => r.json())
         .then((data) => {
           //still have to check for error
           //Router.push('/buy');
-          alert("Event Uploaded!")
           if (data && data.error) {
             setCreateEventMessage(data.message);
           }
           if (data && data.token) {
-            
+            alert("Event Uploaded!")
             //set cookie
             setCreateEventMessage("Success");
             cookie.set('token', data.token, {expires: 2});
@@ -186,6 +198,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
     // ctx.drawImage(imageRef.current, 0, 0);
     // ctx.putImageData(preprocessImage(canvas),0,0);
     // const dataUrl = canvas.toDataURL("image/jpeg");
+    console.log("contents of image: " + image);
   
     Tesseract.recognize(
       image,'eng',
@@ -327,6 +340,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
   
         <input type="submit" value="Submit" />
         {createEventMessage && <p style={{color: 'red'}}>{createEventMessage}</p>}
+        
 
       </form>
 

@@ -20,41 +20,20 @@ const sequelize = new Sequelize('ticketsitedb', 'ticketgroup', 'partytixstinks',
 });
 
 //should clear the database every week if we're doing event as primary key
-const tickets = sequelize.define('tickets', {
-  id_tickets:{
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-
-  price: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-
-  event:{
+const tickets = sequelize.define('images', {
+  idimages:{
     type: DataTypes.STRING,
-    allowNull: false
-  },
-
-  userUserid:{
-    type: DataTypes.STRING,
-  },
-
-  event_id:{
-    type: DataTypes.INTEGER,
-    allowNul: false,
+    allowNull: false,
     references: {
-      model: 'events',
-      key: 'id'
-    }
+        model: 'tickets',
+        key: 'specific_id'
+      }
   },
 
-  specific_id:{
+  image_name: {
     type: DataTypes.STRING,
-    allowNull: false,
-  }
+    
+  },
 });
 
 module.exports = tickets;
