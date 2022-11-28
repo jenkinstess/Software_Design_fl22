@@ -45,6 +45,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
   const [text, setText] = useState('');
   const [imgConfirm, setImgConfirm] = useState('');
   const [imgData, setImgData] = useState('');
+  const [imgError, setImageError] = useState('');
   const canvasRef = useRef(null);
   const imageRef = useRef(null);
 
@@ -162,23 +163,25 @@ const Sell = ({currentEvents, existingTickets}) =>{
           'Content-Type': 'application/json',
         },
       body: JSON.stringify({
-          // imgData,
+          //imgData,
           image,
           text
         }),
       })})
-        // .then((r) => r.json())
         .then((data) => {
+          console.log("data being sent is: " + data);
+          console.log("stringified sent data: "+ JSON.stringify(data));
           //still have to check for error
           //Router.push('/buy');
+          //alert("Event Uploaded!")
           if (data && data.error) {
             setCreateEventMessage(data.message);
           }
-          if (data && data.token) {
-            alert("Event Uploaded!")
+          if (data && data.info==0) {
             //set cookie
             setCreateEventMessage("Success");
-            cookie.set('token', data.token, {expires: 2});
+            setText('');
+            //cookie.set('token', data.token, {expires: 2});
 
           }
         });
@@ -189,15 +192,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
   const handleClick = (e) => {
     e.preventDefault();
     console.log("handling this click !");
-    
-    // const canvas = canvasRef.current;
-    // canvas.width = imageRef.current.width;
-    // canvas.height = imageRef.current.height;
-    // const ctx = canvas.getContext('2d');
 
-    // ctx.drawImage(imageRef.current, 0, 0);
-    // ctx.putImageData(preprocessImage(canvas),0,0);
-    // const dataUrl = canvas.toDataURL("image/jpeg");
     console.log("contents of image: " + image);
   
     Tesseract.recognize(
@@ -220,9 +215,35 @@ const Sell = ({currentEvents, existingTickets}) =>{
       // Get full output
       let text = numResult;
       console.log(text)
-  
-      setText(text);
-      setImgConfirm("image chosen")
+
+      fetch('/api/verify_ticket', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text,
+          eventName,
+        }),
+      })
+        .then((r) => {
+          return r.json();
+        })
+        .then((data) => {
+          console.log("logging data" + JSON.stringify(data));
+          if (data && data.error) {
+            setImageError(data.message);
+          }
+          if (data && !data.ticket) {
+            //set cookie
+            console.log("success")
+            setText(text);
+            setImgConfirm("image chosen")
+            //cookie.set('token', data.token, {expires: 2});
+
+          }
+        });
+
       // setPin(patterns);
     })
   }
@@ -334,6 +355,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
         Confirm this is the right ticket
         <button onClick={handleClick}>CORRECT</button>
         {imgConfirm && <p style={{color: 'green'}}> {imgConfirm}</p>}
+        {imgError && <p style={{color: 'red'}}> {imgError}</p>}
       </main>
       </div>
       <br/>

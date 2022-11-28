@@ -38,9 +38,16 @@ events.sync()
   });
 });
 
-imgs.sync().then(() => {
-    console.log("new syncing complete")
+tickets.sync().then(() => {
+  imgs.sync().then(() => {
+    console.log("new syncing complete")  
   });
+});
+
+imgs.sync().then(() => {
+  console.log("new syncing complete")  
+});
+
 
 async function uploadImgTicket(image_name, idimages, callback) {
     const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO images(idimages, image_name) VALUES (:idimages, :image_name)',
@@ -60,17 +67,26 @@ export default (req, res) => {
  
         const src = req.body.image;
         const imgText = req.body.text;
+        //const imgData = req.body.imgData;
         console.log(src);
         console.log(imgText);
+        //console.log(imgData);
         console.log("data grabbed");
 
+        if(imgText.length == 0){
+          res.status(404).json({error: true, message: 'no image sent'});
+          console.log('no image sent')
+          return;
+        }
+
         uploadImgTicket(src, imgText, function(info) {
-            if(!info){
+          console.log("info" + info);
+            if(info!=0){
                 res.status(401).json({error: true, message: 'error uploading ticket'});
                 return;
             }
             else{
-                res.status(404).json({error: false, message: 'ticket uploaded'});
+                res.status(200).json({info});
                 return;
             }
         })

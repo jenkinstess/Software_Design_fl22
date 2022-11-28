@@ -107,6 +107,15 @@ export default (req, res) => {
         const price = req.body.ticketPrice;
         const specificID = req.body.text;
         const seller_id = req.body.ownerID;
+        // console.log("the specific id lenght is: ");
+
+        // console.log(specificID.length);
+        
+        if(specificID.length == 0){
+          res.status(404).json({error: true, message: 'no image sent'});
+          console.log('no image sent')
+          return;
+        }
         // console.log("data passed: "+ req.body);
         // console.log("SEE IF THERE IS A VALUE HERE: " + specificID);
         // console.log("data grabbed");
@@ -127,7 +136,7 @@ export default (req, res) => {
             //add one to that
             console.log("INA IS TESTING RIGHT HERE: " + eventInfo.numTickets);
             addNumTicketToEvents(eventInfo.id, eventInfo.numTickets)
-            res.status(404).json({error: false, message: 'Ticket on Market!'});
+            res.status(200).json({eventInfo});
           }
         })
       }).catch((error) => {
