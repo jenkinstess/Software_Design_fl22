@@ -49,10 +49,10 @@ imgs.sync().then(() => {
 });
 
 
-async function uploadImgTicket(image_name, idimages, callback) {
-    const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO images(idimages, image_name) VALUES (:idimages, :image_name)',
+async function uploadImgTicket(image_name, idimages, event_name, callback) {
+    const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO images(idimages, image_name, event_name) VALUES (:idimages, :image_name, :event_name)',
     {
-      replacements: {idimages: idimages, image_name: image_name},
+      replacements: {idimages: idimages, image_name: image_name, event_name: event_name},
       type: QueryTypes.INSERT
     }
   );
@@ -67,6 +67,7 @@ export default (req, res) => {
  
         const src = req.body.image;
         const imgText = req.body.text;
+        const eventname = req.body.eventName;
         //const imgData = req.body.imgData;
         console.log(src);
         console.log(imgText);
@@ -79,7 +80,7 @@ export default (req, res) => {
           return;
         }
 
-        uploadImgTicket(src, imgText, function(info) {
+        uploadImgTicket(src, imgText, eventname, function(info) {
           console.log("info" + info);
             if(info!=0){
                 res.status(401).json({error: true, message: 'error uploading ticket'});

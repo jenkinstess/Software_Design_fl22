@@ -165,7 +165,8 @@ const Sell = ({currentEvents, existingTickets}) =>{
       body: JSON.stringify({
           //imgData,
           image,
-          text
+          text,
+          eventName
         }),
       })})
         .then((data) => {

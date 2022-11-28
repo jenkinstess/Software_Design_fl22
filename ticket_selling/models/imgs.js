@@ -34,6 +34,9 @@ const tickets = sequelize.define('images', {
     type: DataTypes.STRING,
     
   },
+  event_name:{
+    type: DataTypes.STRING,
+  }
 });
 
 module.exports = tickets;
