@@ -31,7 +31,7 @@ const tickets = sequelize.define('images', {
   },
 
   image_name: {
-    type: DataTypes.BLOB("long"),
+    type: DataTypes.STRING,
     
   },
   event_name:{
