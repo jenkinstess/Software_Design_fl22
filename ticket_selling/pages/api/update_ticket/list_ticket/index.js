@@ -66,8 +66,6 @@ async function transferOwner(ticket_id, new_price){
       if (req.method === 'POST') {
 
         transferOwner(req.body.ticket_id, req.body.new_price),
-        console.log("HERE IS SOME IMPORTANT INFORMATION !!!!!!!!!!!!!!!!!!! " + req.body.new_price)
-
         //add 1 to ticket counter
         findEventID(req.body.ticket_id, function(eventID){
           findEventNumTickets(eventID.event_id, function(ticketNum){

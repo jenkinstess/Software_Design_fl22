@@ -216,8 +216,6 @@ const Profile = ({tickets, users}) =>{
       users_tix.push(ticket)
     } else if (data.email == JSON.stringify(tickets_json[j].sold_from).replaceAll('"', '')) {
       let is_confirmed = JSON.stringify(tickets_json[j].is_confirmed).replaceAll('"',  '')
-      alert(is_confirmed)
-      alert(tickets_json[j].price)
       if (is_confirmed == 0){
         is_confirmed = false
       } else {
