@@ -65,24 +65,36 @@ const Sell = ({currentEvents, existingTickets}) =>{
     existingEventNames.push(objs.result[i].name)
   }
 
-  const handleChange = async(e) => {
+  async function handleChange(e){
     e.preventDefault();
     var currentEvent = e.target.value;
-    
-    const response = await fetch(`${server}/api/prices`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        currentEvent
-      }),
-  }) 
-    const data = await response.json()
-    console.log("TESTING RIGHT HERE 11/29 " + data)
+    setEventName(e.target.value);
+  
+    const testPrice = await findMedianPrice(currentEvent);
+    setMedianPrice(testPrice)
+    console.log("12:47 TEST" + testPrice)
+  //   fetch(`${server}/api/prices`, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //       currentEvent
+  //     }),
+  // }) 
+  //   .then((r) => {
+  //     //console.log("DATA " + r)
+  //     return r.json();
+  //   })
+  //   .then((data2) => {
+  //     console.log("logging data2: " + data2);
+  //   });
+
+    // const data2 = await response.json()
+    // console.log("DATA@ " + data2)
 
     //findEventMedianPrice(e.target.value);
-    //console.log("TEST HERE SHOWME:" + e.target.value)
+    console.log("TEST HERE SHOWME:" + e.target.value)
     if(e.target.value.length == 0){
       setShowMe(true);
     }
@@ -92,14 +104,35 @@ const Sell = ({currentEvents, existingTickets}) =>{
     
     
   };
-  // async function findEventMedianPrice(currentEvent){
-  //   console.log("11/28 TEST" + currentEvent)
-  //   const meanPrice_res = await 
-  //   // const meanPrice = await meanPrice_res.json()
+  async function findMedianPrice(eventName){
+    
+    const averagePrice_res = await fetch(`${server}/api/prices`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        eventName
+      }),
+  }) 
+    // console.log("ANYTHING")
+    const averagePrice = await averagePrice_res.json()
+      
+    const final_average = JSON.stringify(averagePrice, ["averagePrice"])
+    const parsedAvg = JSON.parse(final_average).averagePrice
+    //JSON.stringify(row, ["id"])
+    // var avgObjs = JSON.parse(averagePrice_string);
+    // console.log("avg price " + avgObjs)
+    // var finalAvg = avgObjs.result[0].averagePrice
+    // console.log("result is: " + JSON.stringify(result));
+    // console.log("text is: " + averagePrice_string);
+    // const averagePrice_obj = JSON.parse(averagePrice_string)
+    //const final_average = averagePrice_string.getSelection()[0]
+    console.log("avg price " + parsedAvg)
+    return parsedAvg
+    
+  }
 
-  //   // //const prices = await meanPrice.json()
-  //   // return meanPrice;
-  // }
 
   const handleOTHERChange = (event) => {
     console.log(event.target.files[0]);
