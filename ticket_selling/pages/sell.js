@@ -40,6 +40,8 @@ const Sell = ({currentEvents, existingTickets}) =>{
   const [ticketPrice, setTicketPrice] = useState('');
   //const eventData = new Map();
   const existingEventNames = [];
+  const [medianPrice, setMedianPrice] = useState('');
+  //const [allPricesForEvent, setAllPrices] = useState('')
 
   const [image, setImage] = useState('');
   const [text, setText] = useState('');
@@ -66,7 +68,25 @@ const Sell = ({currentEvents, existingTickets}) =>{
   const handleChange = (e) => {
     e.preventDefault();
     setEventName(e.target.value);
-    console.log("TEST HERE SHOWME:" + e.target.value)
+    
+    fetch('/api/prices', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        currentEvent
+      }),
+  }) 
+    .then((r) => {
+      return r.json();
+    })
+    .then((data) => {
+      setMedianPrice()
+    })
+
+    //findEventMedianPrice(e.target.value);
+    //console.log("TEST HERE SHOWME:" + e.target.value)
     if(e.target.value.length == 0){
       setShowMe(true);
     }
@@ -74,7 +94,16 @@ const Sell = ({currentEvents, existingTickets}) =>{
       setShowMe(false);
     }
     
+    
   };
+  // async function findEventMedianPrice(currentEvent){
+  //   console.log("11/28 TEST" + currentEvent)
+  //   const meanPrice_res = await 
+  //   // const meanPrice = await meanPrice_res.json()
+
+  //   // //const prices = await meanPrice.json()
+  //   // return meanPrice;
+  // }
 
   const handleOTHERChange = (event) => {
     console.log(event.target.files[0]);
@@ -317,6 +346,17 @@ const Sell = ({currentEvents, existingTickets}) =>{
             //   upon submission. e is accepted due to e representing an integer (ie. 13e3 = 13*10^3)
             required
           />
+        </label>
+        
+        <br />
+        <br />
+        <label htmlFor="medianPrice">
+          Event Median Price: 
+          <input type="text" 
+          value={medianPrice} 
+          class="field left" 
+          readonly="readonly"
+          ></input>
         </label>
 
         {/* <br />
