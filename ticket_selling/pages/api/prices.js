@@ -41,12 +41,14 @@ tickets.sync().then(() => {
 
 async function findAllPrices(eventName, callback){
     console.log("eventName Test: " + eventName);
+    //find all where isSold is false and event is event
     // console.log("finding event");
     const [resultFound] = await tickets.findAll({
       where:{
         event : eventName
       }
     });
+    console.log("AIRPORT TEST " + resultFound.length)
     // this callback allows us to define a function in the exports statement parameterized with the result of find user
     callback(resultFound);
     console.log("LOOK HERE " + JSON.stringify(resultFound));
@@ -68,6 +70,7 @@ export default (req, res) => {
                 return;
             }
             else{
+                console.log("11/29 TEST" + eventInfo)
                 for(let i=0; i<eventInfo.length; i++){
                     allPrices.push(eventInfo[i].price)
                 }
