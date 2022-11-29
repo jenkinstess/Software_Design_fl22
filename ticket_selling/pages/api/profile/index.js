@@ -27,15 +27,12 @@ async function findUser(){
 
   const {data, revalidate} = useSWR('/api/me', async function(args) {
     const res = await fetch(args);
-    console.log("HERE")
-    console.log("RES>JSON: " + JSON.stringify(res.json()))
     return res.json();
   },{refreshInterval:10});
   if (!data) return <h1>Loading...</h1>;
   let loggedIn = false;
   console.log("LOGGED IN: " + data)
   if (data.email) {
-    console.log("EMAILLLLLL: " + data.email)
     loggedIn = true;
       const [resultFound] = await sequelize.query(
         "SELECT * FROM ticketsitedb.users WHERE userid =:email",
@@ -63,12 +60,21 @@ async function getTickets(){
     return JSON.stringify(tickets_res);
 }
 
+async function getImages(){
+  const img_res = await(sequelize.query("SELECT * FROM ticketsitedb.images", 
+  {
+    type: QueryTypes.SELECT
+  }))
+  return JSON.stringify(img_res);
+}
+
   export default async function handler(req, res) {
     
     try {
       const users = await getUsers()
       const tickets = await getTickets()
-      res.status(200).json({ users: users, tickets: tickets })
+      const images = await getImages()
+      res.status(200).json({ users: users, tickets: tickets, images: images })
     } catch (err) {
       res.status(500).json({ error: 'failed to load data' })
     }

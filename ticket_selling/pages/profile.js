@@ -7,27 +7,19 @@ import { StyleRegistry } from 'styled-jsx';
 import React, {useState, useRef} from 'react';
 
 
-
-
-
-
-
+  //get a list of all users, tickets, and images
   export const getStaticProps = async() =>{
     const response = await fetch(`${server}/api/profile`) //local
-    // const response = await fetch('http://ec2-3-141-164-182.us-east-2.compute.amazonaws.com:3000/api/profile') //ec2
-
-    //only absolute urls supported ^^^^^
     const data = await response.json()
     console.log(data)
     return {
-      props: {users: data.users, tickets: data.tickets} 
+      props: {users: data.users, tickets: data.tickets, images: data.images} 
     }
   }
 
 
-  // const [showMe, setShowMe] = useState(true);
+  // put ticket back on market with a new price
   async function listTicket(ticket_id, new_price) {
-    // update ticket's owner to current user 
     const transfer_res = await fetch(`${server}/api/update_ticket/list_ticket`, {
       method: 'POST',
       headers: {
@@ -44,8 +36,8 @@ import React, {useState, useRef} from 'react';
       location.reload();
   }
 
+  // take ticket off market
   async function claimTicket(ticket_id) {
-    // update ticket's owner to current user 
     const transfer_res = await fetch(`${server}/api/update_ticket/claim_ticket`, {
       method: 'POST',
       headers: {
@@ -61,8 +53,8 @@ import React, {useState, useRef} from 'react';
       location.reload();
   }
 
+  // remove ticket from view on profile page
   async function removeTicket(ticket_id) {
-    // update ticket's owner to current user 
     const transfer_res = await fetch(`${server}/api/update_ticket/remove_ticket`, {
       method: 'POST',
       headers: {
@@ -78,8 +70,8 @@ import React, {useState, useRef} from 'react';
       location.reload();
   }
 
+  // add ticket back to view on profile page
   async function unremoveTicket(ticket_id) {
-    // update ticket's owner to current user 
     const transfer_res = await fetch(`${server}/api/update_ticket/unremove_ticket`, {
       method: 'POST',
       headers: {
@@ -95,8 +87,8 @@ import React, {useState, useRef} from 'react';
       location.reload();
   }
 
+  // previous owner confirm transaction
   async function confirmTicket(ticket_id) {
-    // update ticket's owner to current user 
     const transfer_res = await fetch(`${server}/api/update_ticket/confirm_ticket`, {
       method: 'POST',
       headers: {
@@ -112,6 +104,7 @@ import React, {useState, useRef} from 'react';
       location.reload();
   }
 
+  // previous owner report buyer
   async function reportUser(user_id, ticket_id){
     const report_res = await fetch(`${server}/api/report_user`, {
       method: 'POST',
@@ -125,34 +118,42 @@ import React, {useState, useRef} from 'react';
       .then((r) => r.json())
       .then((data) => {
       });
-      //transfer owner back to original here
+      //transfer owner back to original here?
       confirmTicket(ticket_id) //confirm ticket but other user should be banned so they will not get it
       location.reload();
 
 
   }
 
+// show div with removed tix, hide remove button
 async function viewRemoved(){
   document.getElementById("removed_tix").style.display = "block"
   document.getElementById("remove_button").style.display = "none"
 }
 
+// hide div with removed tix, show remove button
 async function hideRemoved(){
   document.getElementById("removed_tix").style.display = "none"
   document.getElementById("remove_button").style.display = "block"
 }
 
+// hide sell ticket form, show the button to access form
 async function hideTicketSellForm(ticket_id){
   document.getElementById("sell_ticket_form"+ticket_id).style.display = "none"
   document.getElementById("show_sell_ticket_form"+ticket_id).style.display = "block"
 }
 
+// show sell ticket form, hide the button to access form
 async function show_sell_ticket_form(ticket_id){
   document.getElementById("show_sell_ticket_form"+ticket_id).style.display = "none"
   document.getElementById("sell_ticket_form"+ticket_id).style.display = "block"
 }
 
-const Profile = ({tickets, users}) =>{
+
+const Profile = ({tickets, users, images}) =>{
+
+  
+  //async function to handle reselling a ticket, with const callback vars
   const [ticketPrice, setTicketPrice] = useState('');
   const [ticketID, setTicketId] = useState('');
   async function handleTicketSellSubmit(e) {
@@ -160,12 +161,13 @@ const Profile = ({tickets, users}) =>{
     listTicket(ticketID, ticketPrice)
     document.getElementById("sell_ticket_form"+ticketID).style.display = "none"
     }
+
+  //global variables to keep track (some aren't needed, TODO: cleanup)  
   let cur_venmo;
   let cur_user_index = 0;
   let user_id = 0;
   let users_tix = []
   let selling_tix = []
-  let reported = false;
   const {data, revalidate} = useSWR('/api/me', async function(args) {
     const res = await fetch(args);
     return res.json();
@@ -183,6 +185,7 @@ const Profile = ({tickets, users}) =>{
         cur_user_index = i;
         cur_venmo = JSON.stringify(users_json.result[i].venmo).replaceAll('"', '')
         user_id = JSON.stringify(users_json.result[i].userid)
+        //if user has been reported, return reported screen
         if (JSON.stringify(users_json.result[i].is_reported).replaceAll('"', '') == 1){
           return (
             <h1>You have been reported. Please contact the admin.</h1>
@@ -191,9 +194,11 @@ const Profile = ({tickets, users}) =>{
       }
     }
 
-  //extract users tickets from full list of tickets
+  //extract users tickets from full list of tickets, and images from full ist of images
   let tickets_json = JSON.parse(tickets)
   let num_tix = (tickets_json).length
+  let images_json = JSON.parse(images)
+  let num_images = (images_json).length
   for (let j = 0; j < num_tix; j++){
     if (user_id == JSON.stringify(tickets_json[j].userUserid).replaceAll('"', '')){
       let is_sold =  JSON.stringify(tickets_json[j].is_sold).replaceAll('"', '')
@@ -208,12 +213,24 @@ const Profile = ({tickets, users}) =>{
     } else {
       show_ticket = false
     }    
-      
+      let blob = ""
+      let specific_id_ticket = JSON.stringify(tickets_json[j].specific_id).replaceAll('"', '')
+      for (let k = 0; k < num_images; k++){
+        let specific_id_image = JSON.stringify(images_json[k].idimages).replaceAll('"', '')
+        let image_event = JSON.stringify(images_json[k].event_name)
+        let ticket_event = JSON.stringify(tickets_json[j].event)
+        // alert("url" + JSON.stringify(images_json[k].image_name).replaceAll('"', '') + "event" + image_event)
+        // alert("current ticket event " + ticket_event + " image event " + image_event + " ticket specific id " + specific_id_ticket + " image specific id " + specific_id_image)
+        if ((specific_id_image == specific_id_ticket) && (image_event == ticket_event)){
+          blob = JSON.stringify(images_json[k].image_name).replaceAll('"', '')
+          blob = blob.replaceAll('blob:', '')
+        }
+      }
       let ticket = [((JSON.stringify(tickets_json[j].event)).replaceAll('"', '')), JSON.stringify(tickets_json[j].price), 
                     is_sold, JSON.stringify(tickets_json[j].event_id), JSON.stringify(tickets_json[j].id_tickets), 
-                  show_ticket]
-
+                  show_ticket, blob]
       users_tix.push(ticket)
+       
     } else if (data.email == JSON.stringify(tickets_json[j].sold_from).replaceAll('"', '')) {
       let is_confirmed = JSON.stringify(tickets_json[j].is_confirmed).replaceAll('"',  '')
       if (is_confirmed == 0){
@@ -249,11 +266,9 @@ const Profile = ({tickets, users}) =>{
              ticket[2] ? ( //is sold?
               ticket[5] && //is removed?
             <li key={ticket} class="list-group-item">
-             {/* <a href = {`${server}/event/${ticket[3]}`} ><strong>Event:</strong> {ticket[0]}</a> 
-              <strong>Event:</strong> {ticket[0]}
-            <li><a href = {`${server}/ticket/${ticket[4]}`} >Price: {ticket[1]}</a></li> */}
               <p><a href = {`${server}/event/${ticket[3]}`}><i>Event</i></a>: {ticket[0]}</p>
               <p><i>Price:</i> $<b>{ticket[1]}</b></p>
+              <a href ={ticket[6]}>{ticket[6]}</a>
               <button id = {"show_sell_ticket_form"+ticket[4]} onClick={()=>show_sell_ticket_form(ticket[4])}>Resell Ticket</button>
               <button onClick={()=>removeTicket(ticket[4])}>Remove Ticket</button>
               <div id = {"sell_ticket_form"+ticket[4]} style = {{display: "none"}}>
@@ -271,9 +286,6 @@ const Profile = ({tickets, users}) =>{
             
           ) : ticket[5] && //is removed?
           <li key={ticket} class="list-group-item">
-             {/* <a href = {`${server}/event/${ticket[3]}`} ><strong>Event:</strong> {ticket[0]}</a> 
-              <strong>Event:</strong> {ticket[0]}
-            <li><a href = {`${server}/ticket/${ticket[4]}`} >Price: {ticket[1]}</a></li> */}
               <p><a href = {`${server}/event/${ticket[3]}`}><i>Event</i></a>: {ticket[0]} | On Market</p>
               <p><i>Price:</i> $<b>{ticket[1]}</b></p>
               <button onClick={()=>claimTicket(ticket[4])}>Claim Ticket</button>
@@ -290,15 +302,11 @@ const Profile = ({tickets, users}) =>{
           {selling_tix.map((ticket) =>
            ((!ticket[5]) && (                                     //confirmed already?
             <li key={ticket} class="list-group-item">
-             {/* <a href = {`${server}/event/${ticket[3]}`} ><strong>Event:</strong> {ticket[0]}</a> 
-              <strong>Event:</strong> {ticket[0]}
-            <li><a href = {`${server}/ticket/${ticket[4]}`} >Price: {ticket[1]}</a></li> */}
               <p><a href = {`${server}/event/${ticket[3]}`}><i>Event</i></a>: {ticket[0]}</p>
               <p><i>Price:</i> $<b>{ticket[1]}</b></p>
               <button onClick={()=>confirmTicket(ticket[4])}>Confirm Ticket</button>
               <button onClick={()=>reportUser(ticket[6], ticket[4])}>Report User</button>
             </li>
-            // NEED A WAY HERE TO INDICATE IF THE TICKET HAS BEEN SOLD OR NOT.... 
           )))}
          
           </ul>
@@ -313,9 +321,6 @@ const Profile = ({tickets, users}) =>{
            {users_tix.map((ticket) =>
               !ticket[5] &&
             <li key={ticket} class="list-group-item">
-             {/* <a href = {`${server}/event/${ticket[3]}`} ><strong>Event:</strong> {ticket[0]}</a> 
-              <strong>Event:</strong> {ticket[0]}
-            <li><a href = {`${server}/ticket/${ticket[4]}`} >Price: {ticket[1]}</a></li> */}
               <p><a href = {`${server}/event/${ticket[3]}`}><i>Event</i></a>: {ticket[0]}</p>
               <p><i>Price:</i> $<b>{ticket[1]}</b></p>
               <button onClick={()=>unremoveTicket(ticket[4])}>Unremove Ticket</button>
