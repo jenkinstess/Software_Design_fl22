@@ -223,7 +223,6 @@ const Profile = ({tickets, users, images}) =>{
         // alert("current ticket event " + ticket_event + " image event " + image_event + " ticket specific id " + specific_id_ticket + " image specific id " + specific_id_image)
         if ((specific_id_image == specific_id_ticket) && (image_event == ticket_event)){
           blob = JSON.stringify(images_json[k].image_name).replaceAll('"', '')
-          blob = blob.replaceAll('blob:', '')
         }
       }
       let ticket = [((JSON.stringify(tickets_json[j].event)).replaceAll('"', '')), JSON.stringify(tickets_json[j].price), 
