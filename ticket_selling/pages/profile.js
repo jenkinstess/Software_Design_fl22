@@ -4,6 +4,7 @@ import useSWR from 'swr';
 import { server } from '../config';
 import { QueryTypes, Sequelize } from 'sequelize';
 import { StyleRegistry } from 'styled-jsx';
+import React, {useState, useRef} from 'react';
 
 
 
@@ -23,7 +24,9 @@ import { StyleRegistry } from 'styled-jsx';
     }
   }
 
-  async function listTicket(ticket_id) {
+
+  // const [showMe, setShowMe] = useState(true);
+  async function listTicket(ticket_id, new_price) {
     // update ticket's owner to current user 
     const transfer_res = await fetch(`${server}/api/update_ticket/list_ticket`, {
       method: 'POST',
@@ -32,6 +35,7 @@ import { StyleRegistry } from 'styled-jsx';
       },
       body: JSON.stringify({
         ticket_id,
+        new_price,
       }),
     })
       .then((r) => r.json())
@@ -108,6 +112,26 @@ import { StyleRegistry } from 'styled-jsx';
       location.reload();
   }
 
+  async function reportUser(user_id, ticket_id){
+    const report_res = await fetch(`${server}/api/report_user`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_id,
+      }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+      });
+      //transfer owner back to original here
+      confirmTicket(ticket_id) //confirm ticket but other user should be banned so they will not get it
+      location.reload();
+
+
+  }
+
 async function viewRemoved(){
   document.getElementById("removed_tix").style.display = "block"
   document.getElementById("remove_button").style.display = "none"
@@ -118,12 +142,30 @@ async function hideRemoved(){
   document.getElementById("remove_button").style.display = "block"
 }
 
+async function hideTicketSellForm(ticket_id){
+  document.getElementById("sell_ticket_form"+ticket_id).style.display = "none"
+  document.getElementById("show_sell_ticket_form"+ticket_id).style.display = "block"
+}
+
+async function show_sell_ticket_form(ticket_id){
+  document.getElementById("show_sell_ticket_form"+ticket_id).style.display = "none"
+  document.getElementById("sell_ticket_form"+ticket_id).style.display = "block"
+}
+
 const Profile = ({tickets, users}) =>{
+  const [ticketPrice, setTicketPrice] = useState('');
+  const [ticketID, setTicketId] = useState('');
+  async function handleTicketSellSubmit(e) {
+    e.preventDefault();
+    listTicket(ticketID, ticketPrice)
+    document.getElementById("sell_ticket_form"+ticketID).style.display = "none"
+    }
   let cur_venmo;
   let cur_user_index = 0;
   let user_id = 0;
   let users_tix = []
   let selling_tix = []
+  let reported = false;
   const {data, revalidate} = useSWR('/api/me', async function(args) {
     const res = await fetch(args);
     return res.json();
@@ -141,6 +183,11 @@ const Profile = ({tickets, users}) =>{
         cur_user_index = i;
         cur_venmo = JSON.stringify(users_json.result[i].venmo).replaceAll('"', '')
         user_id = JSON.stringify(users_json.result[i].userid)
+        if (JSON.stringify(users_json.result[i].is_reported).replaceAll('"', '') == 1){
+          return (
+            <h1>You have been reported. Please contact the admin.</h1>
+          )
+        }
       }
     }
 
@@ -155,27 +202,30 @@ const Profile = ({tickets, users}) =>{
       } else {
         is_sold = true
       }
-    let is_removed = JSON.stringify(tickets_json[j].is_removed).replaceAll('"',  '')
-    if (is_removed == 0){
-      is_removed = true
+    let show_ticket = JSON.stringify(tickets_json[j].is_removed).replaceAll('"',  '')
+    if (show_ticket == 0){ //show ticket is a variable that holds is_removed
+      show_ticket = true 
     } else {
-      is_removed = false
+      show_ticket = false
     }    
       
       let ticket = [((JSON.stringify(tickets_json[j].event)).replaceAll('"', '')), JSON.stringify(tickets_json[j].price), 
                     is_sold, JSON.stringify(tickets_json[j].event_id), JSON.stringify(tickets_json[j].id_tickets), 
-                  is_removed]
+                  show_ticket]
 
       users_tix.push(ticket)
     } else if (data.email == JSON.stringify(tickets_json[j].sold_from).replaceAll('"', '')) {
-      let is_confirmed = JSON.stringify(tickets_json[j].is_removed).replaceAll('"',  '')
+      let is_confirmed = JSON.stringify(tickets_json[j].is_confirmed).replaceAll('"',  '')
+      alert(is_confirmed)
+      alert(tickets_json[j].price)
       if (is_confirmed == 0){
         is_confirmed = false
       } else {
         is_confirmed = true //NOTE; this true false is FLIPPED!!! For convenience with the if statement below 
+                              //we want to show the ticket when it 
       }    
 
-       let ticket = [((JSON.stringify(tickets_json[j].event)).replaceAll('"', '')), JSON.stringify(tickets_json[j].price),  JSON.stringify(tickets_json[j].is_sold), JSON.stringify(tickets_json[j].event_id), JSON.stringify(tickets_json[j].id_tickets), is_confirmed]
+       let ticket = [((JSON.stringify(tickets_json[j].event)).replaceAll('"', '')), JSON.stringify(tickets_json[j].price),  JSON.stringify(tickets_json[j].is_sold), JSON.stringify(tickets_json[j].event_id), JSON.stringify(tickets_json[j].id_tickets), is_confirmed, JSON.stringify(tickets_json[j].userUserid).replaceAll('"', '')]
        
        selling_tix.push(ticket)
     }
@@ -185,10 +235,6 @@ const Profile = ({tickets, users}) =>{
   
   return (
     <div>
-    {/*<Head>
-        <title>Profile</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head>*/}
       <h2>Profile</h2>
       {loggedIn && (
         <>
@@ -196,25 +242,36 @@ const Profile = ({tickets, users}) =>{
           <p>You can find relevant account information here: </p>
           
           <p>Venmo: <i>{cur_venmo}</i></p>
-
+        
       <h5>Your Tickets: </h5>
       <div>
       <div class="card text-center mx-auto" style={{width: '18rem'}}>
         <ul class="list-group list-group-flush">
           {users_tix.map((ticket) =>
-             ticket[2] ? (
-              ticket[5] &&
+             ticket[2] ? ( //is sold?
+              ticket[5] && //is removed?
             <li key={ticket} class="list-group-item">
              {/* <a href = {`${server}/event/${ticket[3]}`} ><strong>Event:</strong> {ticket[0]}</a> 
               <strong>Event:</strong> {ticket[0]}
             <li><a href = {`${server}/ticket/${ticket[4]}`} >Price: {ticket[1]}</a></li> */}
               <p><a href = {`${server}/event/${ticket[3]}`}><i>Event</i></a>: {ticket[0]}</p>
               <p><i>Price:</i> $<b>{ticket[1]}</b></p>
-              <button onClick={()=>listTicket(ticket[4])}>Resell Ticket</button>
+              <button id = {"show_sell_ticket_form"+ticket[4]} onClick={()=>show_sell_ticket_form(ticket[4])}>Resell Ticket</button>
               <button onClick={()=>removeTicket(ticket[4])}>Remove Ticket</button>
+              <div id = {"sell_ticket_form"+ticket[4]} style = {{display: "none"}}>
+                <h1> How much would you like to sell your ticket for?</h1>
+                <form onSubmit={handleTicketSellSubmit}>
+                  <input type = "number" placeholder = {ticket[1]} onChange={(e) => (
+                    setTicketPrice(e.target.value),
+                    setTicketId(ticket[4]))}></input>
+                  <button type = "submit" value = "Submit">Submit</button>
+                  <button type = "button" onClick={() => hideTicketSellForm(ticket[4])}>Cancel</button>
+                </form>
+              </div>
             </li>
+
             
-          ) : ticket[5] &&
+          ) : ticket[5] && //is removed?
           <li key={ticket} class="list-group-item">
              {/* <a href = {`${server}/event/${ticket[3]}`} ><strong>Event:</strong> {ticket[0]}</a> 
               <strong>Event:</strong> {ticket[0]}
@@ -233,7 +290,7 @@ const Profile = ({tickets, users}) =>{
       <div class="card text-center mx-auto" style={{width: '18rem'}}>
         <ul class="list-group list-group-flush">
           {selling_tix.map((ticket) =>
-          ticket[5] &&
+           ((!ticket[5]) && (                                     //confirmed already?
             <li key={ticket} class="list-group-item">
              {/* <a href = {`${server}/event/${ticket[3]}`} ><strong>Event:</strong> {ticket[0]}</a> 
               <strong>Event:</strong> {ticket[0]}
@@ -241,19 +298,22 @@ const Profile = ({tickets, users}) =>{
               <p><a href = {`${server}/event/${ticket[3]}`}><i>Event</i></a>: {ticket[0]}</p>
               <p><i>Price:</i> $<b>{ticket[1]}</b></p>
               <button onClick={()=>confirmTicket(ticket[4])}>Confirm Ticket</button>
+              <button onClick={()=>reportUser(ticket[6], ticket[4])}>Report User</button>
             </li>
             // NEED A WAY HERE TO INDICATE IF THE TICKET HAS BEEN SOLD OR NOT.... 
-          )}
+          )))}
          
           </ul>
           </div>
         </div>
           <button id = "remove_button" onClick = {() => viewRemoved()}>View Removed Tickets</button>
-          <div id = "removed_tix">
+          <div id = "removed_tix" style = {{
+            display: "none"
+          }}>
           <div class="card text-center mx-auto" style={{width: '18rem'}}>
            <ul class="list-group list-group-flush">
            {users_tix.map((ticket) =>
-              ticket[5] &&
+              !ticket[5] &&
             <li key={ticket} class="list-group-item">
              {/* <a href = {`${server}/event/${ticket[3]}`} ><strong>Event:</strong> {ticket[0]}</a> 
               <strong>Event:</strong> {ticket[0]}

@@ -22,10 +22,10 @@ const tickets = require("../../../../models/tickets");
 // TODO: update func. to transfer ownership of ticket to new user 
   //notes: maybe we have to run a select query first to get the previous owner's id; then put that in the sold_from col
   //  set the is_confirmed col to false, will be handled on the profile side
-async function transferOwner(ticket_id){
-    const resultFound = await sequelize.query("UPDATE ticketsitedb.tickets SET is_sold = 0 WHERE id_tickets = :ticket_id",
+async function transferOwner(ticket_id, new_price){
+    const resultFound = await sequelize.query("UPDATE ticketsitedb.tickets SET is_sold = 0, price = :new_price  WHERE id_tickets = :ticket_id",
     {
-      replacements: {ticket_id: ticket_id}, 
+      replacements: {new_price, new_price, ticket_id: ticket_id}, 
       type: QueryTypes.UPDATE
     });
   }
@@ -65,7 +65,8 @@ async function transferOwner(ticket_id){
     try {
       if (req.method === 'POST') {
 
-        transferOwner(req.body.ticket_id),
+        transferOwner(req.body.ticket_id, req.body.new_price),
+        console.log("HERE IS SOME IMPORTANT INFORMATION !!!!!!!!!!!!!!!!!!! " + req.body.new_price)
 
         //add 1 to ticket counter
         findEventID(req.body.ticket_id, function(eventID){
