@@ -40,6 +40,8 @@ const Sell = ({currentEvents, existingTickets}) =>{
   const [ticketPrice, setTicketPrice] = useState('');
   //const eventData = new Map();
   const existingEventNames = [];
+  const [medianPrice, setMedianPrice] = useState('');
+  //const [allPricesForEvent, setAllPrices] = useState('')
 
   const [image, setImage] = useState('');
   const [text, setText] = useState('');
@@ -63,9 +65,35 @@ const Sell = ({currentEvents, existingTickets}) =>{
     existingEventNames.push(objs.result[i].name)
   }
 
-  const handleChange = (e) => {
+  async function handleChange(e){
     e.preventDefault();
+    var currentEvent = e.target.value;
     setEventName(e.target.value);
+  
+    const testPrice = await findMedianPrice(currentEvent);
+    setMedianPrice(testPrice)
+    console.log("12:47 TEST" + testPrice)
+  //   fetch(`${server}/api/prices`, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //       currentEvent
+  //     }),
+  // }) 
+  //   .then((r) => {
+  //     //console.log("DATA " + r)
+  //     return r.json();
+  //   })
+  //   .then((data2) => {
+  //     console.log("logging data2: " + data2);
+  //   });
+
+    // const data2 = await response.json()
+    // console.log("DATA@ " + data2)
+
+    //findEventMedianPrice(e.target.value);
     console.log("TEST HERE SHOWME:" + e.target.value)
     if(e.target.value.length == 0){
       setShowMe(true);
@@ -74,7 +102,37 @@ const Sell = ({currentEvents, existingTickets}) =>{
       setShowMe(false);
     }
     
+    
   };
+  async function findMedianPrice(eventName){
+    
+    const averagePrice_res = await fetch(`${server}/api/prices`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        eventName
+      }),
+  }) 
+    // console.log("ANYTHING")
+    const averagePrice = await averagePrice_res.json()
+      
+    const final_average = JSON.stringify(averagePrice, ["averagePrice"])
+    const parsedAvg = JSON.parse(final_average).averagePrice
+    //JSON.stringify(row, ["id"])
+    // var avgObjs = JSON.parse(averagePrice_string);
+    // console.log("avg price " + avgObjs)
+    // var finalAvg = avgObjs.result[0].averagePrice
+    // console.log("result is: " + JSON.stringify(result));
+    // console.log("text is: " + averagePrice_string);
+    // const averagePrice_obj = JSON.parse(averagePrice_string)
+    //const final_average = averagePrice_string.getSelection()[0]
+    console.log("avg price " + parsedAvg)
+    return parsedAvg
+    
+  }
+
 
   const handleOTHERChange = (event) => {
     console.log(event.target.files[0]);
@@ -317,6 +375,17 @@ const Sell = ({currentEvents, existingTickets}) =>{
             //   upon submission. e is accepted due to e representing an integer (ie. 13e3 = 13*10^3)
             required
           />
+        </label>
+        
+        <br />
+        <br />
+        <label htmlFor="medianPrice">
+          Event Median Price: 
+          <input type="text" 
+          value={medianPrice} 
+          class="field left" 
+          readonly="readonly"
+          ></input>
         </label>
 
         {/* <br />
