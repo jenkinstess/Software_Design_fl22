@@ -56,9 +56,9 @@ export default (req, res) => {
     if (req.method === 'POST') {
       sequelize.authenticate().then(() => {
         console.log('connected to sequelize mysql server');
- 
-        const eventName = req.body.eventName;
-        
+        // console.log('testing 11/29')
+        const eventName = req.body.currentEvent;
+        //console.log(eventName)
         var allPrices = [];
         var sum = 0;
         var averagePrice = 0;

@@ -65,11 +65,11 @@ const Sell = ({currentEvents, existingTickets}) =>{
     existingEventNames.push(objs.result[i].name)
   }
 
-  const handleChange = (e) => {
+  const handleChange = async(e) => {
     e.preventDefault();
-    setEventName(e.target.value);
+    var currentEvent = e.target.value;
     
-    fetch('/api/prices', {
+    const response = await fetch(`${server}/api/prices`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -78,12 +78,8 @@ const Sell = ({currentEvents, existingTickets}) =>{
         currentEvent
       }),
   }) 
-    .then((r) => {
-      return r.json();
-    })
-    .then((data) => {
-      setMedianPrice()
-    })
+    const data = await response.json()
+    console.log("TESTING RIGHT HERE 11/29 " + data)
 
     //findEventMedianPrice(e.target.value);
     //console.log("TEST HERE SHOWME:" + e.target.value)
