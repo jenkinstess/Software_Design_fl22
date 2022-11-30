@@ -97,9 +97,11 @@ const Sell = ({currentEvents, existingTickets}) =>{
     console.log("TEST HERE SHOWME:" + e.target.value)
     if(e.target.value.length == 0){
       setShowMe(true);
+      
     }
     else{
       setShowMe(false);
+      document.getElementById("eventName").readOnly = true;
     }
     
     
@@ -338,16 +340,19 @@ const Sell = ({currentEvents, existingTickets}) =>{
         
   
         <br />
-
+        
         <label htmlFor="eventName">
           Event Name
+          
           <input
             value={eventName}
             onChange={(e) => setEventName(e.target.value)}
+            id="eventName"
             name="eventName"
             type="eventName"
             required
           />
+          
         </label>
 
         <br />
@@ -379,15 +384,16 @@ const Sell = ({currentEvents, existingTickets}) =>{
         
         <br />
         <br />
+        {!showMe && (
         <label htmlFor="medianPrice">
-          Event Median Price: 
+          Suggested Price: 
           <input type="text" 
           value={medianPrice} 
           class="field left" 
           readonly="readonly"
           ></input>
         </label>
-
+        )}
         {/* <br />
 
         <label htmlFor="ticketCode">
