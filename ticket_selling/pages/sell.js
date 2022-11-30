@@ -12,13 +12,23 @@ import AuthRedirection from '../components/AuthRedirection';
 export const getStaticProps = async() => {
   const response = await fetch(`${server}/api/events_buy`)
   const data = await response.json()
+  const all_events = data ? data.result : []
 
-
+  // filter events for those on or after current date
+  const upcoming_events = all_events.filter(event => {
+    // adjust for time zone differences:
+    // date from db is being converted to central (or browser's) time from UST by subtracting hours (6 in case of CST)
+      var now = new Date();
+      var today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() ));
+      var event_date = new Date(event.date)
+      event_date.setDate(event_date.getDate()) // add day back to account for lost hours in conversion
+      return event_date.getTime() >= today.getTime();
+  }) 
 
   // const response2 = await fetch(`${server}/api/ticketPrices`)
   // const data2 = await response2.json()
   return {
-    props: {currentEvents: data}
+    props: {currentEvents: upcoming_events}
   }
 }
 /*get back to this
@@ -59,10 +69,11 @@ const Sell = ({currentEvents, existingTickets}) =>{
   // create an array with the names
   const json = JSON.stringify(currentEvents)
   var objs = JSON.parse(json);
-  for (let i = 0; i<objs.result.length; i++){
+  
+  for (let i = 0; i<objs.length; i++){
     //come back to this to also populate date
     //eventData.set(objs.result[i].name, objs.result[i].date)
-    existingEventNames.push(objs.result[i].name)
+    existingEventNames.push(objs[i].name)
   }
 
   async function handleChange(e){
