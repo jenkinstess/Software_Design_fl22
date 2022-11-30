@@ -97,6 +97,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
     console.log("TEST HERE SHOWME:" + e.target.value)
     if(e.target.value.length == 0){
       setShowMe(true);
+      document.getElementById("eventName").readOnly = false;
       
     }
     else{
@@ -316,7 +317,8 @@ const Sell = ({currentEvents, existingTickets}) =>{
       <h2>Sell Ticket</h2>
       <br></br>
       Existing Events: <select onChange={handleChange}>
-        <option value="" />
+        {/* <option value="" /> */}
+        <option value="">Create New Event</option>
         {existingEventNames.map((eventName) => (
           <option>{eventName}</option>))}
     </select> 
