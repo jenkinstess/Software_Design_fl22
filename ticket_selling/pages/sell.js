@@ -21,7 +21,7 @@ export const getStaticProps = async() => {
       var now = new Date();
       var today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() ));
       var event_date = new Date(event.date)
-      event_date.setDate(event_date.getDate()) // add day back to account for lost hours in conversion
+      event_date.setDate(event_date.getDate()+1)
       return event_date.getTime() >= today.getTime();
   }) 
 
