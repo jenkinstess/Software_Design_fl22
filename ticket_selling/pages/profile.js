@@ -13,7 +13,7 @@ import React, {useState, useRef} from 'react';
     const data = await response.json()
     console.log(data)
     return {
-      props: {users: data.users, tickets: data.tickets, images: data.images} 
+      props: {users: data.users, tickets: data.tickets} 
     }
   }
 
@@ -150,7 +150,7 @@ async function show_sell_ticket_form(ticket_id){
 }
 
 
-const Profile = ({tickets, users, images}) =>{
+const Profile = ({tickets, users}) =>{
 
   
   //async function to handle reselling a ticket, with const callback vars
@@ -197,8 +197,6 @@ const Profile = ({tickets, users, images}) =>{
   //extract users tickets from full list of tickets, and images from full list of images
   let tickets_json = JSON.parse(tickets)
   let num_tix = (tickets_json).length
-  let images_json = JSON.parse(images)
-  let num_images = (images_json).length
   for (let j = 0; j < num_tix; j++){
     if (user_id == JSON.stringify(tickets_json[j].userUserid).replaceAll('"', '')){
       let is_sold =  JSON.stringify(tickets_json[j].is_sold).replaceAll('"', '')
@@ -213,35 +211,27 @@ const Profile = ({tickets, users, images}) =>{
     } else {
       show_ticket = false
     }    
-      let blob = ""
-      let specific_id_ticket = JSON.stringify(tickets_json[j].specific_id).replaceAll('"', '')
-      for (let k = 0; k < num_images; k++){
-        let specific_id_image = JSON.stringify(images_json[k].idimages).replaceAll('"', '')
-        let image_event = JSON.stringify(images_json[k].event_name)
-        let ticket_event = JSON.stringify(tickets_json[j].event)
-        // alert("url" + JSON.stringify(images_json[k].image_name).replaceAll('"', '') + "event" + image_event)
-        // alert("current ticket event " + ticket_event + " image event " + image_event + " ticket specific id " + specific_id_ticket + " image specific id " + specific_id_image)
-        if ((specific_id_image == specific_id_ticket) && (image_event == ticket_event)){
-          blob = JSON.stringify(images_json[k].image_name).replaceAll('"', '')
-        }
-      }
       let is_confirmed = JSON.stringify(tickets_json[j].is_confirmed).replaceAll('"',  '')
       if (is_confirmed == 0){
         is_confirmed = false
       } else {
         is_confirmed = true //NOTE; this true false is FLIPPED!!! For convenience with the if statement below 
-                              //we want to show the ticket when it 
       }  
       let ticket = [((JSON.stringify(tickets_json[j].event)).replaceAll('"', '')), JSON.stringify(tickets_json[j].price), 
                     is_sold, JSON.stringify(tickets_json[j].event_id), JSON.stringify(tickets_json[j].id_tickets), 
-                  show_ticket, blob, is_confirmed, JSON.stringify(tickets_json[j].sold_from).replaceAll('"', '')]
+                  show_ticket, JSON.stringify(tickets_json[j].uploaded_img).replaceAll('"',''), is_confirmed, JSON.stringify(tickets_json[j].sold_from).replaceAll('"', '')]
+                  //0: event, 1: price, 2: is_sold, 3: event_id, 4: ticket id, 5: show ticket (removed?), 6: img url, 7: is_confirmed, 8: sold from
       users_tix.push(ticket)
     } else if (data.email == JSON.stringify(tickets_json[j].sold_from).replaceAll('"', '')) {  
-       let ticket = [((JSON.stringify(tickets_json[j].event)).replaceAll('"', '')), JSON.stringify(tickets_json[j].price),  JSON.stringify(tickets_json[j].is_sold), JSON.stringify(tickets_json[j].event_id), JSON.stringify(tickets_json[j].id_tickets), is_confirmed, JSON.stringify(tickets_json[j].userUserid).replaceAll('"', '')]
+       let ticket = [((JSON.stringify(tickets_json[j].event)).replaceAll('"', '')), JSON.stringify(tickets_json[j].price),
+         JSON.stringify(tickets_json[j].is_sold), JSON.stringify(tickets_json[j].event_id), JSON.stringify(tickets_json[j].id_tickets),
+          is_confirmed, JSON.stringify(tickets_json[j].userUserid).replaceAll('"', ''), JSON.stringify(tickets_json[j].uploaded_img).replaceAll('"', '')]
+          //0: event, 1: price, 2: is_sold, 3: event_id, 4: ticket id, 5: is_confirmed, 6: userid, 7: uploaded_img
+          
        selling_tix.push(ticket)
+       
     }
   }
-
   }
   
   return (
@@ -264,8 +254,9 @@ const Profile = ({tickets, users, images}) =>{
             <li key={ticket} class="list-group-item">
               <p><a href = {`${server}/event/${ticket[3]}`}><i>Event</i></a>: {ticket[0]}</p>
               <p><i>Price:</i> $<b>{ticket[1]}</b></p>
-            { ticket[7] ? (<a href ={ticket[6]}>{ticket[6]}</a>) : <p>This ticket has not been confiremd yet. Email seller at {ticket[8]} </p> }
-              <button id = {"show_sell_ticket_form"+ticket[4]} onClick={()=>show_sell_ticket_form(ticket[4])}>Resell Ticket</button>
+            { ticket[7] ? (<a href ={ticket[6]}>View Ticket</a>) : <p>Your payment is pending approval from the seller. Contact yours seller at {ticket[8]} </p>}
+            <br></br>
+            {ticket [7] &&  <button id = {"show_sell_ticket_form"+ticket[4]} onClick={()=>show_sell_ticket_form(ticket[4])}>Resell Ticket</button>}
               <button onClick={()=>removeTicket(ticket[4])}>Remove Ticket</button>
               <div id = {"sell_ticket_form"+ticket[4]} style = {{display: "none"}}>
                 <h1> How much would you like to sell your ticket for?</h1>

@@ -60,21 +60,12 @@ async function getTickets(){
     return JSON.stringify(tickets_res);
 }
 
-async function getImages(){
-  const img_res = await(sequelize.query("SELECT * FROM ticketsitedb.images", 
-  {
-    type: QueryTypes.SELECT
-  }))
-  return JSON.stringify(img_res);
-}
-
   export default async function handler(req, res) {
     
     try {
       const users = await getUsers()
       const tickets = await getTickets()
-      const images = await getImages()
-      res.status(200).json({ users: users, tickets: tickets, images: images })
+      res.status(200).json({ users: users, tickets: tickets})
     } catch (err) {
       res.status(500).json({ error: 'failed to load data' })
     }
