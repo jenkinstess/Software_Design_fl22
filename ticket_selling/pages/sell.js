@@ -478,11 +478,29 @@ const Sell = ({currentEvents, existingTickets}) =>{
         </div>
         <input type="file" onChange={handleOTHERChange} />
         <br/>
-        Confirm this is the right ticket
-        <button onClick={handleClick}>CORRECT</button>
-        {uploadingStatus && <p>{uploadingStatus}</p>}
+        <button onClick={handleClick}>CONFIRM TICKET</button>
+        {/* {uploadingStatus && <p>{uploadingStatus}</p>} */}
         {imgConfirm && <p style={{color: 'green'}}> {imgConfirm}</p>}
         {imgError && <p style={{color: 'red'}}> {imgError}</p>}
+        <div>
+          Please check that the numbers below match those on your ticket below the QR / bar code.
+          Correct these numbers if they do not match
+        </div>
+        <p></p>
+        <label htmlFor="extracted Text">
+          Extracted Values
+          
+          <input
+            value={text}
+            // onChange={(e) => setEventName(e.target.value)}
+            id="eventName"
+            name="eventName"
+            type="eventName"
+            required
+            size={text.length+2}
+          />
+          
+        </label>
       </main>
       </div>
       <br/>
