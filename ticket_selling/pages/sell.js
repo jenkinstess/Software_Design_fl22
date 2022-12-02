@@ -7,18 +7,29 @@ import cookie from 'js-cookie';
 import { server } from '../config';
 const db = require('/config/database');
 import AuthRedirection from '../components/AuthRedirection';
+import axios from "axios";
 
 
 export const getStaticProps = async() => {
   const response = await fetch(`${server}/api/events_buy`)
   const data = await response.json()
+  const all_events = data ? data.result : []
 
-
+  // filter events for those on or after current date
+  const upcoming_events = all_events.filter(event => {
+    // adjust for time zone differences:
+    // date from db is being converted to central (or browser's) time from UST by subtracting hours (6 in case of CST)
+      var now = new Date();
+      var today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() ));
+      var event_date = new Date(event.date)
+      event_date.setDate(event_date.getDate()+1)
+      return event_date.getTime() >= today.getTime();
+  }) 
 
   // const response2 = await fetch(`${server}/api/ticketPrices`)
   // const data2 = await response2.json()
   return {
-    props: {currentEvents: data}
+    props: {currentEvents: upcoming_events}
   }
 }
 /*get back to this
@@ -50,8 +61,13 @@ const Sell = ({currentEvents, existingTickets}) =>{
   const [imgError, setImageError] = useState('');
   const canvasRef = useRef(null);
   const imageRef = useRef(null);
+  const [file, setFile] = useState('');
+  const [uploadingStatus, setUploadingStatus] =useState('');
+  const [uploadedFile, setUploadedFile] = useState('');
 
   const [showMe, setShowMe] = useState(true);
+
+  const BUCKET_URL = "https://partyticketsimages.s3.us-east-2.amazonaws.com/";
 
     // potentially we just need to store this in db? do we want manual entry
   
@@ -59,10 +75,11 @@ const Sell = ({currentEvents, existingTickets}) =>{
   // create an array with the names
   const json = JSON.stringify(currentEvents)
   var objs = JSON.parse(json);
-  for (let i = 0; i<objs.result.length; i++){
+  
+  for (let i = 0; i<objs.length; i++){
     //come back to this to also populate date
     //eventData.set(objs.result[i].name, objs.result[i].date)
-    existingEventNames.push(objs.result[i].name)
+    existingEventNames.push(objs[i].name)
   }
 
   async function handleChange(e){
@@ -97,9 +114,12 @@ const Sell = ({currentEvents, existingTickets}) =>{
     console.log("TEST HERE SHOWME:" + e.target.value)
     if(e.target.value.length == 0){
       setShowMe(true);
+      document.getElementById("eventName").readOnly = false;
+      
     }
     else{
       setShowMe(false);
+      document.getElementById("eventName").readOnly = true;
     }
     
     
@@ -138,6 +158,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
     console.log(event.target.files[0]);
     setImgData(event.target.files[0]);
     setImage(URL.createObjectURL(event.target.files[0]))
+    setFile(event.target.files[0]);
     //handleClick(event);
     
   }
@@ -212,7 +233,8 @@ const Sell = ({currentEvents, existingTickets}) =>{
           eventDescription,
           ticketPrice,
           text,
-          ownerID
+          ownerID,
+          uploadedFile
         }),
       })})
       .then(() => {fetch('/api/img_tickets', {
@@ -275,6 +297,35 @@ const Sell = ({currentEvents, existingTickets}) =>{
       let text = numResult;
       console.log(text)
 
+      setUploadingStatus("uploading to backend...");
+      fetch('/api/s3', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: file.name,
+          type: file.type,
+        }),
+      })
+        .then((r) => {
+          return r.json();
+        })
+        .then(async(data) => {
+          console.log("DATA!: " + JSON.stringify(data));
+          const url = data.url;
+          let { data: newData } = await axios.put(url, file, {
+            headers: {
+              "Content-type": file.type,
+              "Access-Control-Allow-Origin": "*",
+            },
+          });
+
+          setUploadedFile(BUCKET_URL + file.name);
+          setFile(null);
+        });
+        setFile(null);
+
       fetch('/api/verify_ticket', {
         method: 'POST',
         headers: {
@@ -314,7 +365,8 @@ const Sell = ({currentEvents, existingTickets}) =>{
       <h2>Sell Ticket</h2>
       <br></br>
       Existing Events: <select onChange={handleChange}>
-        <option value="" />
+        {/* <option value="" /> */}
+        <option value="">Create New Event</option>
         {existingEventNames.map((eventName) => (
           <option>{eventName}</option>))}
     </select> 
@@ -338,16 +390,19 @@ const Sell = ({currentEvents, existingTickets}) =>{
         
   
         <br />
-
+        
         <label htmlFor="eventName">
           Event Name
+          
           <input
             value={eventName}
             onChange={(e) => setEventName(e.target.value)}
+            id="eventName"
             name="eventName"
             type="eventName"
             required
           />
+          
         </label>
 
         <br />
@@ -379,15 +434,16 @@ const Sell = ({currentEvents, existingTickets}) =>{
         
         <br />
         <br />
+        {!showMe && (
         <label htmlFor="medianPrice">
-          Event Median Price: 
+          Suggested Price: 
           <input type="text" 
           value={medianPrice} 
           class="field left" 
           readonly="readonly"
           ></input>
         </label>
-
+        )}
         {/* <br />
 
         <label htmlFor="ticketCode">
@@ -422,10 +478,29 @@ const Sell = ({currentEvents, existingTickets}) =>{
         </div>
         <input type="file" onChange={handleOTHERChange} />
         <br/>
-        Confirm this is the right ticket
-        <button onClick={handleClick}>CORRECT</button>
+        <button onClick={handleClick}>CONFIRM TICKET</button>
+        {/* {uploadingStatus && <p>{uploadingStatus}</p>} */}
         {imgConfirm && <p style={{color: 'green'}}> {imgConfirm}</p>}
         {imgError && <p style={{color: 'red'}}> {imgError}</p>}
+        <div>
+          Please check that the numbers below match those on your ticket below the QR / bar code.
+          Correct these numbers if they do not match
+        </div>
+        <p></p>
+        <label htmlFor="extracted Text">
+          Extracted Values
+          
+          <input
+            value={text}
+            // onChange={(e) => setEventName(e.target.value)}
+            id="eventName"
+            name="eventName"
+            type="eventName"
+            required
+            size={text.length+2}
+          />
+          
+        </label>
       </main>
       </div>
       <br/>

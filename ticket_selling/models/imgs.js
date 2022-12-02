@@ -36,6 +36,10 @@ const tickets = sequelize.define('images', {
   },
   event_name:{
     type: DataTypes.STRING,
+  },
+
+  img_type: {
+    type: DataTypes.STRING, 
   }
 });
 

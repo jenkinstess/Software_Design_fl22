@@ -54,7 +54,6 @@ async function findAllPrices(eventName, callback){
     //   raw:true
     // });
 
-    //the issue i think has to do with the fact that eventName is the foreign key
 
     const [resultFound] = await sequelize.query(
         'SELECT price FROM tickets WHERE event = :event',
