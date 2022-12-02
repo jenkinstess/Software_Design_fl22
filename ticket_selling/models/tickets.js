@@ -54,7 +54,12 @@ const tickets = sequelize.define('tickets', {
   specific_id:{
     type: DataTypes.STRING,
     allowNull: false,
-  }
+  },
+
+  uploaded_img:{
+    type: DataTypes.STRING,
+    allowNull: false
+  },
 });
 
 module.exports = tickets;

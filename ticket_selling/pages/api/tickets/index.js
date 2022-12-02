@@ -84,10 +84,10 @@ async function addNumTicketToEvents(eventID, currentNumTickets){
   
 }
 
-async function createTicket(event, price, sellerID, eventID, specID, confirmed) {
-  const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO tickets(price, event, userUserid, event_id, specific_id, is_confirmed) VALUES (:price, :event, :userUserid, :event_id, :specific_id, :is_confirmed)',
+async function createTicket(event, price, sellerID, eventID, specID, confirmed, uploadedFile) {
+  const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO tickets(price, event, userUserid, event_id, specific_id, is_confirmed, uploaded_img) VALUES (:price, :event, :userUserid, :event_id, :specific_id, :is_confirmed, :uploaded_img)',
   {
-      replacements: { price: price, event: event, userUserid: sellerID, event_id: eventID, specific_id: specID, is_confirmed: confirmed},
+      replacements: { price: price, event: event, userUserid: sellerID, event_id: eventID, specific_id: specID, is_confirmed: confirmed, uploaded_img: uploadedFile},
       type: QueryTypes.INSERT
     }
   );
@@ -107,6 +107,7 @@ export default (req, res) => {
         const price = req.body.ticketPrice;
         const specificID = req.body.text;
         const seller_id = req.body.ownerID;
+        const uploadedFile = req.body.uploadedFile;
         // console.log("the specific id lenght is: ");
 
         // console.log(specificID.length);
@@ -131,7 +132,7 @@ export default (req, res) => {
             //const seller_id = await findSellerID();
             console.log("INA IS HERE: " + seller_id);
             let confirmed = true;
-            createTicket(eventName, price, seller_id, eventInfo.id, specificID, confirmed);
+            createTicket(eventName, price, seller_id, eventInfo.id, specificID, confirmed, uploadedFile);
             //fetch event numTickets
             //add one to that
             console.log("INA IS TESTING RIGHT HERE: " + eventInfo.numTickets);
