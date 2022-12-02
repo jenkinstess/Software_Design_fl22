@@ -126,6 +126,7 @@ export default (req, res) => {
           if(!eventInfo){
             //res.status(404).json({error: true, message: 'Event not found'});
             console.log('event not found')
+            res.status(404).json({error: true, message: 'Event not found'});
             return;
           }
           else{
@@ -137,7 +138,8 @@ export default (req, res) => {
             //add one to that
             console.log("INA IS TESTING RIGHT HERE: " + eventInfo.numTickets);
             addNumTicketToEvents(eventInfo.id, eventInfo.numTickets)
-            res.status(200).json({eventInfo});
+            console.log("what is the data being sent: " + eventInfo)
+            res.status(200).json({message: "ticket created!"});
           }
         })
       }).catch((error) => {

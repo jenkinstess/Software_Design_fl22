@@ -155,6 +155,10 @@ const Sell = ({currentEvents, existingTickets}) =>{
 
 
   const handleOTHERChange = (event) => {
+    if(!event.target.files[0]){
+      alert("Make sure Image is selected");
+      return;
+    }
     console.log(event.target.files[0]);
     setImgData(event.target.files[0]);
     setImage(URL.createObjectURL(event.target.files[0]))
@@ -211,6 +215,34 @@ const Sell = ({currentEvents, existingTickets}) =>{
 
       //console.log('Owner ID: ' + ownerID)
 
+      fetch('/api/verify_ticket', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text,
+          eventName,
+        }),
+      })
+        .then((r) => {
+          return r.json();
+        })
+        .then((data) => {
+          console.log("logging data" + JSON.stringify(data));
+          if (data && data.error) {
+            alert(data.message);
+            setImageError(data.message);
+            return;
+          }
+          if (data && !data.ticket) {
+            //set cookie
+            console.log("success")
+            setText(text);
+            setImgConfirm("image chosen")
+            //cookie.set('token', data.token, {expires: 2});
+
+
       fetch('/api/events', {
         method: 'POST',
         headers: {
@@ -223,7 +255,13 @@ const Sell = ({currentEvents, existingTickets}) =>{
           //ownerID,
         }),
     }) 
-    .then(() => {fetch('/api/tickets', {
+    .then((data) => {
+      if(!data || data.error){
+        alert("Error sending the event");
+        return;
+      }
+      
+      fetch('/api/tickets', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -236,36 +274,59 @@ const Sell = ({currentEvents, existingTickets}) =>{
           ownerID,
           uploadedFile
         }),
-      })})
-      .then(() => {fetch('/api/img_tickets', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      body: JSON.stringify({
-          //imgData,
-          image,
-          text,
-          eventName
-        }),
-      })})
-        .then((data) => {
-          console.log("data being sent is: " + data);
-          console.log("stringified sent data: "+ JSON.stringify(data));
-          //still have to check for error
-          //Router.push('/buy');
-          //alert("Event Uploaded!")
-          if (data && data.error) {
-            setCreateEventMessage(data.message);
-          }
-          if (data && data.info==0) {
-            //set cookie
-            setCreateEventMessage("Success");
-            setText('');
-            //cookie.set('token', data.token, {expires: 2});
+      })
+      .then((data) => {
+        console.log("finding out what the data is: " + data.message);
+        console.log("finding out what the data is: " + JSON.stringify(data));
+        if(!data || data.error){
+          alert("Error sending the ticket");
+          return;
+        }
+        if(data) {
+          alert("Ticket Uploaded!");
+          setText('');
+          setImage('');
+          setEventName('');
+          setEventDescription('');
+          setFile('');
+          setDate('');
+          setMedianPrice('');
+          Router.push('/buy');
+        }
+      });
+    })
 
-          }
-        });
+    }
+  });
+      //   fetch('/api/img_tickets', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      // body: JSON.stringify({
+      //     //imgData,
+      //     image,
+      //     text,
+      //     eventName
+      //   }),
+      // })})
+      //   .then((data) => {
+      //     console.log("data being sent is: " + data);
+      //     console.log("stringified sent data: "+ JSON.stringify(data));
+      //     //still have to check for error
+      //     //Router.push('/buy');
+      //     //alert("Event Uploaded!")
+      //     if (data && data.error) {
+      //       //setCreateEventMessage(data.message);
+      //     }
+      //     if (data && data.info==0) {
+      //       //set cookie
+      //       setCreateEventMessage("Success");
+      //       setText('');
+      //       //cookie.set('token', data.token, {expires: 2});
+
+      //     }
+      //   });
       //post new event to db if it's not already there
        
   }
@@ -273,6 +334,10 @@ const Sell = ({currentEvents, existingTickets}) =>{
   const handleClick = (e) => {
     e.preventDefault();
     console.log("handling this click !");
+    if(!image){
+      alert("No image selected");
+      return;
+    }
 
     console.log("contents of image: " + image);
   
@@ -324,7 +389,6 @@ const Sell = ({currentEvents, existingTickets}) =>{
           setUploadedFile(BUCKET_URL + file.name);
           setFile(null);
         });
-        setFile(null);
 
       fetch('/api/verify_ticket', {
         method: 'POST',
@@ -342,7 +406,8 @@ const Sell = ({currentEvents, existingTickets}) =>{
         .then((data) => {
           console.log("logging data" + JSON.stringify(data));
           if (data && data.error) {
-            setImageError(data.message);
+            console.log(data.message);
+            //setImageError(data.message);
           }
           if (data && !data.ticket) {
             //set cookie
@@ -492,7 +557,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
           
           <input
             value={text}
-            // onChange={(e) => setEventName(e.target.value)}
+            onChange={(e) => setText(e.target.value)}
             id="eventName"
             name="eventName"
             type="eventName"

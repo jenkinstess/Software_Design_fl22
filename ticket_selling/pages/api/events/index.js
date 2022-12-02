@@ -82,7 +82,8 @@ export default (req, res) => {
         findEvent(eventName, function(event){
           if(!event){
             createEvent(eventName, eventDate, eventDescription);
-            res.status(404).json({error: false, message: 'Event Created'});
+            res.status(200).json({message: 'Event Created'});
+            //res.status(404).json({error: false, message: 'Event Created'});
             //add one to counter after pulling the existing counter
           }
           else{
