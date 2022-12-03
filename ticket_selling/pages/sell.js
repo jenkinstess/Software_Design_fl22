@@ -298,46 +298,20 @@ const Sell = ({currentEvents, existingTickets}) =>{
 
     }
   });
-      //   fetch('/api/img_tickets', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      // body: JSON.stringify({
-      //     //imgData,
-      //     image,
-      //     text,
-      //     eventName
-      //   }),
-      // })})
-      //   .then((data) => {
-      //     console.log("data being sent is: " + data);
-      //     console.log("stringified sent data: "+ JSON.stringify(data));
-      //     //still have to check for error
-      //     //Router.push('/buy');
-      //     //alert("Event Uploaded!")
-      //     if (data && data.error) {
-      //       //setCreateEventMessage(data.message);
-      //     }
-      //     if (data && data.info==0) {
-      //       //set cookie
-      //       setCreateEventMessage("Success");
-      //       setText('');
-      //       //cookie.set('token', data.token, {expires: 2});
-
-      //     }
-      //   });
-      //post new event to db if it's not already there
        
   }
 
   const handleClick = (e) => {
     e.preventDefault();
-    console.log("handling this click !");
+    
     if(!image){
       alert("No image selected");
       return;
     }
+
+    const x = document.getElementById("textExtract");
+    x.style.display = "block";
+    console.log("handling this click !");
 
     console.log("contents of image: " + image);
   
@@ -387,6 +361,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
           });
 
           setUploadedFile(BUCKET_URL + file.name);
+          x.style.display = "none";
           setFile(null);
         });
 
@@ -509,17 +484,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
           ></input>
         </label>
         )}
-        {/* <br />
-
-        <label htmlFor="ticketCode">
-          Unique ticket code
-          <input
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            name="text"
-            type="text"
-          />
-        </label> */}
+     
 
         <br />
         <div className="App">
@@ -530,20 +495,21 @@ const Sell = ({currentEvents, existingTickets}) =>{
         <p>Upload Ticket in format of <i>bmp, jpg, png, pbm, or webp</i></p>
         <p><i>Note:</i> Only the QR/bar code and numeric value under it should be visible</p>
         <br/>
-        <img 
-           src={image} className="App-logo" alt="logo"
-          //  ref={imageRef} 
-           />
-        {/* <h3>Canvas</h3>
-        <canvas ref={canvasRef}></canvas> */}
-          {/* <h3>Extracted text</h3> */}
-          {/* {text} */}
+        {/* <img src={image} className="App-logo" alt="logo"/> */}
+        <img src={image} />
+        
+          
+      
         <div className="text-box">
           {/* <p> {text} </p> */}
         </div>
         <input type="file" onChange={handleOTHERChange} />
         <br/>
         <button onClick={handleClick}>CONFIRM TICKET</button>
+      
+          <div class="spinner-border" role="status" id="textExtract">
+          </div>
+        
         {/* {uploadingStatus && <p>{uploadingStatus}</p>} */}
         {imgConfirm && <p style={{color: 'green'}}> {imgConfirm}</p>}
         {imgError && <p style={{color: 'red'}}> {imgError}</p>}

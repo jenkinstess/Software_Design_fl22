@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import '../styles/globals.css'
 import '../styles/Navbar.css'
 import '../styles/OCR.css'
+import '../styles/sell.css'
 import { SessionProvider } from "next-auth/react"
 import { useEffect } from 'react';
  
