@@ -53,14 +53,15 @@ const Signup = () => {
         <br></br>
         
         <label htmlFor="email">
-          Email: &emsp;
+          WUSTL email: &emsp;
           <input
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             name="email"
             type="email"
-            required placeholder="johnDoe@gmail.com"
+            required placeholder="johnDoe@wustl.edu"
             pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+            pattern="[a-z0-9._%+-]+@wustl.edu$"
           />
         </label>
   
