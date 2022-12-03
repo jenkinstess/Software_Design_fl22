@@ -223,6 +223,12 @@ const Profile = ({tickets, users}) =>{
                   //0: event, 1: price, 2: is_sold, 3: event_id, 4: ticket id, 5: show ticket (removed?), 6: img url, 7: is_confirmed, 8: sold from
       users_tix.push(ticket)
     } else if (data.email == JSON.stringify(tickets_json[j].sold_from).replaceAll('"', '')) {  
+      let is_confirmed = JSON.stringify(tickets_json[j].is_confirmed).replaceAll('"',  '')
+      if (is_confirmed == 0){
+        is_confirmed = false
+      } else {
+        is_confirmed = true //NOTE; this true false is FLIPPED!!! For convenience with the if statement below 
+      }  
        let ticket = [((JSON.stringify(tickets_json[j].event)).replaceAll('"', '')), JSON.stringify(tickets_json[j].price),
          JSON.stringify(tickets_json[j].is_sold), JSON.stringify(tickets_json[j].event_id), JSON.stringify(tickets_json[j].id_tickets),
           is_confirmed, JSON.stringify(tickets_json[j].userUserid).replaceAll('"', ''), JSON.stringify(tickets_json[j].uploaded_img).replaceAll('"', '')]
@@ -254,7 +260,7 @@ const Profile = ({tickets, users}) =>{
             <li key={ticket} class="list-group-item">
               <p><a href = {`${server}/event/${ticket[3]}`}><i>Event</i></a>: {ticket[0]}</p>
               <p><i>Price:</i> $<b>{ticket[1]}</b></p>
-            { ticket[7] ? (<a href ={ticket[6]}>View Ticket</a>) : <p>Your payment is pending approval from the seller. Contact yours seller at {ticket[8]} </p>}
+            { ticket[7] ? (<a href ={ticket[6]}>View Ticket</a>) : <p>Your payment is pending approval from the seller. You may csontact the seller at {ticket[8]} </p>}
             <br></br>
             {ticket [7] &&  <button id = {"show_sell_ticket_form"+ticket[4]} onClick={()=>show_sell_ticket_form(ticket[4])}>Resell Ticket</button>}
               <button onClick={()=>removeTicket(ticket[4])}>Remove Ticket</button>
