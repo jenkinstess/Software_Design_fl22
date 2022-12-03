@@ -125,21 +125,23 @@ const Sell = ({currentEvents, existingTickets}) =>{
     
   };
   async function findMedianPrice(eventName){
-    
+    console.log(JSON.stringify({
+      eventName: eventName
+    }))
     const averagePrice_res = await fetch(`${server}/api/prices`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        eventName
-      }),
-  }) 
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          eventName: eventName
+        }),
+    }) 
     // console.log("ANYTHING")
-    const averagePrice = await averagePrice_res.json()
+    const priceData = await averagePrice_res.json()
       
-    const final_average = JSON.stringify(averagePrice, ["averagePrice"])
-    const parsedAvg = JSON.parse(final_average).averagePrice
+    // const final_average = JSON.stringify(averagePrice, ["averagePrice"])
+    // const parsedAvg = JSON.parse(final_average).averagePrice
     //JSON.stringify(row, ["id"])
     // var avgObjs = JSON.parse(averagePrice_string);
     // console.log("avg price " + avgObjs)
@@ -148,7 +150,8 @@ const Sell = ({currentEvents, existingTickets}) =>{
     // console.log("text is: " + averagePrice_string);
     // const averagePrice_obj = JSON.parse(averagePrice_string)
     //const final_average = averagePrice_string.getSelection()[0]
-    console.log("avg price " + parsedAvg)
+    const parsedAvg = priceData["averagePrice"]
+    
     return parsedAvg
     
   }
