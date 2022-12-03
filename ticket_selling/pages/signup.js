@@ -3,6 +3,7 @@ import {Component} from 'react';
 import Router from 'next/router';
 import cookie from 'js-cookie';
 import { checkCustomRoutes } from 'next/dist/lib/load-custom-routes';
+import axios from "axios";
 
 const Signup = () => {
     const [signupError, setSignupError] = useState('');
@@ -12,7 +13,11 @@ const Signup = () => {
     const [lastName, setLastName] = useState('');
     const [phoneNum, setPhoneNumber] = useState('');
     const [venmo, setVenmo] = useState('');
+    const [uploadedPic, setUploadedProfPic] = useState('');
+    const [profPic, setProfPic] = useState('');
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
+
+    const BUCKET_URL = "https://partyticketsimages.s3.us-east-2.amazonaws.com/";
 
     function checkPW(e) {
       //e.preventDefault();
@@ -25,9 +30,49 @@ const Signup = () => {
         document.getElementById('message').innerHTML = 'not matching';
       }
     }
+
+    const handleChange = (event) => {
+      if(!event.target.files[0]){
+        alert("no profile picture was selected");
+        return;
+      }
+      setUploadedProfPic(event.target.files[0]);
+    }
   
     function handleSubmit(e) {
       e.preventDefault(); // tells user agent that if the event (hitting submit) does not get handled, this action (fetching) should not be taken 
+      if(!uploadedPic){
+        alert("No profile picture was selected!");
+        return;
+      }
+      fetch('/api/s3', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+
+          name: uploadedPic.name,
+          type: uploadedPic.type,
+        }),
+      })
+        .then((r) => {
+          return r.json();
+        })
+        .then(async(data) => {
+          console.log("DATA!: " + JSON.stringify(data));
+          const url = data.url;
+          let { data: newData } = await axios.put(url, uploadedPic, {
+            headers: {
+              "Content-type": uploadedPic.type,
+              "Access-Control-Allow-Origin": "*",
+            },
+          });
+
+          setUploadedProfPic(BUCKET_URL + uploadedPic.name);
+          
+          setUploadedProfPic(null);
+        
       fetch('/api/users', {
         method: 'POST',
         headers: {
@@ -39,7 +84,8 @@ const Signup = () => {
           firstName,
           lastName,
           phoneNum,
-          venmo
+          venmo,
+          profPic
         }),
       })
       .then((r) => {
@@ -59,6 +105,7 @@ const Signup = () => {
                                                            //   and review if the user has been properly authenticated and that the auth is valid
           }
         });
+      });
     }
     return (
       <form onSubmit={handleSubmit}>
@@ -152,7 +199,7 @@ const Signup = () => {
         <br></br>
         <br></br>
   
-        <label>confirm password:
+        <label>Confirm Password:
         <input 
           type="password" 
           name="confirm_password" 
@@ -162,6 +209,11 @@ const Signup = () => {
         <span id='message'></span>
         </label>
 
+        <br></br>
+        <br></br>
+        <label> Upload Profile Picture: 
+        <input type="file" onChange={handleChange} />
+        </label>
         <br></br>
         <br></br>
 

@@ -56,13 +56,13 @@ async function findUser(email, callback){
 }
 
 // adds the user to the users table in the database
-async function createUser(email, password, venmo, callback) {
+async function createUser(email, password, venmo, prof_pic, callback) {
   bcrypt.hash(password, round, async function(err, hash) {
     console.log(hash)
     // Stores the hash in the password db
-    const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO users( email, password, venmo) VALUES (:email, :password, :venmo)',
+    const [resultsCreate, metadataCreate] = await sequelize.query('INSERT INTO users( email, password, venmo, prof_pic) VALUES (:email, :password, :venmo, :prof_pic)',
       {
-        replacements: { email: email, password: hash, venmo: venmo},
+        replacements: { email: email, password: hash, venmo: venmo, prof_pic: prof_pic },
         type: QueryTypes.INSERT
       },
       // function(err, userCreated){
@@ -97,6 +97,10 @@ export default (req, res) => {
         const email = req.body.email;
         const password = req.body.password;
         const venmo = req.body.venmo;
+        if(!req.body.profPic) {
+          const prof_pic = "https://partyticketsimages.s3.us-east-2.amazonaws.com/basic_prof_pic.jpg";
+        }
+        const prof_pic = req.body.profPic;
         console.log("data grabbed");
         console.log(password);
 
@@ -106,7 +110,7 @@ export default (req, res) => {
           // if no user object is returned, then we should go ahead and create the user
           if (!user){
             // createUser(email, password, venmo, function(err, success){
-            createUser(email, password, venmo, function(newUser){
+            createUser(email, password, venmo, prof_pic, function(newUser){
               if (newUser) {
                 console.log("user created!");
                 const token = jwt.sign(
