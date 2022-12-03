@@ -38,6 +38,9 @@ const users = sequelize.define('users', {
   venmo:{
     type: DataTypes.STRING,
     allowNull: false,
+  },
+  prof_pic:{
+    type: DataTypes.STRING
   }
 });
 

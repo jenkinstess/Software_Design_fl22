@@ -155,6 +155,10 @@ const Sell = ({currentEvents, existingTickets}) =>{
 
 
   const handleOTHERChange = (event) => {
+    if(!event.target.files[0]){
+      alert("Make sure Image is selected");
+      return;
+    }
     console.log(event.target.files[0]);
     setImgData(event.target.files[0]);
     setImage(URL.createObjectURL(event.target.files[0]))
@@ -211,6 +215,34 @@ const Sell = ({currentEvents, existingTickets}) =>{
 
       //console.log('Owner ID: ' + ownerID)
 
+      fetch('/api/verify_ticket', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text,
+          eventName,
+        }),
+      })
+        .then((r) => {
+          return r.json();
+        })
+        .then((data) => {
+          console.log("logging data" + JSON.stringify(data));
+          if (data && data.error) {
+            alert(data.message);
+            setImageError(data.message);
+            return;
+          }
+          if (data && !data.ticket) {
+            //set cookie
+            console.log("success")
+            setText(text);
+            setImgConfirm("image chosen")
+            //cookie.set('token', data.token, {expires: 2});
+
+
       fetch('/api/events', {
         method: 'POST',
         headers: {
@@ -223,7 +255,13 @@ const Sell = ({currentEvents, existingTickets}) =>{
           //ownerID,
         }),
     }) 
-    .then(() => {fetch('/api/tickets', {
+    .then((data) => {
+      if(!data || data.error){
+        alert("Error sending the event");
+        return;
+      }
+      
+      fetch('/api/tickets', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -236,42 +274,43 @@ const Sell = ({currentEvents, existingTickets}) =>{
           ownerID,
           uploadedFile
         }),
-      })})
-      .then(() => {fetch('/api/img_tickets', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      body: JSON.stringify({
-          //imgData,
-          image,
-          text,
-          eventName
-        }),
-      })})
-        .then((data) => {
-          console.log("data being sent is: " + data);
-          console.log("stringified sent data: "+ JSON.stringify(data));
-          //still have to check for error
-          //Router.push('/buy');
-          //alert("Event Uploaded!")
-          if (data && data.error) {
-            setCreateEventMessage(data.message);
-          }
-          if (data && data.info==0) {
-            //set cookie
-            setCreateEventMessage("Success");
-            setText('');
-            //cookie.set('token', data.token, {expires: 2});
+      })
+      .then((data) => {
+        console.log("finding out what the data is: " + data.message);
+        console.log("finding out what the data is: " + JSON.stringify(data));
+        if(!data || data.error){
+          alert("Error sending the ticket");
+          return;
+        }
+        if(data) {
+          alert("Ticket Uploaded!");
+          setText('');
+          setImage('');
+          setEventName('');
+          setEventDescription('');
+          setFile('');
+          setDate('');
+          setMedianPrice('');
+          Router.push('/buy');
+        }
+      });
+    })
 
-          }
-        });
-      //post new event to db if it's not already there
+    }
+  });
        
   }
 
   const handleClick = (e) => {
     e.preventDefault();
+    
+    if(!image){
+      alert("No image selected");
+      return;
+    }
+
+    const x = document.getElementById("textExtract");
+    x.style.display = "block";
     console.log("handling this click !");
 
     console.log("contents of image: " + image);
@@ -322,9 +361,9 @@ const Sell = ({currentEvents, existingTickets}) =>{
           });
 
           setUploadedFile(BUCKET_URL + file.name);
+          x.style.display = "none";
           setFile(null);
         });
-        setFile(null);
 
       fetch('/api/verify_ticket', {
         method: 'POST',
@@ -342,7 +381,8 @@ const Sell = ({currentEvents, existingTickets}) =>{
         .then((data) => {
           console.log("logging data" + JSON.stringify(data));
           if (data && data.error) {
-            setImageError(data.message);
+            console.log(data.message);
+            //setImageError(data.message);
           }
           if (data && !data.ticket) {
             //set cookie
@@ -444,17 +484,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
           ></input>
         </label>
         )}
-        {/* <br />
-
-        <label htmlFor="ticketCode">
-          Unique ticket code
-          <input
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            name="text"
-            type="text"
-          />
-        </label> */}
+     
 
         <br />
         <div className="App">
@@ -465,20 +495,21 @@ const Sell = ({currentEvents, existingTickets}) =>{
         <p>Upload Ticket in format of <i>bmp, jpg, png, pbm, or webp</i></p>
         <p><i>Note:</i> Only the QR/bar code and numeric value under it should be visible</p>
         <br/>
-        <img 
-           src={image} className="App-logo" alt="logo"
-          //  ref={imageRef} 
-           />
-        {/* <h3>Canvas</h3>
-        <canvas ref={canvasRef}></canvas> */}
-          {/* <h3>Extracted text</h3> */}
-          {/* {text} */}
+        {/* <img src={image} className="App-logo" alt="logo"/> */}
+        <img src={image} />
+        
+          
+      
         <div className="text-box">
           {/* <p> {text} </p> */}
         </div>
         <input type="file" onChange={handleOTHERChange} />
         <br/>
         <button onClick={handleClick}>CONFIRM TICKET</button>
+      
+          <div class="spinner-border" role="status" id="textExtract">
+          </div>
+        
         {/* {uploadingStatus && <p>{uploadingStatus}</p>} */}
         {imgConfirm && <p style={{color: 'green'}}> {imgConfirm}</p>}
         {imgError && <p style={{color: 'red'}}> {imgError}</p>}
@@ -492,7 +523,7 @@ const Sell = ({currentEvents, existingTickets}) =>{
           
           <input
             value={text}
-            // onChange={(e) => setEventName(e.target.value)}
+            onChange={(e) => setText(e.target.value)}
             id="eventName"
             name="eventName"
             type="eventName"
