@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Component} from 'react';
 import Router from 'next/router';
 import cookie from 'js-cookie';
+import { checkCustomRoutes } from 'next/dist/lib/load-custom-routes';
 
 const Signup = () => {
     const [signupError, setSignupError] = useState('');
@@ -12,6 +13,18 @@ const Signup = () => {
     const [phoneNum, setPhoneNumber] = useState('');
     const [venmo, setVenmo] = useState('');
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
+
+    function checkPW(e) {
+      //e.preventDefault();
+      if (document.getElementById('password').value ==
+        document.getElementById('confirm_password').value) {
+        document.getElementById('message').style.color = 'green';
+        document.getElementById('message').innerHTML = 'matching';
+      } else {
+        document.getElementById('message').style.color = 'red';
+        document.getElementById('message').innerHTML = 'not matching';
+      }
+    }
   
     function handleSubmit(e) {
       e.preventDefault(); // tells user agent that if the event (hitting submit) does not get handled, this action (fetching) should not be taken 
@@ -132,12 +145,26 @@ const Signup = () => {
             onChange={(e) => setPassword(e.target.value)}
             name="password"
             type="password"
+            id="password"
           />
         </label>
+
+        <br></br>
+        <br></br>
   
-        
+        <label>confirm password:
+        <input 
+          type="password" 
+          name="confirm_password" 
+          id="confirm_password"  
+          onChange={(e) => checkPW(e.target.value)}
+        /> 
+        <span id='message'></span>
+        </label>
+
         <br></br>
         <br></br>
+
         <input type="submit" value="Submit" class="btn btn-primary"/>
         {signupError && <p style={{color: 'red'}}>{signupError}</p>}
       </form>
