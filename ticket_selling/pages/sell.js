@@ -26,22 +26,10 @@ export const getStaticProps = async () => {
     event_date.setDate(event_date.getDate() + 1)
     return event_date.getTime() >= today.getTime();
   })
-
-  // const response2 = await fetch(`${server}/api/ticketPrices`)
-  // const data2 = await response2.json()
   return {
     props: { currentEvents: upcoming_events }
   }
 }
-/*get back to this
-// async function fetchTicketPrices(){
-//   const response2 = await fetch(`${server}/api/ticketPrices`)
-//   const data2 = await response2.json()
-//   return{
-//     props:{existingTickets: data2}
-//   }
-// }
-*/
 
 const Sell = ({ currentEvents, existingTickets }) => {
 
@@ -90,28 +78,6 @@ const Sell = ({ currentEvents, existingTickets }) => {
 
     const testPrice = await findMedianPrice(currentEvent);
     setMedianPrice(testPrice)
-    console.log("12:47 TEST" + testPrice)
-    //   fetch(`${server}/api/prices`, {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({
-    //       currentEvent
-    //     }),
-    // }) 
-    //   .then((r) => {
-    //     //console.log("DATA " + r)
-    //     return r.json();
-    //   })
-    //   .then((data2) => {
-    //     console.log("logging data2: " + data2);
-    //   });
-
-    // const data2 = await response.json()
-    // console.log("DATA@ " + data2)
-
-    //findEventMedianPrice(e.target.value);
     console.log("TEST HERE SHOWME:" + e.target.value)
     if (e.target.value.length == 0) {
       setShowMe(true);
@@ -138,19 +104,7 @@ const Sell = ({ currentEvents, existingTickets }) => {
         eventName: eventName
       }),
     })
-    // console.log("ANYTHING")
     const priceData = await averagePrice_res.json()
-
-    // const final_average = JSON.stringify(averagePrice, ["averagePrice"])
-    // const parsedAvg = JSON.parse(final_average).averagePrice
-    //JSON.stringify(row, ["id"])
-    // var avgObjs = JSON.parse(averagePrice_string);
-    // console.log("avg price " + avgObjs)
-    // var finalAvg = avgObjs.result[0].averagePrice
-    // console.log("result is: " + JSON.stringify(result));
-    // console.log("text is: " + averagePrice_string);
-    // const averagePrice_obj = JSON.parse(averagePrice_string)
-    //const final_average = averagePrice_string.getSelection()[0]
     const parsedAvg = priceData["averagePrice"]
 
     return parsedAvg
@@ -421,9 +375,11 @@ const Sell = ({ currentEvents, existingTickets }) => {
           />
         </div>
       </div>
+      
       <h1 class="pt-4 text-light">Sell Ticket</h1>
-      <p class="text-light">Please select (or create) an event, and fill in the ticket details below: </p>
-      <label htmlFor="eventName" class="my-3">Existing Events: &emsp;
+      <div class="container w-50 rounded bg-dark p-3 shadow">
+      <p class="text-white">Please select (or create) an event, and fill in the ticket details below: </p>
+      <label htmlFor="eventName" class="text-white" >Existing Events: &emsp;
         <select onChange={handleChange} name="eventName">
           {/* <option value="" /> */}
           <option value="">Create New Event</option>
@@ -431,11 +387,12 @@ const Sell = ({ currentEvents, existingTickets }) => {
             <option>{eventName}</option>))}
         </select>
       </label>
+      
       <form onSubmit={handleSubmit}>
 
         {showMe && (
           <>
-            <label class="mb-3" htmlFor="date">
+            <label class="text-white" htmlFor="date">
               Ticket Date: &emsp;
               <input
                 value={eventDate}
@@ -450,7 +407,7 @@ const Sell = ({ currentEvents, existingTickets }) => {
           </>
         )}
 
-        <label class="mb-3" htmlFor="eventName">
+        <label class="text-white" htmlFor="eventName">
           Event Name: &emsp;
 
           <input
@@ -468,7 +425,7 @@ const Sell = ({ currentEvents, existingTickets }) => {
 
         {showMe && (
           <>
-            <label class="mb-3" htmlFor="eventDescription">
+            <label class="text-white" htmlFor="eventDescription">
               Event Description: &emsp;
               <input
                 value={eventDescription}
@@ -481,7 +438,7 @@ const Sell = ({ currentEvents, existingTickets }) => {
           </>
         )}
 
-        <label class="mb-3" htmlFor="ticketPrice">
+        <label class="text-white" htmlFor="ticketPrice">
           Ticket Price: &emsp;
           <input
             value={ticketPrice}
@@ -498,7 +455,7 @@ const Sell = ({ currentEvents, existingTickets }) => {
 
         {!showMe && (
           <>
-            <label htmlFor="medianPrice">
+            <label htmlFor="medianPrice" class="text-white">
               Suggested Price: &emsp;
               <input type="text"
                 value={medianPrice}
@@ -516,8 +473,8 @@ const Sell = ({ currentEvents, existingTickets }) => {
           <main className="App-main">
             <br></br>
             {/* <h4>Upload Ticket:</h4> */}
-            <p>Now, upload your ticket in the format of <i>bmp, jpg, png, pbm, or webp.</i> Confirm below.</p>
-            <p><i>Note:</i> Only the QR/bar code and numeric value under it should be visible</p>
+            <p class="text-white">Now, upload your ticket in the format of <i>bmp, jpg, png, pbm, or webp.</i> Confirm below.</p>
+            <p class="text-white"><i>Note:</i> Only the QR/bar code and numeric value under it should be visible</p>
             
             {/* <img src={image} className="App-logo" alt="logo"/> */}
             <img src={image} />
@@ -525,7 +482,7 @@ const Sell = ({ currentEvents, existingTickets }) => {
             <div className="text-box">
               {/* <p> {text} </p> */}
             </div>
-            <label htmlFor='ticketFile' class=""> Ticket Document: &emsp;
+            <label htmlFor='ticketFile' class="text-white"> Ticket Document: &emsp;
             <input type="file" name="ticketFile" onChange={handleOTHERChange} />
             </label>
             <br />
@@ -538,15 +495,15 @@ const Sell = ({ currentEvents, existingTickets }) => {
             {imgConfirm && <p style={{ color: 'green' }}> {imgConfirm}</p>}
             {imgError && <p style={{ color: 'red' }}> {imgError}</p>}
             <div>
-              <p>
+              <p class="text-white">
               Please check that the numbers below match those on your ticket below the QR / bar code.
               </p>
-              <p>
+              <p class="text-white">
               Correct these numbers if they do not match:
               </p>
             </div>
             
-            <label htmlFor="extracted Text" >
+            <label htmlFor="extracted Text" class="text-white" >
               Extracted Values: &emsp; 
               <input
                 value={text}
@@ -568,6 +525,7 @@ const Sell = ({ currentEvents, existingTickets }) => {
 
 
       </form>
+      </div>
 
       <br />
 
