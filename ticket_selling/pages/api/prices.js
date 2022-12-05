@@ -85,18 +85,30 @@ export default (req, res) => {
                 return;
             }
             else{
-                // console.log("11/29 TEST" + eventInfo.length)
+                
+              // get all prices into arr
                 for(let i=0; i<eventInfo.length; i++){
                     allPrices.push(eventInfo[i].price)
                 }
+                
+                // calculate the average price
                 //do i need to check anything regarding confirmed? on market? etc.
                 for(let i=0; i <allPrices.length; i++){
                     sum += allPrices[i]
                 }
                 var tempAveragePrice = sum/(allPrices.length)
                 averagePrice = Math.round(tempAveragePrice * 100) / 100
+
+                let minPrice = Math.min(...allPrices)
+                let maxPrice = Math.max(...allPrices)
+
                 console.log("TESTING THE AVERAGE PRICE: " + averagePrice)
-                res.status(200).json({averagePrice});
+                res.status(200).json({
+                  averagePrice: averagePrice, 
+                  maxPrice: maxPrice, 
+                  minPrice: minPrice, 
+                  numTickets: allPrices.length
+                });
                 
                 
                 

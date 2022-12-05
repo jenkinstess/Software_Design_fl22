@@ -2,6 +2,7 @@ import Link from 'next/link'
 import eventStyles from '../styles/Event.module.css'
 
 const EventItem = ({ event }) => {
+
     return (
       // <Link href={`/event/${event.id}`}>
       //   <a className={eventStyles.preview}>
@@ -14,6 +15,8 @@ const EventItem = ({ event }) => {
         <div class="card-body">
           <h5 class="card-title">{event.name}</h5>
           <p class="card-text"><i>Details:</i> {event.description}</p>
+          <p class="card-text"><i>Prices:</i> Min: ${event.minPrice} | Average: ${event.avgPrice}</p>
+          <p class="card-text">{event.ticketsLeft} ticket{parseInt(event.ticketsLeft) > 1 ? "s" : ""} available now.</p>
           <a href={`/event/${event.id}`} class="btn btn-primary">View Tickets &rarr;</a>
         </div>
         <div class="card-footer text-muted"><i>Date:</i> {event.date}</div>

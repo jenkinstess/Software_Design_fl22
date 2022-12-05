@@ -11,6 +11,8 @@ const event = ({ event, event_tickets }) => {
                 <p>Name: <i>{event.name}</i></p>
                 <p>Date: <i>{event.date}</i></p>
                 <p>Details: <i>{event.description}</i></p>
+                <h4>Price Data:</h4>
+                <p>Min: <i>${event.minPrice}</i> | Avg: <i>${event.avgPrice}</i> | Total Available: <i>{event.numTickets}</i></p>
             </div>
             <div>
                 <h4>Event Tickets:</h4>
@@ -37,6 +39,23 @@ export const getStaticProps = async (context) => {
     let event_id = context.params.id
     const event_res = await fetch(`${server}/api/events_buy/${event_id}`)
     const event = await event_res.json()
+
+    // get price data associated with the event
+    // get price data for current event:
+    var priceData_res = await fetch(`${server}/api/prices`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          eventName: event.name
+        }),
+    }) 
+    const priceData = await priceData_res.json()
+    event.minPrice = priceData["minPrice"]
+    event.maxPrice = priceData["maxPrice"]
+    event.avgPrice = priceData["averagePrice"]
+    event.ticketsLeft = priceData["numTickets"] // unsold tickets
 
     // get tickets associated with the event
     const tickets_res = await fetch(`${server}/api/tickets_hard`)

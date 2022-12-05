@@ -86,6 +86,27 @@ export async function getStaticProps() {
     // filter for only events with tickets 
     const events = sorted_events.filter(event => { return event.numTickets && (event.numTickets > 0) })
 
+    // add price data to each event
+    for(var idx = 0; idx < events.length; idx++) {
+        // get price data for current event:
+        var priceData_res = await fetch(`${server}/api/prices`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            eventName: events[idx].name
+          }),
+        }) 
+        const priceData = await priceData_res.json()
+        
+        // append price data to each event element
+        events[idx].minPrice = priceData["minPrice"]
+        events[idx].maxPrice = priceData["maxPrice"]
+        events[idx].avgPrice = priceData["averagePrice"]
+        events[idx].ticketsLeft = priceData["numTickets"] // unsold tickets
+    }
+
     return {
         props: {
           events,

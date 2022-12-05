@@ -60,12 +60,21 @@ async function getTickets(){
     return JSON.stringify(tickets_res);
 }
 
+async function getEvents(){
+  const tickets_res = await sequelize.query("SELECT * FROM ticketsitedb.events",
+  {
+    type: QueryTypes.SELECT
+  })
+  return JSON.stringify(tickets_res);
+}
+
   export default async function handler(req, res) {
     
     try {
       const users = await getUsers()
       const tickets = await getTickets()
-      res.status(200).json({ users: users, tickets: tickets})
+      const events = await getEvents()
+      res.status(200).json({ users: users, tickets: tickets, events: events})
     } catch (err) {
       res.status(500).json({ error: 'failed to load data' })
     }
