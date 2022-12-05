@@ -10,6 +10,12 @@ body {
   padding-top: 50px; 
 }
 
+.sticky-top{
+  position: sticky;
+  padding-top: 60px;
+
+}
+
 /* 
   html,body, body * { 
     font-family: 'Open Sans', sans-serif; 

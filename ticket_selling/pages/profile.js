@@ -333,9 +333,10 @@ const Profile = ({ tickets, users, events }) => {
         <>
           <div class="container">
             <div class="col-sm-2 position-fixed">
-              <div class="card-header">
+            <br></br>
                 <br></br>
-                <br></br>
+              <div class="card">
+
                 <div class="card m-4">
                   <img class="rounded" src={profile_pic}></img>
                 </div>
@@ -349,21 +350,21 @@ const Profile = ({ tickets, users, events }) => {
                 </p>
               </div>
             </div>
-            <div class="row justify-content-end">
+            <div class="d-flex flex-row-reverse gx-5">
               <div class="col-3">
                 {/* end column 1, start column 2 */}
 
-                <div class = "bg-info rounded sticky-top">Your Tickets </div>
+                <div class = "bg-primary rounded sticky-top" >Your Tickets </div>
                 <br />
                 <div>
                   {users_tix.map(
                     (ticket) =>
                       ticket[5] && ( //is removed?
-                        <div>
+                        <div class = "m-2">
                           <li key={ticket} class="list-group-item">
                             <div
                               class="card text-center mx-auto shadow p-3 mb-5"
-                              style={{ width: "15rem" }}
+                              
                             >
                               <div>
                               <a href={`${server}/event/${ticket[3]}`}>
@@ -442,9 +443,9 @@ const Profile = ({ tickets, users, events }) => {
                                       setTicketId(ticket[4])
                                     )}
                                   ></input>
-                                  <div class = "modal-footer">
+                                  <br></br>
                                   <button type="submit" value="Submit" class = "btn btn-success">
-                                    Submit
+                                    Sell Ticket
                                   </button>
                                   <button
                                     type="button"
@@ -455,7 +456,7 @@ const Profile = ({ tickets, users, events }) => {
                                   >
                                     Cancel
                                   </button>
-                                  </div>
+                                  
                                 </form>
                               </div>
                               </div>
@@ -471,19 +472,64 @@ const Profile = ({ tickets, users, events }) => {
                       )
                   )}
                 </div>
+                <button id="remove_button" class = "btn btn-secondary text-center mb-4" onClick={() => viewRemoved()}>
+                  View Removed Tickets?
+                </button>
+                <div
+                  id="removed_tix"
+                  class = "text-center"
+                  style={{
+                    display: "none",
+                  }}
+                >
+                  <div class = "bg-warning rounded">Removed Tickets</div>
+                  <br />
+                  <div class = "m-2">
+                  <div
+                    class="card text-center mx-auto"
+                    
+                  >
+                    <ul class="list-group list-group-flush">
+                      {users_tix.map(
+                        (ticket) =>
+                          !ticket[5] && (
+                            <li key={ticket} class="list-group-item">
+                             <div>
+                              <a href={`${server}/event/${ticket[3]}`}>
+                                <i>{ticket[0]}</i>
+                              </a>
+
+                              <p>{ticket[9]}</p>
+                              </div>
+                              <p>
+                                <i>Price:</i> $<b>{ticket[1]}</b>
+                              </p>
+                              <button class = "btn btn-primary"onClick={() => unremoveTicket(ticket[4])}>
+                                Unremove Ticket
+                              </button>
+                            </li>
+                          )
+                      )}
+                    </ul>
+                  </div>
+                  <button id="remove_button" class = "btn btn-secondary mb-4" onClick={() => hideRemoved()}>
+                    Hide Removed Tickets
+                  </button>
+                </div>
+                </div>
                 </div>
 
 
                 <div class="col-3">
-                <div class = "bg-info rounded sticky-top">Tickets Being Sold</div>
+                <div class = "bg-primary rounded sticky-top">Tickets Being Sold</div>
                 <br />
                   {market_tix.map(
                     (ticket) =>
                       ticket[5] && ( //is removed?
-                      <div>
+                      <div class = "m-2">
                         <div
                           class="card text-center mx-auto shadow p-3 mb-5"
-                          style={{ width: "15rem" }}
+                          
                         >
                           <li key={ticket} class="list-group-item">
                             <p>
@@ -493,7 +539,7 @@ const Profile = ({ tickets, users, events }) => {
                               </a>
                               <p>{ticket[9]}</p>
                               </div>
-                              : {ticket[0]} | On Market
+                              {ticket[0]} | On Market
                             </p>
                             <p>
                               <i>Price:</i> $<b>{ticket[1]}</b>
@@ -509,11 +555,12 @@ const Profile = ({ tickets, users, events }) => {
                         
                       )
                   )}
+                  
                 </div>
 
              
               <div class="col-3">
-              <div class = "bg-info rounded sticky-top">Recently Sold</div>
+              <div class = "bg-primary rounded sticky-top">Recently Sold</div>
               <br />
                
 
@@ -521,9 +568,10 @@ const Profile = ({ tickets, users, events }) => {
                       {selling_tix.map(
                         (ticket) =>
                           !ticket[5] && ( //confirmed already?
+                          <div class = "m-2">
                           <div
                           class="card text-center mx-auto shadow p-3 mb-5"
-                          style={{ width: "15rem" }}
+                          
                         >
                               <div>
                               <a href={`${server}/event/${ticket[3]}`}>
@@ -544,54 +592,14 @@ const Profile = ({ tickets, users, events }) => {
                                 Report User
                               </button>
                             </div>
+                            </div>
                           )
                       )}
                    
 
 
                 <br></br>
-                <button id="remove_button" class = "btn btn-secondary text-center" onClick={() => viewRemoved()}>
-                  View Removed Tickets?
-                </button>
-                <div
-                  id="removed_tix"
-                  class = "text-center"
-                  style={{
-                    display: "none",
-                  }}
-                >
-                  <div class = "bg-warning rounded sticky-top">Removed Tickets</div>
-                  <br />
-                  <div
-                    class="card text-center mx-auto"
-                    style={{ width: "15rem" }}
-                  >
-                    <ul class="list-group list-group-flush">
-                      {users_tix.map(
-                        (ticket) =>
-                          !ticket[5] && (
-                            <li key={ticket} class="list-group-item">
-                             <div>
-                              <a href={`${server}/event/${ticket[3]}`}>
-                                <i>{ticket[0]}</i>
-                              </a>
-                              <p>{ticket[8]}</p>
-                              </div>
-                              <p>
-                                <i>Price:</i> $<b>{ticket[1]}</b>
-                              </p>
-                              <button class = "btn btn-primary"onClick={() => unremoveTicket(ticket[4])}>
-                                Unremove Ticket
-                              </button>
-                            </li>
-                          )
-                      )}
-                    </ul>
-                  </div>
-                  <button id="remove_button" class = "btn btn-secondary" onClick={() => hideRemoved()}>
-                    Hide Removed Tickets
-                  </button>
-                </div>
+               
                 <br />
                 <br />
               </div>
