@@ -1,10 +1,14 @@
 * {
-    margin: 10;
-    padding: 10;
+    /* margin: 10;
+    padding: 10; */
     box-sizing: border-box;
     text-align: center;
     /* background-color: blanchedalmond; */
   }
+
+body { 
+  padding-top: 50px; 
+}
 
 /* 
   html,body, body * { 

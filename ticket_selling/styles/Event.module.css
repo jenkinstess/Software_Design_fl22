@@ -1,20 +1,19 @@
-.preview {
+/* .preview {
     margin: 1rem;
     flex-basis: 45%;
     padding: 1.5rem;
     text-align: left;
     color: inherit;
     text-decoration: none;
-    /* border: 1px solid #ffffff; */
-    /* border-radius: 10px; */
+    
     transition: color 0.15s ease, border-color 0.15s ease;
 }
 
 .list {
     align-items: center;
-    /* justify-content: center; */
+    
     max-width: 600px;
-    /* margin-top: 3rem; */
+
     margin-left: auto;
     margin-right: auto;
 } 
@@ -35,4 +34,4 @@
   margin: 0;
   font-size: 1.25rem;
   line-height: 1.5;
-}
+} */
