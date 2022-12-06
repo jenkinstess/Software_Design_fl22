@@ -54,19 +54,20 @@ async function decTicketCounter(event_name) {
       type: QueryTypes.UPDATE
     });
 }
-// async function takeTixOffMarket(user_id){
-//   const resultFound = await sequelize.query("UPDATE ticketsitedb.tickets SET is_sold = 0 WHERE userUserid = :user_id",
-//   {
-//     replacements: {user_id: user_id},
-//     type: QueryTypes.UPDATE
-//   })
-// }
+async function takeTixOffMarket(user_id){
+  const resultFound = await sequelize.query("UPDATE ticketsitedb.tickets SET is_sold = 0 WHERE userUserid = :user_id",
+  {
+    replacements: {user_id: user_id},
+    type: QueryTypes.UPDATE
+  })
+}
   // TODO: update to accept request with new ticket owner id, 
   export default async function handler(req, res) {
     try {
       if (req.method === 'POST') {
 
         reportUser(req.body.user_id),
+        takeTixOffMarket(req.body.user_id),
         getReportedTickets(req.body.user_id, function(ticketsFound){
           if (!ticketsFound) {
             res.status(200).json({error: true, message: 'error finding tickets for reported user'});
