@@ -375,9 +375,14 @@ const Sell = ({ currentEvents, existingTickets }) => {
           />
         </div>
       </div>
-      
-      <h1 class="pt-4 text-light">Sell Ticket</h1>
+      <br />
+      <br />
+      <h1 class="pt-4 text-light " >Sell Ticket</h1>
+      <br />
+      <br />
+      <br />
       <div class="container w-50 rounded bg-dark p-3 shadow">
+      
       <p class="text-white">Please select (or create) an event, and fill in the ticket details below: </p>
       <label htmlFor="eventName" class="text-white" >Existing Events: &emsp;
         <select onChange={handleChange} name="eventName">
@@ -389,9 +394,10 @@ const Sell = ({ currentEvents, existingTickets }) => {
       </label>
       
       <form onSubmit={handleSubmit}>
-
+          
         {showMe && (
           <>
+          <br />
             <label class="text-white" htmlFor="date">
               Ticket Date: &emsp;
               <input
@@ -408,6 +414,7 @@ const Sell = ({ currentEvents, existingTickets }) => {
         )}
 
         <label class="text-white" htmlFor="eventName">
+        <br />
           Event Name: &emsp;
 
           <input
@@ -425,8 +432,10 @@ const Sell = ({ currentEvents, existingTickets }) => {
 
         {showMe && (
           <>
+          <br />
             <label class="text-white" htmlFor="eventDescription">
               Event Description: &emsp;
+              <br />
               <input
                 value={eventDescription}
                 onChange={(e) => setEventDescription(e.target.value)}
@@ -439,7 +448,9 @@ const Sell = ({ currentEvents, existingTickets }) => {
         )}
 
         <label class="text-white" htmlFor="ticketPrice">
+        <br />
           Ticket Price: &emsp;
+          <br />
           <input
             value={ticketPrice}
             onChange={(e) => setTicketPrice(e.target.value)}

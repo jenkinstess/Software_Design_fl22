@@ -65,6 +65,7 @@ const Login = () => {
           <br></br>
           <label htmlFor='email' class="text-white">
             Email: &emsp;
+            <br />
             <input
               name="email"
               type="email"
@@ -77,6 +78,7 @@ const Login = () => {
           <br></br>
           <label htmlFor='password' class="text-white">
             Password: &emsp;
+            <br />
             <input
               name="password"
               type="password"
