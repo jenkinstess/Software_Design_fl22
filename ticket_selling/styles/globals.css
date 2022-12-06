@@ -16,6 +16,14 @@ body {
 
 }
 
+.modal-content{
+  background-color:#292b2c !important;
+}
+
+.modal-body{
+  background-color:#292b2c !important;
+}
+
 /* 
   html,body, body * { 
     font-family: 'Open Sans', sans-serif; 

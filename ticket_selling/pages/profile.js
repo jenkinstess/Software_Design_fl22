@@ -5,6 +5,7 @@ import { server } from "../config";
 import { QueryTypes, Sequelize } from "sequelize";
 import { StyleRegistry } from "styled-jsx";
 import React, { useState, useRef } from "react";
+import Image from 'next/image'
 
 //get a list of all users, tickets, and images
 export const getStaticProps = async () => {
@@ -156,6 +157,18 @@ async function show_sell_ticket_form(ticket_id) {
     "block";
 }
 
+// hide report user modal, show the button to access it
+async function hideReportModal(ticket_id) {
+  document.getElementById("report_user" + ticket_id).style.display =
+    "none";
+}
+
+// show report user modal, hide the button to access form
+async function showReportModal(ticket_id) {
+  document.getElementById("report_user" + ticket_id).style.display =
+    "block";
+}
+
 const Profile = ({ tickets, users, events }) => {
   //async function to handle reselling a ticket, with const callback vars
   const [ticketPrice, setTicketPrice] = useState("");
@@ -212,8 +225,9 @@ const Profile = ({ tickets, users, events }) => {
         let profile_pic_res = JSON.stringify(
           users_json.result[i].prof_pic
         ).replaceAll('"', "");
-        if (profile_pic_res != "null") {
+        if (profile_pic_res != "null" && profile_pic_res != null && profile_pic_res != "") {
           profile_pic = profile_pic_res;
+          alert(profile_pic)
         }
         // setUserID(user_id)
         //if user has been reported, return reported screen
@@ -224,9 +238,12 @@ const Profile = ({ tickets, users, events }) => {
           ) == 1
         ) {
           return (
+           <div>
+            <br></br>
             <h1>
               You have been reported. Please contact j.shonfeld@wustl.edu.
             </h1>
+            </div>
           );
         }
       }
@@ -328,7 +345,21 @@ const Profile = ({ tickets, users, events }) => {
   }
 
   return (
-    <div>
+    <div class="bg-image">
+    <div style={{
+        zIndex: -1,
+        position: "fixed",
+        width: "100vw",
+        height: "100vh"
+    }}>
+        <Image
+            class = "opacity-50"
+            src="/topbackground.webp"
+            alt="Party Picture"
+            layout="fill"
+            objectFit='cover'
+        />
+    </div>
       {loggedIn && (
         <>
           <div class="container">
@@ -354,7 +385,7 @@ const Profile = ({ tickets, users, events }) => {
               <div class="col-3">
                 {/* end column 1, start column 2 */}
 
-                <div class = "bg-primary rounded sticky-top" >Your Tickets </div>
+                <div class = "bg-light rounded sticky-top" ><b class = "h4">Your Tickets </b></div>
                 <br />
                 <div>
                   {users_tix.map(
@@ -428,13 +459,14 @@ const Profile = ({ tickets, users, events }) => {
                                 id={"sell_ticket_form" + ticket[4]}
                                 style={{ display: "none" }}
                               >
+                                <div class = "modal-content">
                                 <div class = "card modal-body">
-                                <h1 class = "modal-body">
+                                <h1 class = "modal-body text-light">
                                   {" "}
                                   How much would you like to sell your ticket
                                   for?
                                 </h1>
-                                <form class = "modal-body" onSubmit={handleTicketSellSubmit}>
+                                <form class = "modal-body text-light" onSubmit={handleTicketSellSubmit}>
                                   <input
                                     type="number"
                                     placeholder={ticket[1]}
@@ -443,6 +475,7 @@ const Profile = ({ tickets, users, events }) => {
                                       setTicketId(ticket[4])
                                     )}
                                   ></input>
+                                  <br></br>
                                   <br></br>
                                   <button type="submit" value="Submit" class = "btn btn-success">
                                     Sell Ticket
@@ -460,6 +493,7 @@ const Profile = ({ tickets, users, events }) => {
                                 </form>
                               </div>
                               </div>
+                              </div>
 
 
 
@@ -472,7 +506,7 @@ const Profile = ({ tickets, users, events }) => {
                       )
                   )}
                 </div>
-                <button id="remove_button" class = "btn btn-secondary text-center mb-4" onClick={() => viewRemoved()}>
+                <button id="remove_button" class = "btn btn-secondary text-center m-5" onClick={() => viewRemoved()}>
                   View Removed Tickets?
                 </button>
                 <div
@@ -521,7 +555,7 @@ const Profile = ({ tickets, users, events }) => {
 
 
                 <div class="col-3">
-                <div class = "bg-primary rounded sticky-top">Tickets Being Sold</div>
+                <div class = "bg-light rounded sticky-top"><b class = "h4">Tickets Being Sold</b></div>
                 <br />
                   {market_tix.map(
                     (ticket) =>
@@ -550,7 +584,7 @@ const Profile = ({ tickets, users, events }) => {
                           </li>
                           <br />
                         </div>
-                        <br />
+                        
                         </div>
                         
                       )
@@ -560,7 +594,7 @@ const Profile = ({ tickets, users, events }) => {
 
              
               <div class="col-3">
-              <div class = "bg-primary rounded sticky-top">Recently Sold</div>
+              <div class = "bg-light rounded sticky-top"><b class = "h4">Recently Sold</b></div>
               <br />
                
 
@@ -587,10 +621,40 @@ const Profile = ({ tickets, users, events }) => {
                               </button>
                               <button
                               class = "btn btn-danger"
-                                onClick={() => reportUser(ticket[6], ticket[4])}
+                                onClick={() => showReportModal(ticket[4])}
                               >
                                 Report User
                               </button>
+
+                              <div
+                                class="modal"
+                                id={"report_user" + ticket[4]}
+                                style={{ display: "none" }}
+                              >
+                                <div class = "card modal-body">
+                                <h1 class = "modal-body text-light">
+                                  {" "}
+                                  Are you sure you would like to report this user?
+                                </h1>
+                                <p class = "text-light">Only report a user if they have not completed the venmo transaction.</p>
+                                
+                                  <button type="submit" value="Submit" class = "btn btn-danger" onClick={() => reportUser(ticket[6], ticket[4])}>
+                                    Report User
+                                  </button>
+                                  <button
+                                    type="button"
+                                    class = "btn btn-secondary"
+                                    onClick={() =>
+                                      hideReportModal(ticket[4])
+                                    }
+                                  >
+                                    Cancel
+                                  </button>
+                                  
+                                
+                              </div>
+                              </div>
+
                             </div>
                             </div>
                           )
@@ -607,7 +671,6 @@ const Profile = ({ tickets, users, events }) => {
           </div>
         </>
       )}
-      {/* end column stuff */}
     </div>
   );
 };
