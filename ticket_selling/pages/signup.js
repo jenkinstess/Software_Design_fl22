@@ -128,11 +128,12 @@ const Signup = () => {
       <h1 class="py-4 text-white">Signup</h1>
       <div class="container w-50 rounded bg-dark p-3 shadow">
       <h4 class="text-white mt-2">Please create an account by filling in the details below:</h4>
-        <form onSubmit={handleSubmit}>
+        <form align="center" onSubmit={handleSubmit}>
           <br></br>
 
           <label htmlFor="email" class="text-white">
             WUSTL email: &emsp;
+            <br />
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -149,6 +150,7 @@ const Signup = () => {
 
           <label htmlFor="firstName" class="text-white">
             First Name: &emsp;
+            <br />
             <input
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
@@ -163,6 +165,7 @@ const Signup = () => {
 
           <label htmlFor="lastName" class="text-white">
             Last Name: &emsp;
+            <br />
             <input
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
@@ -177,6 +180,7 @@ const Signup = () => {
 
           <label htmlFor="phoneNum" class="text-white">
             Phone Number: &emsp;
+            <br />
             <input
               value={phoneNum}
               onChange={(e) => setPhoneNumber(e.target.value)}
@@ -192,6 +196,7 @@ const Signup = () => {
 
           <label htmlFor="venmo" class="text-white">
             Venmo Username: &emsp;
+            <br />
             <input
               value={venmo}
               onChange={(e) => setVenmo(e.target.value)}
@@ -206,6 +211,7 @@ const Signup = () => {
 
           <label htmlFor="password" class="text-white">
             Password: &emsp;
+            <br />
             <input
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -219,6 +225,7 @@ const Signup = () => {
           <br></br>
 
           <label class="text-white">Confirm Password: &emsp;
+          <br />
             <input
               type="password"
               name="confirm_password"
@@ -230,8 +237,11 @@ const Signup = () => {
 
           <br></br>
           <br></br>
-          <label class="text-white"> Upload Profile Picture: &emsp;
-            <input type="file" onChange={handleChange} />
+          <label class="text-white"> Upload Profile Picture: &emsp; 
+          <br/>
+          
+          <input type="file" onChange={handleChange}/>
+          
           </label>
           <br></br>
           <br></br>

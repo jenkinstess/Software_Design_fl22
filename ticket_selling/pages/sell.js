@@ -249,6 +249,7 @@ const Sell = ({ currentEvents, existingTickets }) => {
                     setFile('');
                     setDate('');
                     setMedianPrice('');
+                    setTicketPrice('');
                     Router.push('/buy');
                   }
                 });
@@ -340,6 +341,10 @@ const Sell = ({ currentEvents, existingTickets }) => {
             console.log("logging data" + JSON.stringify(data));
             if (data && data.error) {
               console.log(data.message);
+              alert("This ticket is already being sold. Select a new ticket.")
+              setText('');
+              setImgConfirm('');
+              return;
               //setImageError(data.message);
             }
             if (data && !data.ticket) {
@@ -365,7 +370,7 @@ const Sell = ({ currentEvents, existingTickets }) => {
           zIndex: -1,
           position: "absolute",
           width: "100vw",
-          height: "15vh"
+          height: "100vh"
         }}>
           <Image
             src="/topbackground.webp"
@@ -375,25 +380,33 @@ const Sell = ({ currentEvents, existingTickets }) => {
           />
         </div>
       </div>
-      
-      <h1 class="pt-4 text-light">Sell Ticket</h1>
+      <br />
+      <h1 class="pt-4 text-light " >Sell Ticket</h1>
+      <br />
       <div class="container w-50 rounded bg-dark p-3 shadow">
+      
       <p class="text-white">Please select (or create) an event, and fill in the ticket details below: </p>
       <label htmlFor="eventName" class="text-white" >Existing Events: &emsp;
+      <br />
+        <center>
         <select onChange={handleChange} name="eventName">
           {/* <option value="" /> */}
           <option value="">Create New Event</option>
           {existingEventNames.map((eventName) => (
             <option>{eventName}</option>))}
         </select>
+        </center>
       </label>
       
+      <center>
       <form onSubmit={handleSubmit}>
-
+          
         {showMe && (
           <>
+          <br />
             <label class="text-white" htmlFor="date">
               Ticket Date: &emsp;
+              <br />
               <input
                 value={eventDate}
                 onChange={(e) => setDate(e.target.value)}
@@ -408,8 +421,9 @@ const Sell = ({ currentEvents, existingTickets }) => {
         )}
 
         <label class="text-white" htmlFor="eventName">
+        <br />
           Event Name: &emsp;
-
+          <br />
           <input
             value={eventName}
             onChange={(e) => setEventName(e.target.value)}
@@ -425,8 +439,10 @@ const Sell = ({ currentEvents, existingTickets }) => {
 
         {showMe && (
           <>
+          <br />
             <label class="text-white" htmlFor="eventDescription">
               Event Description: &emsp;
+              <br />
               <input
                 value={eventDescription}
                 onChange={(e) => setEventDescription(e.target.value)}
@@ -439,7 +455,9 @@ const Sell = ({ currentEvents, existingTickets }) => {
         )}
 
         <label class="text-white" htmlFor="ticketPrice">
+        <br />
           Ticket Price: &emsp;
+          <br />
           <input
             value={ticketPrice}
             onChange={(e) => setTicketPrice(e.target.value)}
@@ -456,7 +474,9 @@ const Sell = ({ currentEvents, existingTickets }) => {
         {!showMe && (
           <>
             <label htmlFor="medianPrice" class="text-white">
+            <br />
               Suggested Price: &emsp;
+              <br />
               <input type="text"
                 value={medianPrice}
                 class="field left"
@@ -525,6 +545,7 @@ const Sell = ({ currentEvents, existingTickets }) => {
 
 
       </form>
+      </center>
       </div>
 
       <br />

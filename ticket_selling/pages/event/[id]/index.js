@@ -1,28 +1,41 @@
 import Link from 'next/link'
 import { server } from '../../../config';
+import React, { useEffect, useState } from 'react';
 import AuthRedirection from '../../../components/AuthRedirection';
 import Image from 'next/image';
 
-const event = ({ event, event_tickets }) => {
+const Event = ({ event, all_tickets }) => {
+  const [event_tickets, setTickets] = useState(all_tickets);
+  const [err_text, setText] = useState('');
+
+  // filter out tickets that are owned by the user
+  useEffect(() => {
+    filterOwned(function (others_tickets) {
+      // update event tickets to filtered list 
+      if(others_tickets.length === 0) {
+        setText('You own all available tickets for this event.')
+      }
+      setTickets(others_tickets)
+    })
+  }, [])
+
+  async function filterOwned(callback) {
+    // get currently logged in user's email
+    const loggedin_user_res = await fetch(`${server}/api/me`)
+    const loggedin_user = await loggedin_user_res.json()
+    // get corresponding user in users table
+    const users_res = await fetch(`${server}/api/all_users`)
+    const users = await users_res.json()
+    const current_user = users.result.filter((user) => user.email.toString() == loggedin_user.email.toString())[0]
+    // filter tickets to aren't owned by logged in user
+    const others_tickets = all_tickets.filter((ticket) => parseInt(ticket.userUserid) !== current_user.userid)
+    callback(others_tickets)
+  }
+
   return (
     <>
       <AuthRedirection />
-      <div class="bg-image">
-        <div style={{
-          zIndex: -1,
-          position: "absolute",
-          width: "100vw",
-          height: "33vh"
-        }}>
-          <Image
-            src="/topbackground.webp"
-            alt="Party Picture"
-            layout="fill"
-            objectFit='cover'
-          />
-        </div>
-      </div>
-      <div>
+      <div class="bg-image" style={{ "background-image": "url(/topbackground.webp)", "height": "270px", "object-fit": "cover", "width": "100%", "background-size": "cover" }}>
         <h1 class="pt-4 text-light">Event Details</h1>
         <p class="text-light">Name: <i>{event.name}</i></p>
         <p class="text-light">Date: <i>{event.date}</i></p>
@@ -36,14 +49,15 @@ const event = ({ event, event_tickets }) => {
         <div class="card text-center mx-auto" style={{ width: '15rem' }}>
           {/* list-group-flush */}
           <ul class="list-group">
-            {event_tickets.map((ticket) => (
+            {event_tickets && event_tickets.map((ticket) => (
               <li key={ticket} class="list-group-item d-flex justify-content-between align-items-center">
-                  <b>${ticket.price}</b>
-                  <a href={`/ticket/${ticket.id_tickets}`} class="btn btn-primary btn-sm">Purchase &rarr;</a>
+                <b>${ticket.price}</b>
+                <a href={`/ticket/${ticket.id_tickets}`} class="btn btn-primary btn-sm">Purchase &rarr;</a>
               </li>
             ))}
           </ul>
         </div>
+        {err_text && <p class="mt-3 text-danger">{err_text}</p>}
       </div>
     </>
   )
@@ -75,17 +89,18 @@ export const getStaticProps = async (context) => {
   // get tickets associated with the event
   const tickets_res = await fetch(`${server}/api/tickets_hard`)
 
-  const all_tickets = await tickets_res.json()
+  const tickets_list = await tickets_res.json()
+
   // filter for matching event and ticket not already sold
-  const tickets_filtered = all_tickets.result.filter((ticket) => ticket.event_id == event_id && !ticket.is_sold)
+  const tickets_filtered = tickets_list.result.filter((ticket) => ticket.event_id == event_id && !ticket.is_sold)
 
   // sort by price
-  const event_tickets = tickets_filtered.sort((a, b) => a.price - b.price)
+  const all_tickets = tickets_filtered.sort((a, b) => a.price - b.price)
 
   return {
     props: {
       event,
-      event_tickets,
+      all_tickets,
     },
   }
 }
@@ -105,4 +120,4 @@ export const getStaticPaths = async () => {
   }
 }
 
-export default event
+export default Event
