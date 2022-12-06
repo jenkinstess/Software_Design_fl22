@@ -366,7 +366,7 @@ const Sell = ({ currentEvents, existingTickets }) => {
           zIndex: -1,
           position: "absolute",
           width: "100vw",
-          height: "15vh"
+          height: "100vh"
         }}>
           <Image
             src="/topbackground.webp"
@@ -377,10 +377,7 @@ const Sell = ({ currentEvents, existingTickets }) => {
         </div>
       </div>
       <br />
-      <br />
       <h1 class="pt-4 text-light " >Sell Ticket</h1>
-      <br />
-      <br />
       <br />
       <div class="container w-50 rounded bg-dark p-3 shadow">
       
