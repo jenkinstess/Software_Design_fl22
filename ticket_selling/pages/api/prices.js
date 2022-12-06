@@ -56,9 +56,9 @@ async function findAllPrices(eventName, callback){
 
 
     const [resultFound] = await sequelize.query(
-        'SELECT price FROM tickets WHERE event = :event',
+        'SELECT price FROM tickets WHERE event = :event AND is_sold = :is_sold',
         {
-          replacements: { event: eventName },
+          replacements: { event: eventName, is_sold: "0" },
           type: Sequelize.QueryTypes.RAW
           
         }, 
@@ -98,7 +98,9 @@ export default (req, res) => {
                 }
                 var tempAveragePrice = sum/(allPrices.length)
                 averagePrice = Math.round(tempAveragePrice * 100) / 100
-
+                if(allPrices.length < 1){
+                  averagePrice = "Not Available"
+                }
                 let minPrice = Math.min(...allPrices)
                 let maxPrice = Math.max(...allPrices)
 
