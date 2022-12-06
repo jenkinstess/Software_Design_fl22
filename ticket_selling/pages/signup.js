@@ -245,6 +245,7 @@ const Signup = () => {
               id="confirm_password"
               onChange={(e) => checkPW(e.target.value)}
             />
+            <br></br>
             <span id='message'></span>
           </label>
 
