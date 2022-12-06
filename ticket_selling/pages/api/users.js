@@ -102,6 +102,7 @@ export default (req, res) => {
         }
         const prof_pic = req.body.profPic;
         console.log("data grabbed");
+        console.log(prof_pic);
         console.log(password);
 
         findUser(email, function(user){

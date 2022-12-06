@@ -70,9 +70,7 @@ const Signup = () => {
           },
         });
 
-        setUploadedProfPic(BUCKET_URL + uploadedPic.name);
-
-        setUploadedProfPic(null);
+        setProfPic(BUCKET_URL + uploadedPic.name);
 
         fetch('/api/users', {
           method: 'POST',
