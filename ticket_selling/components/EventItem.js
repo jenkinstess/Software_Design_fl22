@@ -19,7 +19,7 @@ const EventItem = ({ event, logged_in }) => {
           <p class="card-text"><i>Details:</i> {event.description}</p>
           <p class="card-text"><i>Prices:</i> Min: ${event.minPrice} | Average: ${event.avgPrice}</p>
           <p class="card-text"><i>Date:</i> {event.date}</p>
-          <p class="card-text">{event.ticketsLeft} ticket{parseInt(event.ticketsLeft) > 1 ? "s" : ""} available now.</p>
+          <p class="card-text">{event.numTickets} ticket{parseInt(event.numTickets) > 1 ? "s" : ""} available now.</p>
           {logged_in && (<a href={`/event/${event.id}`} class="btn btn-primary">View Tickets &rarr;</a>)}
         </div>
       </div>

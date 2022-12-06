@@ -120,7 +120,7 @@ export async function getStaticProps() {
   const events_available = upcoming_events.filter(event => { return event.numTickets && (event.numTickets > 0) })
 
   // sort for events by number of tickets available
-  const sorted_events = upcoming_events.sort((a, b) => a.numTickets - b.numTickets)
+  const sorted_events = events_available.sort((a, b) => a.numTickets - b.numTickets)
 
   // only show x events
   let events_count = 2
@@ -144,7 +144,7 @@ export async function getStaticProps() {
     trending_events[idx].minPrice = priceData["minPrice"]
     trending_events[idx].maxPrice = priceData["maxPrice"]
     trending_events[idx].avgPrice = priceData["averagePrice"]
-    trending_events[idx].ticketsLeft = priceData["numTickets"] // unsold tickets
+    trending_events[idx].allTickets = priceData["numTickets"] // unsold tickets
   }
 
   return {

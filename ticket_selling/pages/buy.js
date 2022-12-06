@@ -139,7 +139,7 @@ export async function getStaticProps() {
         events[idx].minPrice = priceData["minPrice"]
         events[idx].maxPrice = priceData["maxPrice"]
         events[idx].avgPrice = priceData["averagePrice"]
-        events[idx].ticketsLeft = priceData["numTickets"] // unsold tickets
+        events[idx].allTickets = priceData["numTickets"] // unsold tickets
     }
 
     return {
