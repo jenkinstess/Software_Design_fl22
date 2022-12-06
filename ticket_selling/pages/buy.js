@@ -74,7 +74,7 @@ export default function Buy({ events }) {
                 <div class="bg-image" style={{"background-image":"url(/topbackground.webp)", "height":"225px", "object-fit":"cover", "width":"100%", "background-size": "cover"}}>
                     <h2 class="pt-4 text-light">Upcoming Events</h2>
                     <br></br>
-                    <p class="text-light">Search events:<input
+                    <p class="text-light">Search events: <input
                         onChange={textChange}
                         placeholder='Event name...'
                         type='text'
