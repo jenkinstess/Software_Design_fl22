@@ -512,7 +512,7 @@ const Sell = ({ currentEvents, existingTickets }) => {
             <input class="form-control center" type="file" name="ticketFile" onChange={handleOTHERChange} />
             </label>
             <br />
-            <button class="mb-3" onClick={handleClick}>CONFIRM TICKET</button>
+            <button class="text-white" onClick={handleClick}>CONFIRM TICKET</button>
             
 
             <div class="spinner-border text-success" role="status" id="textExtract">

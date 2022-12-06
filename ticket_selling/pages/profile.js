@@ -506,7 +506,7 @@ const Profile = ({ tickets, users, events }) => {
                   )}
                 </div>
                 <button id="remove_button" class = "btn btn-secondary text-center m-5" onClick={() => viewRemoved()}>
-                  View Hidden Tickets?
+                  View Hidden Tickets
                 </button>
                 <div
                   id="removed_tix"
