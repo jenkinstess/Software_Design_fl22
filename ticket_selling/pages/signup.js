@@ -69,8 +69,23 @@ const Signup = () => {
             "Access-Control-Allow-Origin": "*",
           },
         });
+        console.log(data);
+        console.log(newData);
+        console.log(JSON.stringify(data));
+        console.log(JSON.stringify(newData));
+        console.log(BUCKET_URL);
+        const newName = (uploadedPic.name).replace(/ /gi, "+");
+        console.log(newName);
+        
+        setProfPic(BUCKET_URL + newName);
+        profPic = BUCKET_URL + newName;
+        console.log(profPic);
+        setUploadedProfPic(null);
+        console.log("!!!LOGGING URL INFO");
+        console.log(BUCKET_URL + newName);
+        console.log(uploadedPic.name);
 
-        setProfPic(BUCKET_URL + uploadedPic.name);
+        console.log(profPic);
 
         fetch('/api/users', {
           method: 'POST',
@@ -238,7 +253,7 @@ const Signup = () => {
           <label class="text-white"> Upload Profile Picture: &emsp; 
           <br/>
           
-          <input type="file" onChange={handleChange}/>
+          <input class="form-control center" type="file" onChange={handleChange}/>
           
           </label>
           <br></br>

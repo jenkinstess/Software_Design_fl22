@@ -227,7 +227,7 @@ const Profile = ({ tickets, users, events }) => {
         )
         if (profile_pic_res != "null" && profile_pic_res != null && profile_pic_res != "") {
           profile_pic = profile_pic_res.replaceAll('"', "");
-          alert(profile_pic)
+          //alert(profile_pic)
         }
         // setUserID(user_id)
         //if user has been reported, return reported screen

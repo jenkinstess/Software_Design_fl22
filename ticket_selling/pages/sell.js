@@ -117,6 +117,7 @@ const Sell = ({ currentEvents, existingTickets }) => {
       alert("Make sure Image is selected");
       return;
     }
+    setImageError('');
     console.log(event.target.files[0]);
     setImgData(event.target.files[0]);
     setImage(URL.createObjectURL(event.target.files[0]))
@@ -250,6 +251,8 @@ const Sell = ({ currentEvents, existingTickets }) => {
                     setDate('');
                     setMedianPrice('');
                     setTicketPrice('');
+                    setImageError('');
+                    setImgConfirm('');
                     Router.push('/buy');
                   }
                 });
@@ -492,34 +495,40 @@ const Sell = ({ currentEvents, existingTickets }) => {
         <div className="App">
           <main className="App-main">
             <br></br>
+            <br />
             {/* <h4>Upload Ticket:</h4> */}
-            <p class="text-white">Now, upload your ticket in the format of <i>bmp, jpg, png, pbm, or webp.</i> Confirm below.</p>
-            <p class="text-white"><i>Note:</i> Only the QR/bar code and numeric value under it should be visible</p>
+            <p class="text-white">Upload your ticket in the format of <i>bmp, jpg, png, pbm, or webp.</i> Confirm below.</p>
+            <p class="text-white"><small><i>Note:</i> Only the QR/bar code and numeric value under it should be visible</small></p>
             
             {/* <img src={image} className="App-logo" alt="logo"/> */}
             <img src={image} />
+            <br />
 
             <div className="text-box">
               {/* <p> {text} </p> */}
             </div>
             <label htmlFor='ticketFile' class="text-white"> Ticket Document: &emsp;
-            <input type="file" name="ticketFile" onChange={handleOTHERChange} />
+            
+            <input class="form-control center" type="file" name="ticketFile" onChange={handleOTHERChange} />
             </label>
             <br />
             <button class="mb-3" onClick={handleClick}>CONFIRM TICKET</button>
+            
 
-            <div class="spinner-border" role="status" id="textExtract">
+            <div class="spinner-border text-success" role="status" id="textExtract">
             </div>
-
-            {/* {uploadingStatus && <p>{uploadingStatus}</p>} */}
             {imgConfirm && <p style={{ color: 'green' }}> {imgConfirm}</p>}
             {imgError && <p style={{ color: 'red' }}> {imgError}</p>}
+            <br />
+
+            {/* {uploadingStatus && <p>{uploadingStatus}</p>} */}
+            
             <div>
               <p class="text-white">
               Please check that the numbers below match those on your ticket below the QR / bar code.
               </p>
               <p class="text-white">
-              Correct these numbers if they do not match:
+              <small><i><strong>Correct these numbers if they do not match: </strong></i></small>
               </p>
             </div>
             
