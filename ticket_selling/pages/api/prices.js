@@ -99,7 +99,7 @@ export default (req, res) => {
                 var tempAveragePrice = sum/(allPrices.length)
                 averagePrice = Math.round(tempAveragePrice * 100) / 100
                 if(allPrices.length < 1){
-                  averagePrice = "Not Available"
+                  averagePrice = ""
                 }
                 let minPrice = Math.min(...allPrices)
                 let maxPrice = Math.max(...allPrices)

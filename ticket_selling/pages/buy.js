@@ -70,6 +70,7 @@ export default function Buy({ events }) {
     return (
         <>
             <AuthRedirection />
+            {/*  class="bg-light" style={{"height":"100vh"}} */}
             <div>
                 <div class="bg-image" style={{"background-image":"url(/topbackground.webp)", "height":"225px", "object-fit":"cover", "width":"100%", "background-size": "cover"}}>
                     <h2 class="pt-4 text-light">Upcoming Events</h2>

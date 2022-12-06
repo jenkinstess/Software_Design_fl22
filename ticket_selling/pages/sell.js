@@ -373,7 +373,7 @@ const Sell = ({ currentEvents, existingTickets }) => {
           zIndex: -1,
           position: "absolute",
           width: "100vw",
-          height: "100vh"
+          height: "150vh"
         }}>
           <Image
             src="/topbackground.webp"
