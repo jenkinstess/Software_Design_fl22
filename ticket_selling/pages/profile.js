@@ -224,9 +224,9 @@ const Profile = ({ tickets, users, events }) => {
         user_id = JSON.stringify(users_json.result[i].userid);
         let profile_pic_res = JSON.stringify(
           users_json.result[i].prof_pic
-        ).replaceAll('"', "");
+        )
         if (profile_pic_res != "null" && profile_pic_res != null && profile_pic_res != "") {
-          profile_pic = profile_pic_res;
+          profile_pic = profile_pic_res.replaceAll('"', "");
           alert(profile_pic)
         }
         // setUserID(user_id)
@@ -445,7 +445,7 @@ const Profile = ({ tickets, users, events }) => {
                                 class="btn btn-warning"
                                 onClick={() => removeTicket(ticket[4])}
                               >
-                                Remove Ticket
+                                Hide Ticket
                               </button>
                               
                               
@@ -507,7 +507,7 @@ const Profile = ({ tickets, users, events }) => {
                   )}
                 </div>
                 <button id="remove_button" class = "btn btn-secondary text-center m-5" onClick={() => viewRemoved()}>
-                  View Removed Tickets?
+                  View Hidden Tickets?
                 </button>
                 <div
                   id="removed_tix"
@@ -516,7 +516,7 @@ const Profile = ({ tickets, users, events }) => {
                     display: "none",
                   }}
                 >
-                  <div class = "bg-warning rounded">Removed Tickets</div>
+                  <div class = "bg-warning rounded">Hidden Tickets</div>
                   <br />
                   <div class = "m-2">
                   <div
@@ -539,7 +539,7 @@ const Profile = ({ tickets, users, events }) => {
                                 <i>Price:</i> $<b>{ticket[1]}</b>
                               </p>
                               <button class = "btn btn-primary"onClick={() => unremoveTicket(ticket[4])}>
-                                Unremove Ticket
+                                Show Ticket
                               </button>
                             </li>
                           )
@@ -547,7 +547,7 @@ const Profile = ({ tickets, users, events }) => {
                     </ul>
                   </div>
                   <button id="remove_button" class = "btn btn-secondary mb-4" onClick={() => hideRemoved()}>
-                    Hide Removed Tickets
+                    Hide Tickets
                   </button>
                 </div>
                 </div>
@@ -579,7 +579,7 @@ const Profile = ({ tickets, users, events }) => {
                               <i>Price:</i> $<b>{ticket[1]}</b>
                             </p>
                             <button class = "btn btn-primary" onClick={() => claimTicket(ticket[4])}>
-                              Claim Ticket
+                              Take Off Market
                             </button>
                           </li>
                           <br />
