@@ -341,6 +341,10 @@ const Sell = ({ currentEvents, existingTickets }) => {
             console.log("logging data" + JSON.stringify(data));
             if (data && data.error) {
               console.log(data.message);
+              alert("This ticket is already being sold. Select a new ticket.")
+              setText('');
+              setImgConfirm('');
+              return;
               //setImageError(data.message);
             }
             if (data && !data.ticket) {
