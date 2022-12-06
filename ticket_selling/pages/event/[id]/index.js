@@ -7,22 +7,7 @@ const event = ({ event, event_tickets }) => {
   return (
     <>
       <AuthRedirection />
-      <div class="bg-image">
-        <div style={{
-          zIndex: -1,
-          position: "absolute",
-          width: "100vw",
-          height: "33vh"
-        }}>
-          <Image
-            src="/topbackground.webp"
-            alt="Party Picture"
-            layout="fill"
-            objectFit='cover'
-          />
-        </div>
-      </div>
-      <div>
+      <div class="bg-image" style={{"background-image":"url(/topbackground.webp)", "height":"270px", "object-fit":"cover", "width":"100%", "background-size": "cover"}}>
         <h1 class="pt-4 text-light">Event Details</h1>
         <p class="text-light">Name: <i>{event.name}</i></p>
         <p class="text-light">Date: <i>{event.date}</i></p>

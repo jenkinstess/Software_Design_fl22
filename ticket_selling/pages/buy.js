@@ -70,36 +70,29 @@ export default function Buy({ events }) {
     return (
         <>
             <AuthRedirection />
-            <div class="bg-image">
-                <div style={{
-                    zIndex: -1,
-                    position: "absolute",
-                    width: "100vw",
-                    height: "28vh"
-                }}>
-                    <Image
+            <div>
+                <div class="bg-image" style={{"background-image":"url(/topbackground.webp)", "height":"225px", "object-fit":"cover", "width":"100%", "background-size": "cover"}}>
+                    <h2 class="pt-4 text-light">Upcoming Events</h2>
+                    <br></br>
+                    <p class="text-light">Search events: <input
+                        onChange={textChange}
+                        placeholder='Event name...'
+                        type='text'
+                        value={textQuery}
+                    /></p>
+                    <p class="text-light">View events until: <input
+                        type='date'
+                        onChange={dateChange}
+                        min={new Date().toISOString().split("T")[0]} // after current date
+                    /></p>
+                    <p class="text-light">Please select from the events below to purchase a ticket:</p>
+                    {/* <Image
                         src="/topbackground.webp"
                         alt="Party Picture"
-                        layout="fill"
-                        objectFit='cover'
-                    />
+                        layout='fill'
+                        class="bg-img"
+                    /> */}
                 </div>
-            </div>
-            <div>
-                <h2 class="pt-4 text-light">Upcoming Events</h2>
-                <br></br>
-                <p class="text-light">Search events: <input
-                    onChange={textChange}
-                    placeholder='Event name...'
-                    type='text'
-                    value={textQuery}
-                /></p>
-                <p class="text-light">View events until: <input
-                    type='date'
-                    onChange={dateChange}
-                    min={new Date().toISOString().split("T")[0]} // after current date
-                /></p>
-                <p class="text-light">Please select from the events below to purchase a ticket:</p>
                 <EventList events={cur_events} logged_in={true} />
             </div>
         </>

@@ -47,22 +47,7 @@ const Ticket = ({ ticket, ticket_owner, event }) => {
   
   return (
     <>
-      <div class="bg-image">
-        <div style={{
-          zIndex: -1,
-          position: "absolute",
-          width: "100vw",
-          height: "19vh"
-        }}>
-          <Image
-            src="/topbackground.webp"
-            alt="Party Picture"
-            layout="fill"
-            objectFit='cover'
-          />
-        </div>
-      </div>
-      <div>
+      <div class="bg-image" style={{"background-image":"url(/topbackground.webp)", "height":"150px", "object-fit":"cover", "width":"100%", "background-size": "cover"}}>
         <h2 class="text-light pt-4">Ticket Details</h2>
         <p class="text-light">Event: <i>{event.name}</i></p>
         <p class="text-light">Venmo: <i>{ticket_owner.venmo}</i></p>
