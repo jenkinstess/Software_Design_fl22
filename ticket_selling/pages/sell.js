@@ -249,6 +249,7 @@ const Sell = ({ currentEvents, existingTickets }) => {
                     setFile('');
                     setDate('');
                     setMedianPrice('');
+                    setTicketPrice('');
                     Router.push('/buy');
                   }
                 });
