@@ -1,21 +1,28 @@
 import Link from 'next/link'
 import { server } from '../../../config';
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import AuthRedirection from '../../../components/AuthRedirection';
 import Image from 'next/image';
 
 const Event = ({ event, all_tickets }) => {
   const [event_tickets, setTickets] = useState(all_tickets);
   const [err_text, setText] = useState('');
+  const router = useRouter();
 
   // filter out tickets that are owned by the user
   useEffect(() => {
     filterOwned(function (others_tickets) {
-      // update event tickets to filtered list 
-      if(others_tickets.length === 0) {
-        setText('You own all available tickets for this event.')
+      if (others_tickets) {
+        // update event tickets to filtered list 
+        if(others_tickets.length === 0) {
+          setText('You own all available tickets for this event.')
+        }
+        setTickets(others_tickets)
+      } else {
+        // user not logged in
+        router.push('/login')
       }
-      setTickets(others_tickets)
     })
   }, [])
 

@@ -227,7 +227,6 @@ const Profile = ({ tickets, users, events }) => {
         )
         if (profile_pic_res != "null" && profile_pic_res != null && profile_pic_res != "") {
           profile_pic = profile_pic_res.replaceAll('"', "");
-          //alert(profile_pic)
         }
         // setUserID(user_id)
         //if user has been reported, return reported screen
@@ -385,7 +384,7 @@ const Profile = ({ tickets, users, events }) => {
               <div class="col-3">
                 {/* end column 1, start column 2 */}
 
-                <div class = "bg-light rounded sticky-top" ><b class = "h4">Your Tickets </b></div>
+                <div class = "bg-light rounded sticky-top border-bottom" ><b class = "h4">Your Tickets </b></div>
                 <br />
                 <div>
                   {users_tix.map(
@@ -555,7 +554,7 @@ const Profile = ({ tickets, users, events }) => {
 
 
                 <div class="col-3">
-                <div class = "bg-light rounded sticky-top"><b class = "h4">Tickets Being Sold</b></div>
+                <div class = "bg-light rounded sticky-top border-bottom"><b class = "h4">Tickets Being Sold</b></div>
                 <br />
                   {market_tix.map(
                     (ticket) =>
@@ -594,7 +593,7 @@ const Profile = ({ tickets, users, events }) => {
 
              
               <div class="col-3">
-              <div class = "bg-light rounded sticky-top"><b class = "h4">Recently Sold</b></div>
+              <div class = "bg-light rounded sticky-top border-bottom"><b class = "h4">Recently Sold</b></div>
               <br />
                
 
