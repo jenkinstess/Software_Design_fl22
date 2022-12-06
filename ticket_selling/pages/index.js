@@ -29,7 +29,7 @@ function Home({ trending_events }) {
     // localStorage.setItem('email', data.email);
     // localStorage.setItem('loggedIn', loggedIn);
   }
-
+  
   return (
     <div>
       <Head>
@@ -118,10 +118,10 @@ export async function getStaticProps() {
 
   // filter for only events with tickets 
   const events_available = upcoming_events.filter(event => { return event.numTickets && (event.numTickets > 0) })
-
+  
   // sort for events by number of tickets available
-  const sorted_events = events_available.sort((a, b) => a.numTickets - b.numTickets)
-
+  const sorted_events = events_available.sort((a, b) => parseInt(b.numTickets) - parseInt(a.numTickets))
+  
   // only show x events
   let events_count = 2
   const trending_events = sorted_events.slice(0, events_count)
