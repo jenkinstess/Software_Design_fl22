@@ -128,7 +128,7 @@ const Signup = () => {
       <h1 class="py-4 text-white">Signup</h1>
       <div class="container w-50 rounded bg-dark p-3 shadow">
       <h4 class="text-white mt-2">Please create an account by filling in the details below:</h4>
-        <form onSubmit={handleSubmit}>
+        <form align="center" onSubmit={handleSubmit}>
           <br></br>
 
           <label htmlFor="email" class="text-white">
@@ -239,6 +239,7 @@ const Signup = () => {
           <br></br>
           <label class="text-white"> Upload Profile Picture: &emsp; 
           <br/>
+          
           <input type="file" onChange={handleChange}/>
           
           </label>

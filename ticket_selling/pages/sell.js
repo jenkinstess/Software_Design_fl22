@@ -385,14 +385,18 @@ const Sell = ({ currentEvents, existingTickets }) => {
       
       <p class="text-white">Please select (or create) an event, and fill in the ticket details below: </p>
       <label htmlFor="eventName" class="text-white" >Existing Events: &emsp;
+      <br />
+        <center>
         <select onChange={handleChange} name="eventName">
           {/* <option value="" /> */}
           <option value="">Create New Event</option>
           {existingEventNames.map((eventName) => (
             <option>{eventName}</option>))}
         </select>
+        </center>
       </label>
       
+      <center>
       <form onSubmit={handleSubmit}>
           
         {showMe && (
@@ -400,6 +404,7 @@ const Sell = ({ currentEvents, existingTickets }) => {
           <br />
             <label class="text-white" htmlFor="date">
               Ticket Date: &emsp;
+              <br />
               <input
                 value={eventDate}
                 onChange={(e) => setDate(e.target.value)}
@@ -416,7 +421,7 @@ const Sell = ({ currentEvents, existingTickets }) => {
         <label class="text-white" htmlFor="eventName">
         <br />
           Event Name: &emsp;
-
+          <br />
           <input
             value={eventName}
             onChange={(e) => setEventName(e.target.value)}
@@ -467,7 +472,9 @@ const Sell = ({ currentEvents, existingTickets }) => {
         {!showMe && (
           <>
             <label htmlFor="medianPrice" class="text-white">
+            <br />
               Suggested Price: &emsp;
+              <br />
               <input type="text"
                 value={medianPrice}
                 class="field left"
@@ -536,6 +543,7 @@ const Sell = ({ currentEvents, existingTickets }) => {
 
 
       </form>
+      </center>
       </div>
 
       <br />
