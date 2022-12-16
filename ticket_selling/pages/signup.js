@@ -40,8 +40,43 @@ const Signup = () => {
     setUploadedProfPic(event.target.files[0]);
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault(); // tells user agent that if the event (hitting submit) does not get handled, this action (fetching) should not be taken 
+    // check email is valid:
+    let api_key = 'zIAiQJDOFBmJ8XodqOwJTNGP8BIe6AuR' // mailboxlayer api key 
+    let email_verified = false;
+    await fetch(`https://api.apilayer.com/email_verification/check?email=${email}`, {
+      method: 'GET',
+      redirect: 'follow',
+      headers: {
+        'apikey': api_key
+      }
+    })
+      .then((r) => {
+        return r.json();
+      })
+      .then(async (data) => {
+        console.log('Email verification res:')
+        console.log(data)
+        if(data) {
+          if(data.smtp_check && data.mx_found) {
+            console.log('This is a valid email')
+            email_verified = true;
+          } else {
+            // display error message 
+            document.getElementById('email-message').style.color = 'red';
+            document.getElementById('email-message').innerHTML = `${email} is not a valid WashU email`;
+            email_verified = false;
+          }
+        }
+      })
+
+    
+    if(!email_verified) {
+      // prevent signup 
+      return;
+    }
+
     if (!uploadedPic) {
       alert("No profile picture was selected!");
       return;
@@ -245,6 +280,7 @@ const Signup = () => {
               id="confirm_password"
               onChange={(e) => checkPW(e.target.value)}
             />
+            <br></br>
             <span id='message'></span>
           </label>
 
@@ -258,7 +294,8 @@ const Signup = () => {
           </label>
           <br></br>
           <br></br>
-
+          <p id='email-message' class="mb-3"></p>
+          
           <input type="submit" value="Submit &rarr;" class="btn btn-primary" />
           {signupError && <p style={{ color: 'red' }}>{signupError}</p>}
         </form>
