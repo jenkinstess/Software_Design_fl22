@@ -11,8 +11,11 @@ body {
 }
 
 .sticky-top{
-  position: sticky;
-  padding-top: 60px;
+  position: fixed;
+  margin-top: 5% ;
+  margin-left: 10%;
+  width:  23%;
+
 
 }
 
@@ -23,6 +26,21 @@ body {
 .modal-body{
   background-color:#292b2c !important;
 }
+
+
+.scrolling-wrapper {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+ .scrolling-wrapper > .card-holder {
+    display: inline-block;
+  }
+
+  .card-wrapper-profile {
+    max-width: 30%;
+  }
+
 
 /* 
   html,body, body * { 

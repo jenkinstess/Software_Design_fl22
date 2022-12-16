@@ -5,7 +5,7 @@ import { server } from "../config";
 import { QueryTypes, Sequelize } from "sequelize";
 import { StyleRegistry } from "styled-jsx";
 import React, { useState, useRef } from "react";
-import Image from 'next/image'
+import Image from "next/image";
 
 //get a list of all users, tickets, and images
 export const getStaticProps = async () => {
@@ -72,6 +72,40 @@ async function removeTicket(ticket_id) {
     .then((data) => {});
   location.reload();
 }
+
+async function hideShowYourTix() {
+  let checkbox = document.getElementById("your-tix-checkbox");
+  let yourtix = document.getElementById("your-tickets");
+  if (checkbox.checked == true) {
+    yourtix.style.display = "block";
+  } else {
+    yourtix.style.display = "none";
+  }
+}
+
+async function hideShowTixOnMarket() {
+  let checkbox = document.getElementById("tix-on-market-checkbox");
+  let onmarket = document.getElementById("tix-on-market");
+  if (checkbox.checked == true) {
+    onmarket.style.display = "block";
+  } else {
+    onmarket.style.display = "none";
+  }
+}
+
+async function hideShowRemovedTix(){
+  let checkbox = document.getElementById("removed-tix-checkbox");
+  let element = document.getElementById("removed-tix");
+  if (checkbox.checked == true) {
+    element.style.display = "block";
+  } else {
+    element.style.display = "none";
+  }
+}
+
+// async function hideShowActionCenter(){
+
+// }
 
 // add ticket back to view on profile page
 async function unremoveTicket(ticket_id) {
@@ -159,14 +193,12 @@ async function show_sell_ticket_form(ticket_id) {
 
 // hide report user modal, show the button to access it
 async function hideReportModal(ticket_id) {
-  document.getElementById("report_user" + ticket_id).style.display =
-    "none";
+  document.getElementById("report_user" + ticket_id).style.display = "none";
 }
 
 // show report user modal, hide the button to access form
 async function showReportModal(ticket_id) {
-  document.getElementById("report_user" + ticket_id).style.display =
-    "block";
+  document.getElementById("report_user" + ticket_id).style.display = "block";
 }
 
 const Profile = ({ tickets, users, events }) => {
@@ -194,6 +226,7 @@ const Profile = ({ tickets, users, events }) => {
   let users_tix = [];
   let selling_tix = [];
   let cur_user_index = 0;
+  let num_action_items = 0;
   const { data, revalidate } = useSWR(
     "/api/me",
     async function (args) {
@@ -222,10 +255,12 @@ const Profile = ({ tickets, users, events }) => {
           ""
         );
         user_id = JSON.stringify(users_json.result[i].userid);
-        let profile_pic_res = JSON.stringify(
-          users_json.result[i].prof_pic
-        )
-        if (profile_pic_res != "null" && profile_pic_res != null && profile_pic_res != "") {
+        let profile_pic_res = JSON.stringify(users_json.result[i].prof_pic);
+        if (
+          profile_pic_res != "null" &&
+          profile_pic_res != null &&
+          profile_pic_res != ""
+        ) {
           profile_pic = profile_pic_res.replaceAll('"', "");
         }
         // setUserID(user_id)
@@ -237,11 +272,11 @@ const Profile = ({ tickets, users, events }) => {
           ) == 1
         ) {
           return (
-           <div>
-            <br></br>
-            <h1>
-              You have been reported. Please contact j.shonfeld@wustl.edu.
-            </h1>
+            <div>
+              <br></br>
+              <h1>
+                You have been reported. Please contact j.shonfeld@wustl.edu.
+              </h1>
             </div>
           );
         }
@@ -254,20 +289,25 @@ const Profile = ({ tickets, users, events }) => {
     let events_json = JSON.parse(events);
     let num_events = events_json.length;
     let event_date = "";
+
     for (let j = 0; j < num_tix; j++) {
-      
-      let ticket_event_id = JSON.stringify(tickets_json[j].event_id).replaceAll('"',"")
-        for (let k = 0; k < num_events; k++){
-          if (ticket_event_id == JSON.stringify(events_json[k].id).replaceAll('"',"")){
-            event_date = JSON.stringify(events_json[k].date).replaceAll('"',"")
-          }
+      let ticket_event_id = JSON.stringify(tickets_json[j].event_id).replaceAll(
+        '"',
+        ""
+      );
+      for (let k = 0; k < num_events; k++) {
+        if (
+          ticket_event_id ==
+          JSON.stringify(events_json[k].id).replaceAll('"', "")
+        ) {
+          event_date = JSON.stringify(events_json[k].date).replaceAll('"', "");
         }
+      }
 
       if (
         user_id ==
         JSON.stringify(tickets_json[j].userUserid).replaceAll('"', "")
       ) {
-        
         let is_sold = JSON.stringify(tickets_json[j].is_sold).replaceAll(
           '"',
           ""
@@ -305,7 +345,7 @@ const Profile = ({ tickets, users, events }) => {
           JSON.stringify(tickets_json[j].uploaded_img).replaceAll('"', ""),
           is_confirmed,
           JSON.stringify(tickets_json[j].sold_from).replaceAll('"', ""),
-          event_date
+          event_date,
         ];
         //0: event, 1: price, 2: is_sold, 3: event_id, 4: ticket id, 5: show ticket (removed?), 6: img url, 7: is_confirmed, 8: sold from, 9: event date
         if (is_sold) {
@@ -334,337 +374,372 @@ const Profile = ({ tickets, users, events }) => {
           is_confirmed,
           JSON.stringify(tickets_json[j].userUserid).replaceAll('"', ""),
           JSON.stringify(tickets_json[j].uploaded_img).replaceAll('"', ""),
-          event_date
+          event_date,
         ];
         //0: event, 1: price, 2: is_sold, 3: event_id, 4: ticket id, 5: is_confirmed, 6: userid, 7: uploaded_img, 8: event date
 
         selling_tix.push(ticket);
+        num_action_items = selling_tix.length
       }
+      
     }
+    
   }
 
   return (
     <div class="bg-image">
-    <div style={{
-        zIndex: -1,
-        position: "fixed",
-        width: "100vw",
-        height: "100vh"
-    }}>
+      <div
+        style={{
+          zIndex: -1,
+          position: "fixed",
+          width: "100vw",
+          height: "100vh",
+        }}
+      >
         <Image
-            class = "opacity-50"
-            src="/topbackground.webp"
-            alt="Party Picture"
-            layout="fill"
-            objectFit='cover'
+          class="opacity-50"
+          src="/topbackground.webp"
+          alt="Party Picture"
+          layout="fill"
+          objectFit="cover"
         />
-    </div>
+      </div>
       {loggedIn && (
         <>
           <div class="container">
-            <div class="col-sm-2 position-fixed">
-            <br></br>
+            <div class="row">
+              <div id = "profile-pic" class="col-2 position-fixed left-0 mx-auto">
                 <br></br>
-              <div class="card">
+                <br></br>
+                <div class="card">
+                  <div class="card m-4">
+                    <img class="rounded" src={profile_pic}></img>
+                  </div>
+                  <p>
+                    <b>
+                      Welcome to the profile page <i>{data.email}!</i>
+                    </b>
+                  </p>
+                  <p>
+                    Venmo: <i>{cur_venmo}</i>
+                  </p>
+                  <div>
+                    <p class = "text-danger">Action Items: {num_action_items}</p>
+                  </div>
+                  <div>
+                    <input
+                      type="checkbox"
+                      id="your-tix-checkbox"
+                      onClick={hideShowYourTix}
+                    ></input>
+                    <label for="your-tix-checkbox" class="m-1">
+                      {" "}
+                      Your Tickets
+                    </label>
+                  </div>
+                  <div>
+                    <input
+                      type="checkbox"
+                      id="tix-on-market-checkbox"
+                      onClick={hideShowTixOnMarket}
+                    ></input>
+                    <label for="tix-on-market-checkbox" class="m-1">
+                      {" "}
+                      Tickets on the Market
+                    </label>
+                  </div>
+                  <div>
+                    <input
+                      type="checkbox"
+                      id="removed-tix-checkbox"
+                      onClick={hideShowRemovedTix}
+                    ></input>
+                    <label for="tix-on-market-checkbox" class="m-1">
+                      {" "}
+                      Hidden Tickets
+                    </label>
+                  </div>
 
-                <div class="card m-4">
-                  <img class="rounded" src={profile_pic}></img>
                 </div>
-                <p>
-                  <b>
-                    Welcome to the profile page <i>{data.email}!</i>
-                  </b>
-                </p>
-                <p>
-                  Venmo: <i>{cur_venmo}</i>
-                </p>
               </div>
-            </div>
-            <div class="d-flex flex-row-reverse gx-5">
-              <div class="col-3">
-                {/* end column 1, start column 2 */}
 
-                <div class = "bg-light rounded sticky-top border-bottom" ><b class = "h4">Your Tickets </b></div>
-                <br />
-                <div>
-                  {users_tix.map(
+              <div class="col-7 offset-4 mt-5" id = "tix-section">
+
+                  
+                <div  id="your-tickets" class = "g-1" style={{ display: "none" }}>
+
+                  
+                    {users_tix.map(
+                      (ticket) =>
+                        ticket[5] && ( //is removed?
+                          <div id = "your-ticket" class="row-cols-1">
+                            <li key={ticket} class="list-group-item">
+                              <div class="card text-center shadow p-3 mb-5 w-15">
+                                <div>
+                                  <a href={`${server}/event/${ticket[3]}`}>
+                                    <i>{ticket[0]}</i>
+                                  </a>
+                                  <p>{ticket[9]}</p>
+                                </div>
+                                <p>
+                                  <i>Price:</i> $<b>{ticket[1]}</b>
+                                </p>
+                                {ticket[7] ? (
+                                  <div class="card border-primary mb-3">
+                                    <a
+                                      href={ticket[6]}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                    >
+                                      <img
+                                        class="card-img-top"
+                                        src={ticket[6]}
+                                      ></img>
+                                    </a>
+                                  </div>
+                                ) : (
+                                  <div class="card border-warning m-3 p-3">
+                                    <p>
+                                      Your payment is pending approval from the
+                                      seller. You may contact the seller at{" "}
+                                      <strong>{ticket[8]}</strong>
+                                    </p>
+                                  </div>
+                                )}
+
+                                <br></br>
+                                {ticket[7] && (
+                                  <button
+                                    class="btn btn-primary"
+                                    id={"show_sell_ticket_form" + ticket[4]}
+                                    onClick={() =>
+                                      show_sell_ticket_form(ticket[4])
+                                    }
+                                  >
+                                    Resell Ticket
+                                  </button>
+                                )}
+                                <button
+                                  class="btn btn-warning"
+                                  onClick={() => removeTicket(ticket[4])}
+                                >
+                                  Hide Ticket
+                                </button>
+
+                                <div
+                                  class="modal"
+                                  id={"sell_ticket_form" + ticket[4]}
+                                  style={{ display: "none" }}
+                                >
+                                  <div class="modal-content">
+                                    <div class="card modal-body">
+                                      <h1 class="modal-body text-light">
+                                        {" "}
+                                        How much would you like to sell your
+                                        ticket for?
+                                      </h1>
+                                      <form
+                                        class="modal-body text-light"
+                                        onSubmit={handleTicketSellSubmit}
+                                      >
+                                        <input
+                                          type="number"
+                                          placeholder={ticket[1]}
+                                          onChange={(e) => (
+                                            setTicketPrice(e.target.value),
+                                            setTicketId(ticket[4])
+                                          )}
+                                        ></input>
+                                        <br></br>
+                                        <br></br>
+                                        <button
+                                          type="submit"
+                                          value="Submit"
+                                          class="btn btn-success"
+                                        >
+                                          Sell Ticket
+                                        </button>
+                                        <button
+                                          type="button"
+                                          class="btn btn-danger"
+                                          onClick={() =>
+                                            hideTicketSellForm(ticket[4])
+                                          }
+                                        >
+                                          Cancel
+                                        </button>
+                                      </form>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </li>
+                          </div>
+                        )
+                    )}
+
+                  {/* <button
+                    id="remove_button"
+                    class="btn btn-secondary text-center m-5"
+                    onClick={() => viewRemoved()}
+                  >
+                    View Hidden Tickets
+                  </button> */}
+                  </div>
+                  <div
+                    id="removed-tix"
+                    class="g-1"
+                    style={{
+                      display: "none",
+                    }}
+                  >
+
+                    <div class="bg-warning rounded">Hidden Tickets</div>
+                    <br />
+                    <div class="m-2">
+                      <div class="card text-center mx-auto">
+                        <ul class="list-group list-group-flush">
+                          {users_tix.map(
+                            (ticket) =>
+                              !ticket[5] && (
+                                <li key={ticket} class="list-group-item">
+                                  <div>
+                                    <a href={`${server}/event/${ticket[3]}`}>
+                                      <i>{ticket[0]}</i>
+                                    </a>
+
+                                    <p>{ticket[9]}</p>
+                                  </div>
+                                  <p>
+                                    <i>Price:</i> $<b>{ticket[1]}</b>
+                                  </p>
+                                  <button
+                                    class="btn btn-primary"
+                                    onClick={() => unremoveTicket(ticket[4])}
+                                  >
+                                    Show Ticket
+                                  </button>
+                                </li>
+                              )
+                          )}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                
+
+                <div style={{ display: "none" }} id="tix-on-market" class = "g-1 p-5">
+                  {/* <div class="bg-light rounded sticky-top border-bottom">
+                    <b class="h4">Tickets Being Sold</b>
+                  </div> */}
+                  <p> </p>
+                  {market_tix.map(
                     (ticket) =>
                       ticket[5] && ( //is removed?
-                        <div class = "m-2">
-                          <li key={ticket} class="list-group-item">
-                            <div
-                              class="card text-center mx-auto shadow p-3 mb-5"
-                              
-                            >
-                              <div>
-                              <a href={`${server}/event/${ticket[3]}`}>
-                                <i>{ticket[0]}</i>
-                              </a>
-                              <p>{ticket[9]}</p>
-                              </div>
+                        <div class="m-2">
+                          <div class="card text-center mx-auto shadow p-3 mb-5">
+                            <li key={ticket} class="list-group-item">
+                              <p>
+                                <div>
+                                  <a href={`${server}/event/${ticket[3]}`}>
+                                    <i>{ticket[0]}</i>
+                                  </a>
+                                  <p>{ticket[9]}</p>
+                                </div>
+                                {ticket[0]} | On Market
+                              </p>
                               <p>
                                 <i>Price:</i> $<b>{ticket[1]}</b>
                               </p>
-                              {ticket[7] ? (
-                                <div class="card border-primary mb-3">
-                                  <a
-                                    href={ticket[6]}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    <img
-                                      class="card-img-top"
-                                      src={ticket[6]}
-                                    ></img>
-                                  </a>
-                                </div>
-                              ) : (
-                                <div class="card border-warning m-3 p-3">
-                                  <p>
-                                    Your payment is pending approval from the
-                                    seller. You may contact the seller at{" "}
-                                    <strong>{ticket[8]}</strong>
-                                  </p>
-                                </div>
-                              )}
-
-                              <br></br>
-                              {ticket[7] && (
-                                <button
-                                  class="btn btn-primary"
-                                  id={"show_sell_ticket_form" + ticket[4]}
-                                  onClick={() =>
-                                    show_sell_ticket_form(ticket[4])
-                                  }
-                                >
-                                  Resell Ticket
-                                </button>
-                              )}
                               <button
-                                class="btn btn-warning"
-                                onClick={() => removeTicket(ticket[4])}
+                                class="btn btn-primary"
+                                onClick={() => claimTicket(ticket[4])}
                               >
-                                Hide Ticket
+                                Take Off Market
                               </button>
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              <div
-                                class="modal"
-                                id={"sell_ticket_form" + ticket[4]}
-                                style={{ display: "none" }}
-                              >
-                                <div class = "modal-content">
-                                <div class = "card modal-body">
-                                <h1 class = "modal-body text-light">
-                                  {" "}
-                                  How much would you like to sell your ticket
-                                  for?
-                                </h1>
-                                <form class = "modal-body text-light" onSubmit={handleTicketSellSubmit}>
-                                  <input
-                                    type="number"
-                                    placeholder={ticket[1]}
-                                    onChange={(e) => (
-                                      setTicketPrice(e.target.value),
-                                      setTicketId(ticket[4])
-                                    )}
-                                  ></input>
-                                  <br></br>
-                                  <br></br>
-                                  <button type="submit" value="Submit" class = "btn btn-success">
-                                    Sell Ticket
-                                  </button>
-                                  <button
-                                    type="button"
-                                    class = "btn btn-danger"
-                                    onClick={() =>
-                                      hideTicketSellForm(ticket[4])
-                                    }
-                                  >
-                                    Cancel
-                                  </button>
-                                  
-                                </form>
-                              </div>
-                              </div>
-                              </div>
-
-
-
-
-
-
-                            </div>
-                          </li>
+                            </li>
+                            <br />
+                          </div>
                         </div>
                       )
                   )}
                 </div>
-                <button id="remove_button" class = "btn btn-secondary text-center m-5" onClick={() => viewRemoved()}>
-                  View Hidden Tickets?
-                </button>
-                <div
-                  id="removed_tix"
-                  class = "text-center"
-                  style={{
-                    display: "none",
-                  }}
-                >
-                  <div class = "bg-warning rounded">Hidden Tickets</div>
-                  <br />
-                  <div class = "m-2">
-                  <div
-                    class="card text-center mx-auto"
-                    
-                  >
-                    <ul class="list-group list-group-flush">
-                      {users_tix.map(
-                        (ticket) =>
-                          !ticket[5] && (
-                            <li key={ticket} class="list-group-item">
-                             <div>
-                              <a href={`${server}/event/${ticket[3]}`}>
-                                <i>{ticket[0]}</i>
-                              </a>
 
-                              <p>{ticket[9]}</p>
-                              </div>
-                              <p>
-                                <i>Price:</i> $<b>{ticket[1]}</b>
-                              </p>
-                              <button class = "btn btn-primary"onClick={() => unremoveTicket(ticket[4])}>
-                                Show Ticket
-                              </button>
-                            </li>
-                          )
-                      )}
-                    </ul>
-                  </div>
-                  <button id="remove_button" class = "btn btn-secondary mb-4" onClick={() => hideRemoved()}>
-                    Hide Tickets
-                  </button>
-                </div>
-                </div>
-                </div>
+                <div id="action-center">
 
 
-                <div class="col-3">
-                <div class = "bg-light rounded sticky-top border-bottom"><b class = "h4">Tickets Being Sold</b></div>
-                <br />
-                  {market_tix.map(
+                  {selling_tix.map(
                     (ticket) =>
-                      ticket[5] && ( //is removed?
-                      <div class = "m-2">
-                        <div
-                          class="card text-center mx-auto shadow p-3 mb-5"
-                          
-                        >
-                          <li key={ticket} class="list-group-item">
-                            <p>
+                      !ticket[5] && ( //confirmed already?
+                        <div class="m-2">
+                          <div class="card text-center mx-auto shadow p-3 mb-5">
                             <div>
                               <a href={`${server}/event/${ticket[3]}`}>
                                 <i>{ticket[0]}</i>
                               </a>
-                              <p>{ticket[9]}</p>
-                              </div>
-                              {ticket[0]} | On Market
-                            </p>
+                              <p>{ticket[8]}</p>
+                            </div>
                             <p>
                               <i>Price:</i> $<b>{ticket[1]}</b>
                             </p>
-                            <button class = "btn btn-primary" onClick={() => claimTicket(ticket[4])}>
-                              Take Off Market
+                            <button
+                              class="btn btn-success"
+                              onClick={() => confirmTicket(ticket[4])}
+                            >
+                              Confirm Ticket
                             </button>
-                          </li>
-                          <br />
+                            <button
+                              class="btn btn-danger"
+                              onClick={() => showReportModal(ticket[4])}
+                            >
+                              Report User
+                            </button>
+
+                            <div
+                              class="modal"
+                              id={"report_user" + ticket[4]}
+                              style={{ display: "none" }}
+                            >
+                              <div class="card modal-body">
+                                <h1 class="modal-body text-light">
+                                  {" "}
+                                  Are you sure you would like to report this
+                                  user?
+                                </h1>
+                                <p class="text-light">
+                                  Only report a user if they have not completed
+                                  the venmo transaction.
+                                </p>
+
+                                <button
+                                  type="submit"
+                                  value="Submit"
+                                  class="btn btn-danger"
+                                  onClick={() =>
+                                    reportUser(ticket[6], ticket[4])
+                                  }
+                                >
+                                  Report User
+                                </button>
+                                <button
+                                  type="button"
+                                  class="btn btn-secondary"
+                                  onClick={() => hideReportModal(ticket[4])}
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                        
-                        </div>
-                        
                       )
                   )}
-                  
+
+                  <br></br>
+
+                  <br />
+                  <br />
                 </div>
-
-             
-              <div class="col-3">
-              <div class = "bg-light rounded sticky-top border-bottom"><b class = "h4">Recently Sold</b></div>
-              <br />
-               
-
-
-                      {selling_tix.map(
-                        (ticket) =>
-                          !ticket[5] && ( //confirmed already?
-                          <div class = "m-2">
-                          <div
-                          class="card text-center mx-auto shadow p-3 mb-5"
-                          
-                        >
-                              <div>
-                              <a href={`${server}/event/${ticket[3]}`}>
-                                <i>{ticket[0]}</i>
-                              </a>
-                              <p>{ticket[8]}</p>
-                              </div>
-                              <p>
-                                <i>Price:</i> $<b>{ticket[1]}</b>
-                              </p>
-                              <button class = "btn btn-success"onClick={() => confirmTicket(ticket[4])}>
-                                Confirm Ticket
-                              </button>
-                              <button
-                              class = "btn btn-danger"
-                                onClick={() => showReportModal(ticket[4])}
-                              >
-                                Report User
-                              </button>
-
-                              <div
-                                class="modal"
-                                id={"report_user" + ticket[4]}
-                                style={{ display: "none" }}
-                              >
-                                <div class = "card modal-body">
-                                <h1 class = "modal-body text-light">
-                                  {" "}
-                                  Are you sure you would like to report this user?
-                                </h1>
-                                <p class = "text-light">Only report a user if they have not completed the venmo transaction.</p>
-                                
-                                  <button type="submit" value="Submit" class = "btn btn-danger" onClick={() => reportUser(ticket[6], ticket[4])}>
-                                    Report User
-                                  </button>
-                                  <button
-                                    type="button"
-                                    class = "btn btn-secondary"
-                                    onClick={() =>
-                                      hideReportModal(ticket[4])
-                                    }
-                                  >
-                                    Cancel
-                                  </button>
-                                  
-                                
-                              </div>
-                              </div>
-
-                            </div>
-                            </div>
-                          )
-                      )}
-                   
-
-
-                <br></br>
-               
-                <br />
-                <br />
               </div>
             </div>
           </div>
