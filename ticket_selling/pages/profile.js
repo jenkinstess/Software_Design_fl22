@@ -70,7 +70,7 @@ async function removeTicket(ticket_id) {
   )
     .then((r) => r.json())
     .then((data) => {});
-  location.reload();
+  // location.reload();
 }
 
 async function hideShowYourTix() {
@@ -123,7 +123,7 @@ async function unremoveTicket(ticket_id) {
   )
     .then((r) => r.json())
     .then((data) => {});
-  location.reload();
+  // location.reload();
 }
 
 // previous owner confirm transaction
@@ -594,14 +594,15 @@ const Profile = ({ tickets, users, events }) => {
                     }}
                   >
 
-                    <div class="bg-warning rounded">Hidden Tickets</div>
                     <br />
                     <div class="m-2">
-                      <div class="card text-center mx-auto">
+
+                      <div class="card text-center mx-auto bg-secondary">
                         <ul class="list-group list-group-flush">
                           {users_tix.map(
                             (ticket) =>
                               !ticket[5] && (
+                                <div>
                                 <li key={ticket} class="list-group-item">
                                   <div>
                                     <a href={`${server}/event/${ticket[3]}`}>
@@ -620,6 +621,8 @@ const Profile = ({ tickets, users, events }) => {
                                     Show Ticket
                                   </button>
                                 </li>
+                                </div>
+                                
                               )
                           )}
                         </ul>
@@ -628,7 +631,8 @@ const Profile = ({ tickets, users, events }) => {
                   </div>
                 
 
-                <div style={{ display: "none" }} id="tix-on-market" class = "g-1 p-5">
+                <div style={{ display: "none" }} id="tix-on-market" class = "g-1">
+                <br />
                   {/* <div class="bg-light rounded sticky-top border-bottom">
                     <b class="h4">Tickets Being Sold</b>
                   </div> */}
@@ -658,7 +662,6 @@ const Profile = ({ tickets, users, events }) => {
                                 Take Off Market
                               </button>
                             </li>
-                            <br />
                           </div>
                         </div>
                       )
