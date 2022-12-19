@@ -365,6 +365,7 @@ const Sell = ({ currentEvents, existingTickets }) => {
   }
 
   return (
+    
 
     <div>
       <AuthRedirection />
@@ -386,8 +387,8 @@ const Sell = ({ currentEvents, existingTickets }) => {
       <br />
       <h1 class="pt-4 text-light " >Sell Ticket</h1>
       <br />
-      <div class="container w-50 rounded bg-dark p-3 shadow">
-      
+      {/* <div class="container w-50 rounded bg-dark p-3 shadow"> */}
+      <div class = "container w-50 shadow p-3 mb-5 bg-dark rounded">
       <p class="text-white">Please select (or create) an event, and fill in the ticket details below: </p>
       <label htmlFor="eventName" class="text-white" >Existing Events: &emsp;
       <br />
@@ -400,13 +401,15 @@ const Sell = ({ currentEvents, existingTickets }) => {
         </select>
         </center>
       </label>
-      
       <center>
+      
       <form onSubmit={handleSubmit}>
+        
           
         {showMe && (
           <>
           <br />
+            
             <label class="text-white" htmlFor="date">
               Ticket Date: &emsp;
               <br />
@@ -422,7 +425,6 @@ const Sell = ({ currentEvents, existingTickets }) => {
             <br />
           </>
         )}
-
         <label class="text-white" htmlFor="eventName">
         <br />
           Event Name: &emsp;
@@ -554,7 +556,9 @@ const Sell = ({ currentEvents, existingTickets }) => {
 
 
       </form>
+      
       </center>
+      
       </div>
 
       <br />
