@@ -42,17 +42,18 @@ const Event = ({ event, all_tickets }) => {
   return (
     <>
       <AuthRedirection />
-      <div class="bg-image" style={{ "background-image": "url(/topbackground.webp)", "height": "270px", "object-fit": "cover", "width": "100%", "background-size": "cover" }}>
+      <div class="bg-light opacity-70" style={{ "background-image": "url(/topbackground.webp)", "height": "200vh", "object-fit": "cover", "width": "100vw", "position": "absolute" }}>
         <h1 class="pt-4 text-light">Event Details</h1>
         <p class="text-light">Name: <i>{event.name}</i></p>
         <p class="text-light">Date: <i>{event.date}</i></p>
         <p class="text-light">Details: <i>{event.description}</i></p>
         <h4 class="text-light">Price Data:</h4>
         <p class="text-light">Min: <i>${event.minPrice}</i> | Avg: <i>${event.avgPrice}</i> | Total Available: <i>{event.numTickets}</i></p>
-      </div>
+      
       <div>
-        <h4 class="pt-3">Event Tickets:</h4>
-        <p>Select from the tickets below to purchase:</p>
+        <br />
+        <h4 class="text-light">Event Tickets:</h4>
+        <p class="text-light">Select from the tickets below to purchase:</p>
         <div class="card text-center mx-auto" style={{ width: '15rem' }}>
           {/* list-group-flush */}
           <ul class="list-group">
@@ -65,6 +66,7 @@ const Event = ({ event, all_tickets }) => {
           </ul>
         </div>
         {err_text && <p class="mt-3 text-danger">{err_text}</p>}
+      </div>
       </div>
     </>
   )
