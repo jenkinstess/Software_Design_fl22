@@ -379,7 +379,7 @@ const Profile = ({ tickets, users, events }) => {
         //0: event, 1: price, 2: is_sold, 3: event_id, 4: ticket id, 5: is_confirmed, 6: userid, 7: uploaded_img, 8: event date
 
         selling_tix.push(ticket);
-        num_action_items = selling_tix.length
+        num_action_items += 1
       }
       
     }
@@ -424,7 +424,6 @@ const Profile = ({ tickets, users, events }) => {
                     Venmo: <i>{cur_venmo}</i>
                   </p>
                   <div>
-                    <p class = "text-danger">Action Items: {num_action_items}</p>
                   </div>
                   <div>
                     <input
