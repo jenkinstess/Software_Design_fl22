@@ -72,7 +72,7 @@ export default function Buy({ events }) {
             <AuthRedirection />
             {/*  class="bg-light" style={{"height":"100vh"}} */}
             <div>
-                <div class="bg-image" style={{"background-image":"url(/topbackground.webp)", "height":"225px", "object-fit":"cover", "width":"100%", "background-size": "cover"}}>
+                <div class="bg-light opacity-80" style={{"background-image":"url(/topbackground.webp)", "height":"200vh", "object-fit":"cover", "width":"100vw", "position": "absolute"}}>
                     <h2 class="pt-4 text-light">Upcoming Events</h2>
                     <br></br>
                     <p class="text-light">Search events: <input
@@ -93,8 +93,9 @@ export default function Buy({ events }) {
                         layout='fill'
                         class="bg-img"
                     /> */}
+                    <EventList events={cur_events} logged_in={true} />
                 </div>
-                <EventList events={cur_events} logged_in={true} />
+                
             </div>
         </>
     )

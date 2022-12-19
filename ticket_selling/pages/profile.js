@@ -397,7 +397,7 @@ const Profile = ({ tickets, users, events }) => {
         }}
       >
         <Image
-          class="opacity-50"
+          class="opacity-80"
           src="/topbackground.webp"
           alt="Party Picture"
           layout="fill"
